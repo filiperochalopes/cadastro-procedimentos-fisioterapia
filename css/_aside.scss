@@ -1,0 +1,64 @@
+aside{
+    position: fixed;
+    bottom: 50px;
+    right: 20px;
+    width: 70px;
+    height: 70px;
+    z-index: 5;
+
+    #menu{
+        position: absolute;
+        background: $secundary_color;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+        padding: 0;
+        z-index: 5;
+    }
+    
+    ul{
+        bottom: 10px;
+        left: 5px;
+        z-index: 4;
+
+        li{
+            position: absolute;
+            list-style: none;
+            top: 0px;
+            left: 0px;
+            opacity: 0;
+            transition: .5s all;
+
+            &.open{
+                opacity: 1;
+            }
+
+            &:nth-child(1).open{
+                transition: .3s all;
+                top: 0px;
+                left: -100px;
+            }
+
+            &:nth-child(2).open{
+                transition: .4s all;
+                top: -80px;
+                left: -80px;
+            }
+
+            &:nth-child(3).open{
+                transition: .5s all;
+                top: -100px;
+                left: 0px;
+            }
+
+
+            button.rounded.large{
+                background: #fff;
+                box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+                padding: 0;
+            }
+
+            span{
+                display: none;
+            }
+        }
+    }
+}

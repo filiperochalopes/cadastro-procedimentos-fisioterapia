@@ -1,0 +1,27 @@
+table{
+    border-radius: 5px;
+    border: 1px solid #222;
+    border-collapse: collapse;
+    min-width: 280px;
+
+    td{
+        padding: 4px 12px;
+        border-bottom: 1px solid #222;
+
+        &.nome{
+            width: 90%;
+        }
+    }
+
+    button{
+        margin: 0;
+        padding: 0;
+        background: transparent;
+        border: none;
+        outline: 0;
+
+        &.del{
+            color: $red;
+        }
+    }
+}
