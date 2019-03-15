@@ -83,28 +83,7 @@ $(document).ready(function () {
     }
   }
 
-  //Reset de todos os inputs condicionais
-  $(".condicional").addClass("none").attr("required", false);
-
-  $("#situacao_adm").change(function () {
-    condicionais($(this).attr("id"), $(this).val())
-  })
-
-  $("*[name=atleta]").change(function () {
-    condicionais($(this).attr("id"), $(this).val(), true, "modalidade")
-  })
-
-  $("*[name=comparecimento]").change(function () {
-    condicionais($(this).attr("id"), $(this).val(), true, "procedimento_1")
-  })
-
-  $("#modalidade").change(function () {
-    condicionais($(this).attr("id"), $(this).val(), true, "outra_modalidade")
-  })
-
-  $(".procedimento").change(function () {
-    addProcedimento($(this).attr("id"))
-  })
+  resetForm();
 
   /* --------- LINKS ----------- */
 
@@ -292,6 +271,35 @@ $(document).ready(function () {
 
   /* --------- ENVIAR TABELA ---------- */
 
+  function resetForm() {
+    console.log("Reset Form");
+    
+    $('#form_registro').trigger("reset");
+
+    //Reset de todos os inputs condicionais
+    $(".condicional").addClass("none").attr("required", false);
+
+    $("#situacao_adm").change(function () {
+      condicionais($(this).attr("id"), $(this).val())
+    })
+
+    $("*[name=atleta]").change(function () {
+      condicionais($(this).attr("id"), $(this).val(), true, "modalidade")
+    })
+
+    $("*[name=comparecimento]").change(function () {
+      condicionais($(this).attr("id"), $(this).val(), true, "procedimento_1")
+    })
+
+    $("#modalidade").change(function () {
+      condicionais($(this).attr("id"), $(this).val(), true, "outra_modalidade")
+    })
+
+    $(".procedimento").change(function () {
+      addProcedimento($(this).attr("id"))
+    })
+  }
+
   function pad(num, size) {
     var s = num + "";
     while (s.length < size) s = "0" + s;
@@ -339,7 +347,7 @@ $(document).ready(function () {
       }
     }).done(function (data) {
       aviso(data);
-      $('#form_registro').trigger("reset");
+      resetForm();
     });
 
   }
