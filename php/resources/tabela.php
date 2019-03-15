@@ -29,6 +29,9 @@ if($method == "POST"){
 
     $data =  $data["json"];
 
+    $date = $data["data"];
+    $data["data"] = date("d/m/Y", strtotime($date));
+
     // print_r($data);
 
     $sql = "INSERT INTO `tabela` (
