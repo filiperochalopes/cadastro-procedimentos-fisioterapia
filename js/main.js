@@ -212,7 +212,7 @@ $(document).ready(function () {
       }).done(function (data) {
         console.log(data);
         if (data.fisioterapeuta) {
-          googleSheetAPI(data);
+          sendTableToDatabase(data);
         }
         aviso(data);
       });
@@ -285,12 +285,12 @@ $(document).ready(function () {
         $("#" + el[0]).focus().val(el[1]).blur().change();
       }
       $("input[name=origem][value=" + data.origem + "]").prop('checked', true);
-      $("input[name=corpoquadro][value=" + data.corpoquadro + "]").prop('checked', true);
-      $("input[name=atleta][value=" + data.atleta + "]").prop('checked', true);
+      data.corpoquadro ? $("input[name=corpoquadro][value=" + data.corpoquadro + "]").prop('checked', true) : null;
+      data.atleta ? $("input[name=atleta][value=" + data.atleta + "]").prop('checked', true) : null;
     })
   }
 
-  /* --------- GOOGLE API SEND ---------- */
+  /* --------- ENVIAR TABELA ---------- */
 
   function pad(num, size) {
     var s = num + "";
@@ -298,7 +298,7 @@ $(document).ready(function () {
     return s;
   }
 
-  function googleSheetAPI(array) {
+  function sendTableToDatabase(array) {
   console.log(array);
   
     num_procedimentos = 0;
@@ -325,6 +325,7 @@ $(document).ready(function () {
     //   }
     //   final_array.push(el);
     // })
+    array["id"]
     array["data"] ? final_array.push(array["data"]) : final_array.push("");
     array["fisioterapeuta"] ? final_array.push(array["fisioterapeuta"]) : final_array.push("");
     array["nome_paciente"] ? final_array.push(array["nome_paciente"]) : final_array.push("");
@@ -334,7 +335,7 @@ $(document).ready(function () {
     array["nip_titular"] ? final_array.push(array["nip_titular"]) : final_array.push("");
     array["cpf_titular"] ? final_array.push(array["cpf_titular"]) : final_array.push("");
     array["origem"] ? final_array.push(array["origem"]) : final_array.push("");
-    array["corpoquadro"] ? final_array.push(array["corpoquadro"]) : final_array.push("");
+    array["corpo_quadro"] ? final_array.push(array["corpoquadro"]) : final_array.push("");
     array["posto_graduacao"] ? final_array.push(array["posto_graduacao"]) : final_array.push("");
     array["atleta"] ? final_array.push(array["atleta"]) : final_array.push("");
     array["modalidade"] ? final_array.push(array["modalidade"]) : final_array.push("");
@@ -354,98 +355,6 @@ $(document).ready(function () {
   }
 
 })
-
-/* --------- GOOGLE API ---------- */
-
-
-// Client ID and API key from the Developer Console
-var CLIENT_ID = '449836031683-4q3r4oqgvsv6327elf5qjkdcos6ji6p9.apps.googleusercontent.com';
-var API_KEY = 'AIzaSyA13xSg0pTDZHH8zCN2GwVW4WoaIXnyedU';
-
-// Array of API discovery doc URLs for APIs used by the quickstart
-var DISCOVERY_DOCS = ["https://sheets.googleapis.com/$discovery/rest?version=v4"];
-
-// Authorization scopes required by the API; multiple scopes can be
-// included, separated by spaces.
-var SCOPES = "https://www.googleapis.com/auth/spreadsheets";
-
-/**
- *  On load, called to load the auth2 library and API client library.
- */
-function handleClientLoad() {
-  gapi.load('client:auth2', initClient);
-}
-
-/**
- *  Initializes the API client library and sets up sign-in state
- *  listeners.
- */
-function initClient() {
-  gapi.client.init({
-    apiKey: API_KEY,
-    clientId: CLIENT_ID,
-    discoveryDocs: DISCOVERY_DOCS,
-    scope: SCOPES
-  }).then(function () {
-    // Listen for sign-in state changes.
-    // gapi.auth2.getAuthInstance().isSignedIn.listen(updateSigninStatus);
-
-    // Handle the initial sign-in state.
-    // updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get());
-  }, function (error) {
-    console.log(error);
-  });
-}
-
-/**
- *  Sign out the user upon button click.
- */
-// function handleSignoutClick(event) {
-//   gapi.auth2.getAuthInstance().signOut();
-// }
-
-/**
- * Print the names and majors of students in a sample spreadsheet:
- * https://docs.google.com/spreadsheets/d/1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms/edit
- */
-function makeApiCall(array) {
-  gapi.auth2.getAuthInstance().signIn();
-
-  var params = {
-    // The ID of the spreadsheet to update.
-    spreadsheetId: '1gqpz5ZVYmGivhkVmRnzMfkjQ8bkVENGbxdKIBm2jET8',  // TODO: Update placeholder value.
-
-    // The A1 notation of a range to search for a logical table of data.
-    // Values will be appended after the last row of the table.
-    range: 'Sheet1',  // TODO: Update placeholder value.
-
-    // How the input data should be interpreted.
-    valueInputOption: 'USER_ENTERED',  // TODO: Update placeholder value.
-
-    // How the input data should be inserted.
-    insertDataOption: 'INSERT_ROWS',  // TODO: Update placeholder value.
-  };
-
-  var valueRangeBody = {
-    values: [
-      array
-    ]
-  };
-
-  var request = gapi.client.sheets.spreadsheets.values.append(params, valueRangeBody);
-  request.then(function (response) {
-    // TODO: Change code below to process the `response` object:
-    console.log(response.result);
-    aviso({
-      mensagem: "Inserido na planilha",
-      class: "green"
-    });
-    // document.getElementById("form_registro").reset();
-    // document.setTimeout(() => location.reload(), 500)
-  }, function (reason) {
-    console.error('error: ' + reason.result.error.message);
-  });
-}
 
 /* --------- AVISO ---------- */
 
