@@ -299,58 +299,48 @@ $(document).ready(function () {
   }
 
   function sendTableToDatabase(array) {
-  console.log(array);
-  
+    
+    // Cálculo de número de procedimentos
+
     num_procedimentos = 0;
     for (let idx = 1; idx <= 20; idx++) { //campos de procedimentos
       array["procedimento_"+idx] != "" ? num_procedimentos++ : null;
     }
 
-    final_array = [];
-    final_array.push("=Row()-1");
-    // array.map((el, i) => {
-    //   switch (i) {
-    //     case 6:
-    //     case 7: //campo de nip
-    //       el = pad(el, 8);
-    //       break;
-    //     case 8: //campo de cpf
-    //       el = pad(el, 11)
-    //       break;
-    //     case 33: //campo de procedimentos
-    //       el = num_procedimentos
-    //       break;
-    //     default:
-    //       el = el
-    //   }
-    //   final_array.push(el);
-    // })
-    array["id"]
-    array["data"] ? final_array.push(array["data"]) : final_array.push("");
-    array["fisioterapeuta"] ? final_array.push(array["fisioterapeuta"]) : final_array.push("");
-    array["nome_paciente"] ? final_array.push(array["nome_paciente"]) : final_array.push("");
-    array["tipoatendimento"] ? final_array.push(array["tipoatendimento"]) : final_array.push("");
-    array["situacao_adm"] ? final_array.push(array["situacao_adm"]) : final_array.push("");
-    array["nip_paciente"] ? final_array.push(array["nip_paciente"]) : final_array.push("");
-    array["nip_titular"] ? final_array.push(array["nip_titular"]) : final_array.push("");
-    array["cpf_titular"] ? final_array.push(array["cpf_titular"]) : final_array.push("");
-    array["origem"] ? final_array.push(array["origem"]) : final_array.push("");
-    array["corpo_quadro"] ? final_array.push(array["corpoquadro"]) : final_array.push("");
-    array["posto_graduacao"] ? final_array.push(array["posto_graduacao"]) : final_array.push("");
-    array["atleta"] ? final_array.push(array["atleta"]) : final_array.push("");
-    array["modalidade"] ? final_array.push(array["modalidade"]) : final_array.push("");
-    array["outra_modalidade"] ? final_array.push(array["outra_modalidade"]) : final_array.push("");
-    array["comparecimento"] ? final_array.push(array["comparecimento"]) : final_array.push("");
+    array["id"] = "";
+    array["nip_paciente"] ? null : array["nip_paciente"] = ""
+    array["nip_titular"] ? null : array["nip_titular"] = ""
+    array["cpf_titular"] ? null : array["cpf_titular"] = ""
+    array["origem"] ? null : array["origem"] = ""
+    array["corpoquadro"] ? null : array["corpoquadro"] = ""
+    array["posto_graduacao"] ? null : array["posto_graduacao"] = ""
+    array["atleta"] ? null : array["atleta"] = ""
+    array["modalidade"] ? null : array["modalidade"] = ""
+    array["outra_modalidade"] ? null : array["outra_modalidade"] = ""
+    array["comparecimento"] ? null : array["comparecimento"] = ""
 
     for (let idx = 1; idx <= 20; idx++) { //campos de procedimentos
-      array["procedimento_"+idx] ? final_array.push(array["procedimento_"+idx]) : final_array.push("");
+      array["procedimento_"+idx] ? null : array["procedimento_"+idx] = "";
     }
 
-    final_array.push(num_procedimentos);
+    array["total_procedimentos"] = num_procedimentos;
 
+    console.log(array);
 
-    makeApiCall(final_array)
-    // console.log(final_array);
+    $.ajax({
+      url: "php/resources/tabela.php",
+      method: "POST",
+      data: { json : array },
+      beforeSend: function (xhr) {
+        aviso({
+          mensagem: "<div class='spinner'><i class='fas fa-spinner'></i></div> Carregando...",
+          class: "yellow"
+        });
+      }
+    }).done(function (data) {
+      aviso(data);
+      $('#form_registro').trigger("reset");
+    });
 
   }
 
@@ -368,7 +358,7 @@ function aviso(props, long = false) {
 
   props = typeof (props) == "object" ? props : JSON.parse(props);
   color = props.class || "grey";
-  mensagem = props.mensagem || "Aviso";
+  mensagem = props.mensagem || "Aguarde um momento.";
 
   $("#aviso").removeClass("red green yellow grey");
   $("#aviso").addClass(color).find("div").html(mensagem);
