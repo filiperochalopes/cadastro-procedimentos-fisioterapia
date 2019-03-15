@@ -100,7 +100,7 @@ if($method == "POST"){
                 NULL, 
                 '$paciente', 
                 '".$data["situacao_adm"]."', 
-                '".$data["posto_graducao"]."', 
+                '".$data["posto_graduacao"]."', 
                 '$nip_paciente', 
                 '$nip_titular', 
                 '$cpf_titular',
