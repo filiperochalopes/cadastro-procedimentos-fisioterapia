@@ -84,6 +84,14 @@ include "php/struct/header.php";
             ["comparecimento_nao", "Não"]
         ))?>
 
+        <label for="tipo_falta" data-condicional="tipo_falta" class="condicional">TIPO DE FALTA<span>*</span></label>
+        <select id="tipo_falta" name="tipo_falta" data-condicional="tipo_falta" class="condicional">
+            <option value="" disabled selected>Selecione um tipo</option>
+            <?=write_options(array(
+                "Falta sem justificativa", "Desmarcação pelo profissional", "Desmarcação pelo paciente"
+            ))?>
+        </select>
+
         <label class="condicional" data-condicional="corpoquadro" >CORPO/QUADRO <span>*</span></label>
         <?=write_radio("corpoquadro", array(
             ["corpoquadro_cfn", "CFN"],
