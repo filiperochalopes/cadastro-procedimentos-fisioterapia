@@ -289,6 +289,7 @@ $(document).ready(function () {
 
     $("*[name=comparecimento]").change(function () {
       condicionais($(this).attr("id"), $(this).val(), true, "procedimento_1")
+      condicionais($(this).attr("id"), $(this).val(), true, "tipo_falta")
     })
 
     $("#modalidade").change(function () {

@@ -36,7 +36,8 @@ if($method == "POST"){
 
     $sql = "INSERT INTO `tabela` (
         `id`, 
-        `data`, 
+        `data`,
+        `turno`,
         `fisioterapeuta`, 
         `nome_paciente`, 
         `tipo_atendimento`, 
@@ -51,6 +52,7 @@ if($method == "POST"){
         `modalidade`, 
         `outra_modalidade`,
         `comparecimento`,
+        `tipo_falta`,
         `procedimento_1`,
         `procedimento_2`,
         `procedimento_3`,
@@ -75,6 +77,7 @@ if($method == "POST"){
         ) VALUES (
             NULL, 
             '".$data["data"]."', 
+            '".$data["turno"]."', 
             '".$data["fisioterapeuta"]."', 
             '".$data["nome_paciente"]."', 
             '".$data["tipo_atendimento"]."', 
@@ -89,6 +92,7 @@ if($method == "POST"){
             '".$data["modalidade"]."', 
             '".$data["outra_modalidade"]."',
             '".$data["comparecimento"]."',
+            '".$data["tipo_falta"]."',
             '".$data["procedimento_1"]."',
             '".$data["procedimento_2"]."',
             '".$data["procedimento_3"]."',

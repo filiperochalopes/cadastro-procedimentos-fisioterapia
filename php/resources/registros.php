@@ -31,6 +31,7 @@ if($method == "POST"){
     $procedimentos = array();
     // $date = date("Y-m-d");
     $date = $data["data"];
+    $turno = $data["turno"];
 
     for($i = 1; $i <= 20; $i++){
         if($data["procedimento_".$i]){
@@ -46,7 +47,7 @@ if($method == "POST"){
     if($pesquisaregistros->num_rows){
         //Verifica se existe algum com mesma pessoa, depoi o mais demorado que são a verificação de procedimentos
         while($row = $pesquisaregistros->fetch_assoc()){
-            if($paciente == $row["paciente"]){
+            if($paciente == $row["paciente"] && $turno == $row["turno"] && $row["turno"] !== NULL ){
                 $procedimentos_paciente = json_decode($row["procedimentos"]);
                 if(!array_diff($procedimentos, $procedimentos_paciente)){
                     exit("{ 
@@ -63,12 +64,14 @@ if($method == "POST"){
         `id`, 
         `paciente`, 
         `procedimentos`, 
-        `data`
+        `data`,
+        `turno`
         ) VALUES (
             NULL,
             '$paciente',
             '".json_encode($procedimentos)."',
-            '$date'
+            '$date',
+            '$turno'
         )";
 
         // echo $sql;
@@ -116,7 +119,6 @@ if($method == "POST"){
 
     echo json_encode($data);
 
-    //Adicionar na planilha do GOOGLE
 }
 
 //

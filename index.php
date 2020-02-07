@@ -32,8 +32,14 @@ include "php/struct/header.php";
         <label for="data">DATA <span>*</span></label>
         <input type="date" id="data" name="data" required/> <label for="data" class="inline side"><i class="far fa-calendar-alt"></i></label>
 
-        <label for="tipoatendimento">TIPO DE ATENDIMENTO<span>*</span></label>
-        <select id="tipoatendimento" name="tipoatendimento" required>
+        <label>TURNO <span>*</span></label>
+        <?=write_radio("turno", array(
+            ["manha", "Manhã"],
+            ["tarde", "Tarde"]
+        ))?>
+
+        <label for="tipo_atendimento">TIPO DE ATENDIMENTO<span>*</span></label>
+        <select id="tipo_atendimento" name="tipo_atendimento" required>
             <option value="" disabled selected>Selecione um tipo</option>
             <?=write_options(array(
                 "Individual", "Grupo de Hidroterapia", "Pilates", "Grupo de Hidroterapia", "Grupo de Educação em Dor", "Grupo de Dor Lombar"
