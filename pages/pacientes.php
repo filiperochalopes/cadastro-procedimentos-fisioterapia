@@ -5,18 +5,18 @@ require ("config-db.php");
 
 include "php/func/login_check.php";
 
-include "php/struct/head.php";
-include "php/struct/header.php";
+include "page/parts/head.php";
+include "page/parts/header.php";
 ?>
 <body>
     
     <?php
-    include "php/struct/body.php";
+    include "page/parts/body.php";
     ?>
     
     <div class="page">
     <?php
-    include "php/struct/aside.php";
+    include "page/parts/aside.php";
     ?> 
     <main>
     <h1>ESTATÍSTICA DA FISIOTERAPIA DO CEFAN <span><i class="fas fa-user"></i> Pacientes</span></h1>
@@ -34,5 +34,5 @@ include "php/struct/header.php";
     </main>            
     </div>
     <?php
-    include "php/struct/footer.php";
+    include "page/parts/footer.php";
     ?>

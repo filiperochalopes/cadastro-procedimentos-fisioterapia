@@ -3,12 +3,12 @@
 require ("functions.php");
 require ("config-db.php");
 
-include "php/struct/head.php";
+include "page/parts/head.php";
 ?>
 <body>
     
     <?php
-    include "php/struct/body.php";
+    include "page/parts/body.php";
 
     if(isset($_GET["erro"])){
         $erro = $_GET["erro"];

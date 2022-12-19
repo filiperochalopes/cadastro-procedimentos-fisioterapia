@@ -6,18 +6,18 @@ require ("config-globals.php");
 
 include "php/func/login_check.php";
 
-include "php/struct/head.php";
-include "php/struct/header.php";
+include "pages/parts/head.php";
+include "page/parts/header.php";
 ?>
 <body>
     
     <?php
-    include "php/struct/body.php";
+    include "page/parts/body.php";
     ?>
     
     <div class="page">
     <?php
-    include "php/struct/aside.php";
+    include "page/parts/aside.php";
     ?> 
     <main>
     <h1>ESTATÍSTICA DA FISIOTERAPIA DO CEFAN <span><i class="fas fa-check-square"></i> FORMULÁRIO</span></h1>
@@ -143,5 +143,5 @@ include "php/struct/header.php";
     </script>           
     </div>
     <?php
-    include "php/struct/footer.php";
+    include "page/parts/footer.php";
     ?>

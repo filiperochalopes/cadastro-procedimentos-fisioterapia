@@ -1,0 +1,7 @@
+{
+    "require": {
+        "propel/propel": "~2.0@beta",
+        "slim/slim": "4.*",
+        "slim/psr7": "^1.6"
+    }
+}
