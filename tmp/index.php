@@ -1,7 +1,7 @@
 <?php
 
-require ("functions.php");
-require ("config-db.php");
+require 'functions.php';
+require 'config-db.php';
 require ("config-globals.php");
 
 include "php/func/login_check.php";

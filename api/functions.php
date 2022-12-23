@@ -82,14 +82,21 @@ function num_clientes($especialidade) {
     return $pesquisaclientes->num_rows;
 }
 
+/**
+ * Renderiza de forma mais prática options dentro de um select
+ * 
+ * @param Array $array Lista de strings nomes que são apresentados nas opções
+ * 
+ * @return Void Renderiza Options de Select
+ */
 function write_options($array){
-    $func = function($item){
+    array_map(function($item){
         echo "<option value=\"$item\">$item</option>";
-    };
-    
-    array_map($func, $array);
+    }, $array);
 }
 
+
+// ! Deprecated Deve ser trocada por write_options
 function write_options_db($table, $col){
     global $mydb;
     
@@ -99,6 +106,15 @@ function write_options_db($table, $col){
     }
 }
 
+/**
+ * Escreve a um input radio
+ * 
+ * @param String $name Name do elemento html, lembrando que têm que ser iguais para que só possa selecoinar um checkbox
+ * @param Array $array Blocos de conteeúdo com id e label
+ * @param String $conditional Adicionada a funcinoalidade de ser um radio condicional
+ * 
+ * @return String HTML Component
+ */
 function write_radio($name, $array, $conditional=false){
 
     $func = function($item) use ($name, $conditional){
@@ -114,20 +130,13 @@ function write_radio($name, $array, $conditional=false){
     echo "<span class=\"clear\"></span>";
 }
 
-function console_log( $data ){
+/**
+ * Função com finalidade de realizar debug
+ * 
+ * @param String JSON decoded string
+ */
+function console_log($data){
     echo '<script>';
     echo 'console.log('. json_encode( $data ) .')';
     echo '</script>';
 }
-
-function cut($string, $num){
-    return substr($string, 0, $num);
-}
-
-function highlight($query, $string){
-    $newstring = "<span class='highlight'>".$query."</span>";
-    $string = str_ireplace($query, $newstring, $string);
-    return $string;
-}
-
-?>

@@ -1,6 +1,10 @@
 FROM php:8.2-rc-apache-bullseye
 
+RUN mkdir -p /var/www/html/
 WORKDIR /var/www/html/
+
+RUN echo "ServerName localhost" >> /etc/apache2/apache2.conf
+RUN sed -i '/<Directory \/var\/www\/>/,/<\/Directory>/ s/AllowOverride None/AllowOverride All/' /etc/apache2/apache2.conf
 
 RUN pecl install xdebug \
     && apt update \
@@ -10,14 +14,11 @@ RUN pecl install xdebug \
     && docker-php-ext-install zip \
     && rm -rf /var/lib/apt/lists/*
 
+COPY . .
+
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 COPY composer.json composer.json
-COPY composer.lock composer.lock
 
-RUN groupadd -r user && useradd -r -g user user
-USER user
-RUN composer install --no-dev
-
-COPY . .
+ENV PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/var/www/html/vendor/bin
 
 EXPOSE 80

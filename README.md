@@ -10,3 +10,19 @@ Projeto de baixo custo para o serviço da Marinha do Brasil no Centro de Educaç
 Passou por uma refatoração de dados e de estrutura em código em 2023, adequando-se aos padrões mais atuais, todavia algumas implementações de banco de dados e regras normais não foram implementadas por combinado mútuo.
 
 ### Rodando docker em ambiente de desenvolvimento com banco de dados inicial
+
+1. Cole o backup do banco de dados em `/static/db/`
+2. Não esqueça de adicionar no arquivo de backup 
+
+```sql
+-- Nome do banco de dados
+USE `fisiocefan`;
+```
+
+3. Inicializar conexão
+
+```sh
+docker exec -it fisiocefan_app bash -c "propel init"
+```
+
+Pending: https://opis.io/database/4.x/
