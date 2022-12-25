@@ -21,7 +21,7 @@ services:
       - "33306:3306"
     volumes:
       - "./static/db:/docker-entrypoint-initdb.d"
-      - "/data:/var/lib/mysql"
+      - "./data:/var/lib/mysql"
     environment:
       MARIADB_ROOT_PASSWORD: ${DB_PASS}
       MARIADB_DATABASE: ${DB_NAME}

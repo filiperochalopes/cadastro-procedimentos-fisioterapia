@@ -1,4 +1,4 @@
-FROM php:8.2-rc-apache-bullseye
+FROM php:8.1-apache-bullseye
 
 RUN mkdir -p /var/www/html/
 WORKDIR /var/www/html/
@@ -11,7 +11,7 @@ RUN pecl install xdebug \
     && apt install libzip-dev -y \
     && docker-php-ext-enable xdebug \
     && a2enmod rewrite \
-    && docker-php-ext-install zip \
+    && docker-php-ext-install pdo pdo_mysql zip \
     && rm -rf /var/lib/apt/lists/*
 
 COPY . .

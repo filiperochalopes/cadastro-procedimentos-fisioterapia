@@ -1,6 +1,7 @@
 {
     "require": {
-        "opis/orm": "^1.0",
+        "propel/propel": "~2.0@beta",
+        "opis/database": "^3.6",
         "slim/slim": "4.*",
         "slim/psr7": "^1.6"
     }

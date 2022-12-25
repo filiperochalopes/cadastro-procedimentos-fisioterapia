@@ -13,3 +13,8 @@ db-restore:
 	docker exec -i fisiocefan_db sh -c 'exec mariadb -uroot -p"$MARIADB_ROOT_PASSWORD" < "/home/$(sql)"'
 db-terminal:
 	docker exec -it fisiocefan_db sh -c 'mysql -p'
+db-reset:
+	docker-compose down --remove-orphans --volumes
+	sudo rm -rf data
+	docker-compose up -d
+	docker-compose logs -f
