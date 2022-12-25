@@ -1,70 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
-<database name="default" defaultIdMethod="native" namespace="\Models" defaultPhpNamingMethod="underscore">
-  <table name="fisioterapeutas" idMethod="native" phpName="Fisioterapeuta">
+<database name="default" defaultIdMethod="native" namespace="\Api\Models" defaultPhpNamingMethod="underscore">
+  <table name="fisioterapeutas" idMethod="native" phpName="Fisioterapeutas">
+    <column name="id" phpName="Id" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
+    <column name="fisioterapeuta" phpName="Fisioterapeuta" type="VARCHAR" size="150" required="true"/>
+    <vendor type="mysql">
+      <parameter name="Engine" value="InnoDB"/>
+    </vendor>
+  </table>
+  <table name="pacientes" idMethod="native" phpName="Pacientes">
     <column name="id" phpName="Id" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
     <column name="nome" phpName="Nome" type="VARCHAR" size="150" required="true"/>
+    <column name="situacao_adm" phpName="SituacaoAdm" type="VARCHAR" size="30" required="true"/>
+    <column name="posto_graduacao" phpName="PostoGraduacao" type="VARCHAR" size="10" required="true"/>
+    <column name="nip_paciente" phpName="NipPaciente" type="INTEGER" size="8" required="true"/>
+    <column name="nip_titular" phpName="NipTitular" type="INTEGER" size="8" required="true"/>
+    <column name="cpf_titular" phpName="CpfTitular" type="BIGINT" size="11" required="true"/>
+    <column name="origem" phpName="Origem" type="VARCHAR" size="20" required="true"/>
+    <column name="corpoquadro" phpName="Corpoquadro" type="VARCHAR" size="5" required="true"/>
+    <column name="atleta" phpName="Atleta" type="VARCHAR" size="3" required="true"/>
+    <column name="modalidade" phpName="Modalidade" type="VARCHAR" size="50" required="true"/>
+    <column name="outra_modalidade" phpName="OutraModalidade" type="VARCHAR" size="50" required="true"/>
     <vendor type="mysql">
       <parameter name="Engine" value="InnoDB"/>
     </vendor>
   </table>
-  <table name="pacientes" idMethod="native" phpName="Paciente">
+  <table name="procedimentos" idMethod="native" phpName="Procedimentos">
     <column name="id" phpName="Id" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
-    <column name="nome" phpName="Nome" type="VARCHAR" size="150" required="true"/>
-    <column name="situacao_administ" phpName="SituacaoAdmistrativa" type="VARCHAR" size="30"/>
-    <column name="posto_graduacao" phpName="PostoGraduacao" type="VARCHAR" size="10"/>
-    <column name="nip_paciente" phpName="Nip" type="VARCHAR" size="8"/>
-    <column name="nip_titular" phpName="NipTitular" type="VARCHAR" size="8"/>
-    <column name="cpf_titular" phpName="CpfTitular" type="VARCHAR" size="11"/>
-    <column name="origem" phpName="Origem" type="VARCHAR" size="20"/>
-    <column name="corpo_quadro" phpName="CorpoQuadro" type="VARCHAR" size="5"/>
-    <column name="atleta" phpName="Atleta" type="BOOLEAN"/>
-    <column name="atleta_modalidade" phpName="Modalidade" type="VARCHAR" size="50"/>
-    <column name="outra_modalidade" phpName="OutraModalidade" type="VARCHAR" size="50"/>
+    <column name="procedimento" phpName="Procedimento" type="VARCHAR" size="100" required="true"/>
     <vendor type="mysql">
       <parameter name="Engine" value="InnoDB"/>
     </vendor>
   </table>
-  <table name="procedimentos" idMethod="native" phpName="Procedimento">
+  <table name="registros" idMethod="native" phpName="Registros">
     <column name="id" phpName="Id" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
-    <column name="nome" phpName="Nome" type="VARCHAR" size="100" required="true"/>
-    <vendor type="mysql">
-      <parameter name="Engine" value="InnoDB"/>
-    </vendor>
-  </table>
-  <table name="registros" idMethod="native" phpName="Registro">
-    <column name="id" phpName="Id" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
-    <column name="paciente" phpName="Paciente" type="VARCHAR" size="150"/>
-    <column name="procedimentos" phpName="Procedimentos" type="LONGVARCHAR"/>
-    <column name="fisioterapeuta_id" phpName="FisioterapeutaId" type="INTEGER"/>
-    <column name="paciente_id" phpName="PacienteId" type="INTEGER"/>
-    <column name="tipo_atendimento" phpName="TipoAtendimento" type="VARCHAR" size="21"/>
-    <column name="comparecimento" phpName="Comparecimento" type="VARCHAR" size="3"/>
-    <column name="tipo_falta" phpName="TipoFalta" type="VARCHAR" size="40"/>
-    <column name="data" phpName="Data" type="DATE"/>
+    <column name="paciente" phpName="Paciente" type="VARCHAR" size="150" required="true"/>
+    <column name="procedimentos" phpName="Procedimentos" type="LONGVARCHAR" required="true"/>
+    <column name="data" phpName="Data" type="DATE" required="true"/>
     <column name="turno" phpName="Turno" type="VARCHAR" size="5"/>
-    <foreign-key foreignTable="fisioterapeutas" phpName="Fisioterapeuta" refPhpName="Registro">
-      <reference local="fisioterapeuta_id" foreign="id"/>
-    </foreign-key>
-    <foreign-key foreignTable="pacientes" phpName="Paciente" refPhpName="Registro">
-      <reference local="paciente_id" foreign="id"/>
-    </foreign-key>
     <vendor type="mysql">
       <parameter name="Engine" value="InnoDB"/>
     </vendor>
-  </table>
-  <table name="registro_procedimento" isCrossRef="true">
-    <column name="registro_id" type="INTEGER" primaryKey="true"/>
-    <column name="procedimento_id" type="INTEGER" primaryKey="true"/>
-    <foreign-key foreignTable="registros">
-      <reference local="registro_id" foreign="id"/>
-    </foreign-key>
-    <foreign-key foreignTable="procedimentos">
-      <reference local="procedimento_id" foreign="id"/>
-    </foreign-key>
   </table>
   <table name="tabela" idMethod="native" phpName="Tabela">
     <column name="id" phpName="Id" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
-    <column name="data" phpName="Data" type="DATE"/>
+    <column name="data" phpName="Data" type="VARCHAR" size="10"/>
     <column name="turno" phpName="Turno" type="VARCHAR" size="5" required="true"/>
     <column name="fisioterapeuta" phpName="Fisioterapeuta" type="VARCHAR" size="100"/>
     <column name="nome_paciente" phpName="NomePaciente" type="VARCHAR" size="43"/>
@@ -80,7 +59,7 @@
     <column name="modalidade" phpName="Modalidade" type="VARCHAR" size="20"/>
     <column name="outra_modalidade" phpName="OutraModalidade" type="VARCHAR" size="10"/>
     <column name="comparecimento" phpName="Comparecimento" type="VARCHAR" size="3"/>
-    <column name="tipo_falta" phpName="TipoFalta" type="VARCHAR" size="40"/>
+    <column name="tipo_falta" phpName="TipoFalta" type="VARCHAR" size="40" required="true"/>
     <column name="procedimento_1" phpName="Procedimento1" type="VARCHAR" size="50"/>
     <column name="procedimento_2" phpName="Procedimento2" type="VARCHAR" size="50"/>
     <column name="procedimento_3" phpName="Procedimento3" type="VARCHAR" size="50"/>
