@@ -12,7 +12,7 @@ propel:
         schemaDir: /var/www/html/config
 
         # The directory where Propel should output generated object model classes.
-        phpDir: /var/www/html/api/Models
+        phpDir: /var/www/html/api
 
 #   database:
 #       connections:
