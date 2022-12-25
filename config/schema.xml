@@ -33,7 +33,7 @@
   </table>
   <table name="registros" idMethod="native" phpName="Registro">
     <column name="id" phpName="Id" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
-    <column name="paciente" phpName="Paciente" type="VARCHAR" size="150"/>
+    <column name="paciente" phpName="PacienteDeprecated" type="VARCHAR" size="150"/>
     <column name="procedimentos" phpName="Procedimentos" type="LONGVARCHAR"/>
     <column name="fisioterapeuta_id" phpName="FisioterapeutaId" type="INTEGER"/>
     <column name="paciente_id" phpName="PacienteId" type="INTEGER"/>
