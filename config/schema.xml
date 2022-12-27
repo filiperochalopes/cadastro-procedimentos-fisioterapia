@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<database name="default" defaultIdMethod="native" namespace="\Models" defaultPhpNamingMethod="underscore">
+<database name="default" defaultIdMethod="native" namespace="\Api\Models" defaultPhpNamingMethod="underscore">
   <table name="fisioterapeutas" idMethod="native" phpName="Fisioterapeuta">
     <column name="id" phpName="Id" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
     <column name="nome" phpName="Nome" type="VARCHAR" size="150" required="true"/>

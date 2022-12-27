@@ -1,15 +1,15 @@
 <?php
 
-namespace Models\Base;
+namespace Api\Models\Base;
 
 use \Exception;
 use \PDO;
-use Models\Fisioterapeuta as ChildFisioterapeuta;
-use Models\FisioterapeutaQuery as ChildFisioterapeutaQuery;
-use Models\Registro as ChildRegistro;
-use Models\RegistroQuery as ChildRegistroQuery;
-use Models\Map\FisioterapeutaTableMap;
-use Models\Map\RegistroTableMap;
+use Api\Models\Fisioterapeuta as ChildFisioterapeuta;
+use Api\Models\FisioterapeutaQuery as ChildFisioterapeutaQuery;
+use Api\Models\Registro as ChildRegistro;
+use Api\Models\RegistroQuery as ChildRegistroQuery;
+use Api\Models\Map\FisioterapeutaTableMap;
+use Api\Models\Map\RegistroTableMap;
 use Propel\Runtime\Propel;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\ActiveQuery\ModelCriteria;
@@ -28,7 +28,7 @@ use Propel\Runtime\Parser\AbstractParser;
  *
  *
  *
- * @package    propel.generator.Models.Base
+ * @package    propel.generator.Api.Models.Base
  */
 abstract class Fisioterapeuta implements ActiveRecordInterface
 {
@@ -37,7 +37,7 @@ abstract class Fisioterapeuta implements ActiveRecordInterface
      *
      * @var string
      */
-    public const TABLE_MAP = '\\Models\\Map\\FisioterapeutaTableMap';
+    public const TABLE_MAP = '\\Api\\Models\\Map\\FisioterapeutaTableMap';
 
 
     /**
@@ -103,7 +103,7 @@ abstract class Fisioterapeuta implements ActiveRecordInterface
     protected $registrosScheduledForDeletion = null;
 
     /**
-     * Initializes internal state of Models\Base\Fisioterapeuta object.
+     * Initializes internal state of Api\Models\Base\Fisioterapeuta object.
      */
     public function __construct()
     {
@@ -440,7 +440,7 @@ abstract class Fisioterapeuta implements ActiveRecordInterface
             return $startcol + 2; // 2 = FisioterapeutaTableMap::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
-            throw new PropelException(sprintf('Error populating %s object', '\\Models\\Fisioterapeuta'), 0, $e);
+            throw new PropelException(sprintf('Error populating %s object', '\\Api\\Models\\Fisioterapeuta'), 0, $e);
         }
     }
 
@@ -1005,7 +1005,7 @@ abstract class Fisioterapeuta implements ActiveRecordInterface
      * If desired, this method can also make copies of all associated (fkey referrers)
      * objects.
      *
-     * @param object $copyObj An object of \Models\Fisioterapeuta (or compatible) type.
+     * @param object $copyObj An object of \Api\Models\Fisioterapeuta (or compatible) type.
      * @param bool $deepCopy Whether to also copy all rows that refer (by fkey) to the current row.
      * @param bool $makeNew Whether to reset autoincrement PKs and make the object new.
      * @throws \Propel\Runtime\Exception\PropelException
@@ -1043,7 +1043,7 @@ abstract class Fisioterapeuta implements ActiveRecordInterface
      * objects.
      *
      * @param bool $deepCopy Whether to also copy all rows that refer (by fkey) to the current row.
-     * @return \Models\Fisioterapeuta Clone of current object.
+     * @return \Api\Models\Fisioterapeuta Clone of current object.
      * @throws \Propel\Runtime\Exception\PropelException
      */
     public function copy(bool $deepCopy = false)
@@ -1120,7 +1120,7 @@ abstract class Fisioterapeuta implements ActiveRecordInterface
         $collectionClassName = RegistroTableMap::getTableMap()->getCollectionClassName();
 
         $this->collRegistros = new $collectionClassName;
-        $this->collRegistros->setModel('\Models\Registro');
+        $this->collRegistros->setModel('\Api\Models\Registro');
     }
 
     /**
@@ -1150,7 +1150,7 @@ abstract class Fisioterapeuta implements ActiveRecordInterface
                     $collectionClassName = RegistroTableMap::getTableMap()->getCollectionClassName();
 
                     $collRegistros = new $collectionClassName;
-                    $collRegistros->setModel('\Models\Registro');
+                    $collRegistros->setModel('\Api\Models\Registro');
 
                     return $collRegistros;
                 }

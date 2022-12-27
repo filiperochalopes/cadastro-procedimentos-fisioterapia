@@ -1,8 +1,8 @@
 <?php
 
-namespace Models;
+namespace Api\Models;
 
-use Models\Base\Procedimento as BaseProcedimento;
+use \Api\Models\Base\Procedimento as BaseProcedimento;
 
 /**
  * Skeleton subclass for representing a row from the 'procedimentos' table.

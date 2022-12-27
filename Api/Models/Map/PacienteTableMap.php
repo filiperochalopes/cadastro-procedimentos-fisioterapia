@@ -1,9 +1,9 @@
 <?php
 
-namespace Models\Map;
+namespace Api\Models\Map;
 
-use Models\Paciente;
-use Models\PacienteQuery;
+use Api\Models\Paciente;
+use Api\Models\PacienteQuery;
 use Propel\Runtime\Propel;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\ActiveQuery\InstancePoolTrait;
@@ -33,7 +33,7 @@ class PacienteTableMap extends TableMap
     /**
      * The (dot-path) name of this class
      */
-    public const CLASS_NAME = 'Models.Map.PacienteTableMap';
+    public const CLASS_NAME = 'Api.Models.Map.PacienteTableMap';
 
     /**
      * The default database name for this class
@@ -48,12 +48,12 @@ class PacienteTableMap extends TableMap
     /**
      * The related Propel class for this table
      */
-    public const OM_CLASS = '\\Models\\Paciente';
+    public const OM_CLASS = '\\Api\\Models\\Paciente';
 
     /**
      * A class that can be returned by this tableMap
      */
-    public const CLASS_DEFAULT = 'Models.Paciente';
+    public const CLASS_DEFAULT = 'Api.Models.Paciente';
 
     /**
      * The total number of columns
@@ -280,8 +280,8 @@ class PacienteTableMap extends TableMap
         $this->setName('pacientes');
         $this->setPhpName('Paciente');
         $this->setIdentifierQuoting(false);
-        $this->setClassName('\\Models\\Paciente');
-        $this->setPackage('Models');
+        $this->setClassName('\\Api\\Models\\Paciente');
+        $this->setPackage('Api.Models');
         $this->setUseIdGenerator(true);
         // columns
         $this->addPrimaryKey('id', 'Id', 'INTEGER', true, null, null);
@@ -305,7 +305,7 @@ class PacienteTableMap extends TableMap
      */
     public function buildRelations(): void
     {
-        $this->addRelation('Registro', '\\Models\\Registro', RelationMap::ONE_TO_MANY, array (
+        $this->addRelation('Registro', '\\Api\\Models\\Registro', RelationMap::ONE_TO_MANY, array (
   0 =>
   array (
     0 => ':paciente_id',
@@ -559,7 +559,7 @@ class PacienteTableMap extends TableMap
         if ($values instanceof Criteria) {
             // rename for clarity
             $criteria = $values;
-        } elseif ($values instanceof \Models\Paciente) { // it's a model object
+        } elseif ($values instanceof \Api\Models\Paciente) { // it's a model object
             // create criteria based on pk values
             $criteria = $values->buildPkeyCriteria();
         } else { // it's a primary key, or an array of pks

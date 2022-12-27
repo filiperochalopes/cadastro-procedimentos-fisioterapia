@@ -1,12 +1,12 @@
 <?php
 
-namespace Models\Base;
+namespace Api\Models\Base;
 
 use \Exception;
 use \PDO;
-use Models\Tabela as ChildTabela;
-use Models\TabelaQuery as ChildTabelaQuery;
-use Models\Map\TabelaTableMap;
+use Api\Models\Tabela as ChildTabela;
+use Api\Models\TabelaQuery as ChildTabelaQuery;
+use Api\Models\Map\TabelaTableMap;
 use Propel\Runtime\Propel;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\ActiveQuery\ModelCriteria;
@@ -282,13 +282,13 @@ abstract class TabelaQuery extends ModelCriteria
     protected $entityNotFoundExceptionClass = '\\Propel\\Runtime\\Exception\\EntityNotFoundException';
 
     /**
-     * Initializes internal state of \Models\Base\TabelaQuery object.
+     * Initializes internal state of \Api\Models\Base\TabelaQuery object.
      *
      * @param string $dbName The database name
      * @param string $modelName The phpName of a model, e.g. 'Book'
      * @param string $modelAlias The alias for the model in this query, e.g. 'b'
      */
-    public function __construct($dbName = 'default', $modelName = '\\Models\\Tabela', $modelAlias = null)
+    public function __construct($dbName = 'default', $modelName = '\\Api\\Models\\Tabela', $modelAlias = null)
     {
         parent::__construct($dbName, $modelName, $modelAlias);
     }

@@ -1,22 +1,22 @@
 <?php
 
-namespace Models\Base;
+namespace Api\Models\Base;
 
 use \DateTime;
 use \Exception;
 use \PDO;
-use Models\Fisioterapeuta as ChildFisioterapeuta;
-use Models\FisioterapeutaQuery as ChildFisioterapeutaQuery;
-use Models\Paciente as ChildPaciente;
-use Models\PacienteQuery as ChildPacienteQuery;
-use Models\Procedimento as ChildProcedimento;
-use Models\ProcedimentoQuery as ChildProcedimentoQuery;
-use Models\Registro as ChildRegistro;
-use Models\RegistroProcedimento as ChildRegistroProcedimento;
-use Models\RegistroProcedimentoQuery as ChildRegistroProcedimentoQuery;
-use Models\RegistroQuery as ChildRegistroQuery;
-use Models\Map\RegistroProcedimentoTableMap;
-use Models\Map\RegistroTableMap;
+use Api\Models\Fisioterapeuta as ChildFisioterapeuta;
+use Api\Models\FisioterapeutaQuery as ChildFisioterapeutaQuery;
+use Api\Models\Paciente as ChildPaciente;
+use Api\Models\PacienteQuery as ChildPacienteQuery;
+use Api\Models\Procedimento as ChildProcedimento;
+use Api\Models\ProcedimentoQuery as ChildProcedimentoQuery;
+use Api\Models\Registro as ChildRegistro;
+use Api\Models\RegistroProcedimento as ChildRegistroProcedimento;
+use Api\Models\RegistroProcedimentoQuery as ChildRegistroProcedimentoQuery;
+use Api\Models\RegistroQuery as ChildRegistroQuery;
+use Api\Models\Map\RegistroProcedimentoTableMap;
+use Api\Models\Map\RegistroTableMap;
 use Propel\Runtime\Propel;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\ActiveQuery\ModelCriteria;
@@ -36,7 +36,7 @@ use Propel\Runtime\Util\PropelDateTime;
  *
  *
  *
- * @package    propel.generator.Models.Base
+ * @package    propel.generator.Api.Models.Base
  */
 abstract class Registro implements ActiveRecordInterface
 {
@@ -45,7 +45,7 @@ abstract class Registro implements ActiveRecordInterface
      *
      * @var string
      */
-    public const TABLE_MAP = '\\Models\\Map\\RegistroTableMap';
+    public const TABLE_MAP = '\\Api\\Models\\Map\\RegistroTableMap';
 
 
     /**
@@ -195,7 +195,7 @@ abstract class Registro implements ActiveRecordInterface
     protected $registroProcedimentosScheduledForDeletion = null;
 
     /**
-     * Initializes internal state of Models\Base\Registro object.
+     * Initializes internal state of Api\Models\Base\Registro object.
      */
     public function __construct()
     {
@@ -819,7 +819,7 @@ abstract class Registro implements ActiveRecordInterface
             return $startcol + 10; // 10 = RegistroTableMap::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
-            throw new PropelException(sprintf('Error populating %s object', '\\Models\\Registro'), 0, $e);
+            throw new PropelException(sprintf('Error populating %s object', '\\Api\\Models\\Registro'), 0, $e);
         }
     }
 
@@ -1033,7 +1033,7 @@ abstract class Registro implements ActiveRecordInterface
                         $pks[] = $entryPk;
                     }
 
-                    \Models\RegistroProcedimentoQuery::create()
+                    \Api\Models\RegistroProcedimentoQuery::create()
                         ->filterByPrimaryKeys($pks)
                         ->delete($con);
 
@@ -1053,7 +1053,7 @@ abstract class Registro implements ActiveRecordInterface
 
             if ($this->registroProcedimentosScheduledForDeletion !== null) {
                 if (!$this->registroProcedimentosScheduledForDeletion->isEmpty()) {
-                    \Models\RegistroProcedimentoQuery::create()
+                    \Api\Models\RegistroProcedimentoQuery::create()
                         ->filterByPrimaryKeys($this->registroProcedimentosScheduledForDeletion->getPrimaryKeys(false))
                         ->delete($con);
                     $this->registroProcedimentosScheduledForDeletion = null;
@@ -1626,7 +1626,7 @@ abstract class Registro implements ActiveRecordInterface
      * If desired, this method can also make copies of all associated (fkey referrers)
      * objects.
      *
-     * @param object $copyObj An object of \Models\Registro (or compatible) type.
+     * @param object $copyObj An object of \Api\Models\Registro (or compatible) type.
      * @param bool $deepCopy Whether to also copy all rows that refer (by fkey) to the current row.
      * @param bool $makeNew Whether to reset autoincrement PKs and make the object new.
      * @throws \Propel\Runtime\Exception\PropelException
@@ -1672,7 +1672,7 @@ abstract class Registro implements ActiveRecordInterface
      * objects.
      *
      * @param bool $deepCopy Whether to also copy all rows that refer (by fkey) to the current row.
-     * @return \Models\Registro Clone of current object.
+     * @return \Api\Models\Registro Clone of current object.
      * @throws \Propel\Runtime\Exception\PropelException
      */
     public function copy(bool $deepCopy = false)
@@ -1851,7 +1851,7 @@ abstract class Registro implements ActiveRecordInterface
         $collectionClassName = RegistroProcedimentoTableMap::getTableMap()->getCollectionClassName();
 
         $this->collRegistroProcedimentos = new $collectionClassName;
-        $this->collRegistroProcedimentos->setModel('\Models\RegistroProcedimento');
+        $this->collRegistroProcedimentos->setModel('\Api\Models\RegistroProcedimento');
     }
 
     /**
@@ -1881,7 +1881,7 @@ abstract class Registro implements ActiveRecordInterface
                     $collectionClassName = RegistroProcedimentoTableMap::getTableMap()->getCollectionClassName();
 
                     $collRegistroProcedimentos = new $collectionClassName;
-                    $collRegistroProcedimentos->setModel('\Models\RegistroProcedimento');
+                    $collRegistroProcedimentos->setModel('\Api\Models\RegistroProcedimento');
 
                     return $collRegistroProcedimentos;
                 }
@@ -2101,7 +2101,7 @@ abstract class Registro implements ActiveRecordInterface
 
         $this->collProcedimentos = new $collectionClassName;
         $this->collProcedimentosPartial = true;
-        $this->collProcedimentos->setModel('\Models\Procedimento');
+        $this->collProcedimentos->setModel('\Api\Models\Procedimento');
     }
 
     /**

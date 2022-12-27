@@ -1,8 +1,8 @@
 <?php
 
-namespace Models;
+namespace Api\Models;
 
-use Models\Base\Fisioterapeuta as BaseFisioterapeuta;
+use \Api\Models\Base\Fisioterapeuta as BaseFisioterapeuta;
 
 /**
  * Skeleton subclass for representing a row from the 'fisioterapeutas' table.

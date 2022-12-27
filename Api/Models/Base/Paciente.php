@@ -1,15 +1,15 @@
 <?php
 
-namespace Models\Base;
+namespace Api\Models\Base;
 
 use \Exception;
 use \PDO;
-use Models\Paciente as ChildPaciente;
-use Models\PacienteQuery as ChildPacienteQuery;
-use Models\Registro as ChildRegistro;
-use Models\RegistroQuery as ChildRegistroQuery;
-use Models\Map\PacienteTableMap;
-use Models\Map\RegistroTableMap;
+use Api\Models\Paciente as ChildPaciente;
+use Api\Models\PacienteQuery as ChildPacienteQuery;
+use Api\Models\Registro as ChildRegistro;
+use Api\Models\RegistroQuery as ChildRegistroQuery;
+use Api\Models\Map\PacienteTableMap;
+use Api\Models\Map\RegistroTableMap;
 use Propel\Runtime\Propel;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\ActiveQuery\ModelCriteria;
@@ -28,7 +28,7 @@ use Propel\Runtime\Parser\AbstractParser;
  *
  *
  *
- * @package    propel.generator.Models.Base
+ * @package    propel.generator.Api.Models.Base
  */
 abstract class Paciente implements ActiveRecordInterface
 {
@@ -37,7 +37,7 @@ abstract class Paciente implements ActiveRecordInterface
      *
      * @var string
      */
-    public const TABLE_MAP = '\\Models\\Map\\PacienteTableMap';
+    public const TABLE_MAP = '\\Api\\Models\\Map\\PacienteTableMap';
 
 
     /**
@@ -173,7 +173,7 @@ abstract class Paciente implements ActiveRecordInterface
     protected $registrosScheduledForDeletion = null;
 
     /**
-     * Initializes internal state of Models\Base\Paciente object.
+     * Initializes internal state of Api\Models\Base\Paciente object.
      */
     public function __construct()
     {
@@ -858,7 +858,7 @@ abstract class Paciente implements ActiveRecordInterface
             return $startcol + 12; // 12 = PacienteTableMap::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
-            throw new PropelException(sprintf('Error populating %s object', '\\Models\\Paciente'), 0, $e);
+            throw new PropelException(sprintf('Error populating %s object', '\\Api\\Models\\Paciente'), 0, $e);
         }
     }
 
@@ -1613,7 +1613,7 @@ abstract class Paciente implements ActiveRecordInterface
      * If desired, this method can also make copies of all associated (fkey referrers)
      * objects.
      *
-     * @param object $copyObj An object of \Models\Paciente (or compatible) type.
+     * @param object $copyObj An object of \Api\Models\Paciente (or compatible) type.
      * @param bool $deepCopy Whether to also copy all rows that refer (by fkey) to the current row.
      * @param bool $makeNew Whether to reset autoincrement PKs and make the object new.
      * @throws \Propel\Runtime\Exception\PropelException
@@ -1661,7 +1661,7 @@ abstract class Paciente implements ActiveRecordInterface
      * objects.
      *
      * @param bool $deepCopy Whether to also copy all rows that refer (by fkey) to the current row.
-     * @return \Models\Paciente Clone of current object.
+     * @return \Api\Models\Paciente Clone of current object.
      * @throws \Propel\Runtime\Exception\PropelException
      */
     public function copy(bool $deepCopy = false)
@@ -1738,7 +1738,7 @@ abstract class Paciente implements ActiveRecordInterface
         $collectionClassName = RegistroTableMap::getTableMap()->getCollectionClassName();
 
         $this->collRegistros = new $collectionClassName;
-        $this->collRegistros->setModel('\Models\Registro');
+        $this->collRegistros->setModel('\Api\Models\Registro');
     }
 
     /**
@@ -1768,7 +1768,7 @@ abstract class Paciente implements ActiveRecordInterface
                     $collectionClassName = RegistroTableMap::getTableMap()->getCollectionClassName();
 
                     $collRegistros = new $collectionClassName;
-                    $collRegistros->setModel('\Models\Registro');
+                    $collRegistros->setModel('\Api\Models\Registro');
 
                     return $collRegistros;
                 }

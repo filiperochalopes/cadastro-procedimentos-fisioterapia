@@ -1,8 +1,8 @@
 <?php
 
-namespace Models;
+namespace Api\Models;
 
-use Models\Base\PacienteQuery as BasePacienteQuery;
+use \Api\Models\Base\PacienteQuery as BasePacienteQuery;
 
 /**
  * Skeleton subclass for performing query and update operations on the 'pacientes' table.

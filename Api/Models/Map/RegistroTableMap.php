@@ -1,9 +1,9 @@
 <?php
 
-namespace Models\Map;
+namespace Api\Models\Map;
 
-use Models\Registro;
-use Models\RegistroQuery;
+use Api\Models\Registro;
+use Api\Models\RegistroQuery;
 use Propel\Runtime\Propel;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\ActiveQuery\InstancePoolTrait;
@@ -33,7 +33,7 @@ class RegistroTableMap extends TableMap
     /**
      * The (dot-path) name of this class
      */
-    public const CLASS_NAME = 'Models.Map.RegistroTableMap';
+    public const CLASS_NAME = 'Api.Models.Map.RegistroTableMap';
 
     /**
      * The default database name for this class
@@ -48,12 +48,12 @@ class RegistroTableMap extends TableMap
     /**
      * The related Propel class for this table
      */
-    public const OM_CLASS = '\\Models\\Registro';
+    public const OM_CLASS = '\\Api\\Models\\Registro';
 
     /**
      * A class that can be returned by this tableMap
      */
-    public const CLASS_DEFAULT = 'Models.Registro';
+    public const CLASS_DEFAULT = 'Api.Models.Registro';
 
     /**
      * The total number of columns
@@ -253,8 +253,8 @@ class RegistroTableMap extends TableMap
         $this->setName('registros');
         $this->setPhpName('Registro');
         $this->setIdentifierQuoting(false);
-        $this->setClassName('\\Models\\Registro');
-        $this->setPackage('Models');
+        $this->setClassName('\\Api\\Models\\Registro');
+        $this->setPackage('Api.Models');
         $this->setUseIdGenerator(true);
         // columns
         $this->addPrimaryKey('id', 'Id', 'INTEGER', true, null, null);
@@ -276,28 +276,28 @@ class RegistroTableMap extends TableMap
      */
     public function buildRelations(): void
     {
-        $this->addRelation('Fisioterapeuta', '\\Models\\Fisioterapeuta', RelationMap::MANY_TO_ONE, array (
+        $this->addRelation('Fisioterapeuta', '\\Api\\Models\\Fisioterapeuta', RelationMap::MANY_TO_ONE, array (
   0 =>
   array (
     0 => ':fisioterapeuta_id',
     1 => ':id',
   ),
 ), null, null, null, false);
-        $this->addRelation('Paciente', '\\Models\\Paciente', RelationMap::MANY_TO_ONE, array (
+        $this->addRelation('Paciente', '\\Api\\Models\\Paciente', RelationMap::MANY_TO_ONE, array (
   0 =>
   array (
     0 => ':paciente_id',
     1 => ':id',
   ),
 ), null, null, null, false);
-        $this->addRelation('RegistroProcedimento', '\\Models\\RegistroProcedimento', RelationMap::ONE_TO_MANY, array (
+        $this->addRelation('RegistroProcedimento', '\\Api\\Models\\RegistroProcedimento', RelationMap::ONE_TO_MANY, array (
   0 =>
   array (
     0 => ':registro_id',
     1 => ':id',
   ),
 ), null, null, 'RegistroProcedimentos', false);
-        $this->addRelation('Procedimento', '\\Models\\Procedimento', RelationMap::MANY_TO_MANY, array(), null, null, 'Procedimentos');
+        $this->addRelation('Procedimento', '\\Api\\Models\\Procedimento', RelationMap::MANY_TO_MANY, array(), null, null, 'Procedimentos');
     }
 
     /**
@@ -537,7 +537,7 @@ class RegistroTableMap extends TableMap
         if ($values instanceof Criteria) {
             // rename for clarity
             $criteria = $values;
-        } elseif ($values instanceof \Models\Registro) { // it's a model object
+        } elseif ($values instanceof \Api\Models\Registro) { // it's a model object
             // create criteria based on pk values
             $criteria = $values->buildPkeyCriteria();
         } else { // it's a primary key, or an array of pks

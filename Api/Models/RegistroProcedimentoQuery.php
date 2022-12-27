@@ -1,8 +1,8 @@
 <?php
 
-namespace Models;
+namespace Api\Models;
 
-use Models\Base\RegistroProcedimentoQuery as BaseRegistroProcedimentoQuery;
+use \Api\Models\Base\RegistroProcedimentoQuery as BaseRegistroProcedimentoQuery;
 
 /**
  * Skeleton subclass for performing query and update operations on the 'registro_procedimento' table.

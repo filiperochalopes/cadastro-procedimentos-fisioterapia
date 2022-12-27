@@ -1,17 +1,17 @@
 <?php
 
-namespace Models\Base;
+namespace Api\Models\Base;
 
 use \Exception;
 use \PDO;
-use Models\Procedimento as ChildProcedimento;
-use Models\ProcedimentoQuery as ChildProcedimentoQuery;
-use Models\Registro as ChildRegistro;
-use Models\RegistroProcedimento as ChildRegistroProcedimento;
-use Models\RegistroProcedimentoQuery as ChildRegistroProcedimentoQuery;
-use Models\RegistroQuery as ChildRegistroQuery;
-use Models\Map\ProcedimentoTableMap;
-use Models\Map\RegistroProcedimentoTableMap;
+use Api\Models\Procedimento as ChildProcedimento;
+use Api\Models\ProcedimentoQuery as ChildProcedimentoQuery;
+use Api\Models\Registro as ChildRegistro;
+use Api\Models\RegistroProcedimento as ChildRegistroProcedimento;
+use Api\Models\RegistroProcedimentoQuery as ChildRegistroProcedimentoQuery;
+use Api\Models\RegistroQuery as ChildRegistroQuery;
+use Api\Models\Map\ProcedimentoTableMap;
+use Api\Models\Map\RegistroProcedimentoTableMap;
 use Propel\Runtime\Propel;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\ActiveQuery\ModelCriteria;
@@ -30,7 +30,7 @@ use Propel\Runtime\Parser\AbstractParser;
  *
  *
  *
- * @package    propel.generator.Models.Base
+ * @package    propel.generator.Api.Models.Base
  */
 abstract class Procedimento implements ActiveRecordInterface
 {
@@ -39,7 +39,7 @@ abstract class Procedimento implements ActiveRecordInterface
      *
      * @var string
      */
-    public const TABLE_MAP = '\\Models\\Map\\ProcedimentoTableMap';
+    public const TABLE_MAP = '\\Api\\Models\\Map\\ProcedimentoTableMap';
 
 
     /**
@@ -123,7 +123,7 @@ abstract class Procedimento implements ActiveRecordInterface
     protected $registroProcedimentosScheduledForDeletion = null;
 
     /**
-     * Initializes internal state of Models\Base\Procedimento object.
+     * Initializes internal state of Api\Models\Base\Procedimento object.
      */
     public function __construct()
     {
@@ -460,7 +460,7 @@ abstract class Procedimento implements ActiveRecordInterface
             return $startcol + 2; // 2 = ProcedimentoTableMap::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
-            throw new PropelException(sprintf('Error populating %s object', '\\Models\\Procedimento'), 0, $e);
+            throw new PropelException(sprintf('Error populating %s object', '\\Api\\Models\\Procedimento'), 0, $e);
         }
     }
 
@@ -647,7 +647,7 @@ abstract class Procedimento implements ActiveRecordInterface
                         $pks[] = $entryPk;
                     }
 
-                    \Models\RegistroProcedimentoQuery::create()
+                    \Api\Models\RegistroProcedimentoQuery::create()
                         ->filterByPrimaryKeys($pks)
                         ->delete($con);
 
@@ -667,7 +667,7 @@ abstract class Procedimento implements ActiveRecordInterface
 
             if ($this->registroProcedimentosScheduledForDeletion !== null) {
                 if (!$this->registroProcedimentosScheduledForDeletion->isEmpty()) {
-                    \Models\RegistroProcedimentoQuery::create()
+                    \Api\Models\RegistroProcedimentoQuery::create()
                         ->filterByPrimaryKeys($this->registroProcedimentosScheduledForDeletion->getPrimaryKeys(false))
                         ->delete($con);
                     $this->registroProcedimentosScheduledForDeletion = null;
@@ -1054,7 +1054,7 @@ abstract class Procedimento implements ActiveRecordInterface
      * If desired, this method can also make copies of all associated (fkey referrers)
      * objects.
      *
-     * @param object $copyObj An object of \Models\Procedimento (or compatible) type.
+     * @param object $copyObj An object of \Api\Models\Procedimento (or compatible) type.
      * @param bool $deepCopy Whether to also copy all rows that refer (by fkey) to the current row.
      * @param bool $makeNew Whether to reset autoincrement PKs and make the object new.
      * @throws \Propel\Runtime\Exception\PropelException
@@ -1092,7 +1092,7 @@ abstract class Procedimento implements ActiveRecordInterface
      * objects.
      *
      * @param bool $deepCopy Whether to also copy all rows that refer (by fkey) to the current row.
-     * @return \Models\Procedimento Clone of current object.
+     * @return \Api\Models\Procedimento Clone of current object.
      * @throws \Propel\Runtime\Exception\PropelException
      */
     public function copy(bool $deepCopy = false)
@@ -1169,7 +1169,7 @@ abstract class Procedimento implements ActiveRecordInterface
         $collectionClassName = RegistroProcedimentoTableMap::getTableMap()->getCollectionClassName();
 
         $this->collRegistroProcedimentos = new $collectionClassName;
-        $this->collRegistroProcedimentos->setModel('\Models\RegistroProcedimento');
+        $this->collRegistroProcedimentos->setModel('\Api\Models\RegistroProcedimento');
     }
 
     /**
@@ -1199,7 +1199,7 @@ abstract class Procedimento implements ActiveRecordInterface
                     $collectionClassName = RegistroProcedimentoTableMap::getTableMap()->getCollectionClassName();
 
                     $collRegistroProcedimentos = new $collectionClassName;
-                    $collRegistroProcedimentos->setModel('\Models\RegistroProcedimento');
+                    $collRegistroProcedimentos->setModel('\Api\Models\RegistroProcedimento');
 
                     return $collRegistroProcedimentos;
                 }
@@ -1419,7 +1419,7 @@ abstract class Procedimento implements ActiveRecordInterface
 
         $this->collRegistros = new $collectionClassName;
         $this->collRegistrosPartial = true;
-        $this->collRegistros->setModel('\Models\Registro');
+        $this->collRegistros->setModel('\Api\Models\Registro');
     }
 
     /**

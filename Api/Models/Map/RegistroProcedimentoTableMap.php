@@ -1,9 +1,9 @@
 <?php
 
-namespace Models\Map;
+namespace Api\Models\Map;
 
-use Models\RegistroProcedimento;
-use Models\RegistroProcedimentoQuery;
+use Api\Models\RegistroProcedimento;
+use Api\Models\RegistroProcedimentoQuery;
 use Propel\Runtime\Propel;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\ActiveQuery\InstancePoolTrait;
@@ -33,7 +33,7 @@ class RegistroProcedimentoTableMap extends TableMap
     /**
      * The (dot-path) name of this class
      */
-    public const CLASS_NAME = 'Models.Map.RegistroProcedimentoTableMap';
+    public const CLASS_NAME = 'Api.Models.Map.RegistroProcedimentoTableMap';
 
     /**
      * The default database name for this class
@@ -48,12 +48,12 @@ class RegistroProcedimentoTableMap extends TableMap
     /**
      * The related Propel class for this table
      */
-    public const OM_CLASS = '\\Models\\RegistroProcedimento';
+    public const OM_CLASS = '\\Api\\Models\\RegistroProcedimento';
 
     /**
      * A class that can be returned by this tableMap
      */
-    public const CLASS_DEFAULT = 'Models.RegistroProcedimento';
+    public const CLASS_DEFAULT = 'Api.Models.RegistroProcedimento';
 
     /**
      * The total number of columns
@@ -154,8 +154,8 @@ class RegistroProcedimentoTableMap extends TableMap
         $this->setName('registro_procedimento');
         $this->setPhpName('RegistroProcedimento');
         $this->setIdentifierQuoting(false);
-        $this->setClassName('\\Models\\RegistroProcedimento');
-        $this->setPackage('Models');
+        $this->setClassName('\\Api\\Models\\RegistroProcedimento');
+        $this->setPackage('Api.Models');
         $this->setUseIdGenerator(false);
         $this->setIsCrossRef(true);
         // columns
@@ -170,14 +170,14 @@ class RegistroProcedimentoTableMap extends TableMap
      */
     public function buildRelations(): void
     {
-        $this->addRelation('Registro', '\\Models\\Registro', RelationMap::MANY_TO_ONE, array (
+        $this->addRelation('Registro', '\\Api\\Models\\Registro', RelationMap::MANY_TO_ONE, array (
   0 =>
   array (
     0 => ':registro_id',
     1 => ':id',
   ),
 ), null, null, null, false);
-        $this->addRelation('Procedimento', '\\Models\\Procedimento', RelationMap::MANY_TO_ONE, array (
+        $this->addRelation('Procedimento', '\\Api\\Models\\Procedimento', RelationMap::MANY_TO_ONE, array (
   0 =>
   array (
     0 => ':procedimento_id',
@@ -194,7 +194,7 @@ class RegistroProcedimentoTableMap extends TableMap
      * to the cache in order to ensure that the same objects are always returned by find*()
      * and findPk*() calls.
      *
-     * @param \Models\RegistroProcedimento $obj A \Models\RegistroProcedimento object.
+     * @param \Api\Models\RegistroProcedimento $obj A \Api\Models\RegistroProcedimento object.
      * @param string|null $key Key (optional) to use for instance map (for performance boost if key was already calculated externally).
      *
      * @return void
@@ -217,14 +217,14 @@ class RegistroProcedimentoTableMap extends TableMap
      * methods in your stub classes -- you may need to explicitly remove objects
      * from the cache in order to prevent returning objects that no longer exist.
      *
-     * @param mixed $value A \Models\RegistroProcedimento object or a primary key value.
+     * @param mixed $value A \Api\Models\RegistroProcedimento object or a primary key value.
      *
      * @return void
      */
     public static function removeInstanceFromPool($value): void
     {
         if (Propel::isInstancePoolingEnabled() && null !== $value) {
-            if (is_object($value) && $value instanceof \Models\RegistroProcedimento) {
+            if (is_object($value) && $value instanceof \Api\Models\RegistroProcedimento) {
                 $key = serialize([(null === $value->getRegistroId() || is_scalar($value->getRegistroId()) || is_callable([$value->getRegistroId(), '__toString']) ? (string) $value->getRegistroId() : $value->getRegistroId()), (null === $value->getProcedimentoId() || is_scalar($value->getProcedimentoId()) || is_callable([$value->getProcedimentoId(), '__toString']) ? (string) $value->getProcedimentoId() : $value->getProcedimentoId())]);
 
             } elseif (is_array($value) && count($value) === 2) {
@@ -235,7 +235,7 @@ class RegistroProcedimentoTableMap extends TableMap
 
                 return;
             } else {
-                $e = new PropelException("Invalid value passed to removeInstanceFromPool().  Expected primary key or \Models\RegistroProcedimento object; got " . (is_object($value) ? get_class($value) . ' object.' : var_export($value, true)));
+                $e = new PropelException("Invalid value passed to removeInstanceFromPool().  Expected primary key or \Api\Models\RegistroProcedimento object; got " . (is_object($value) ? get_class($value) . ' object.' : var_export($value, true)));
                 throw $e;
             }
 
@@ -457,7 +457,7 @@ class RegistroProcedimentoTableMap extends TableMap
         if ($values instanceof Criteria) {
             // rename for clarity
             $criteria = $values;
-        } elseif ($values instanceof \Models\RegistroProcedimento) { // it's a model object
+        } elseif ($values instanceof \Api\Models\RegistroProcedimento) { // it's a model object
             // create criteria based on pk values
             $criteria = $values->buildPkeyCriteria();
         } else { // it's a primary key, or an array of pks

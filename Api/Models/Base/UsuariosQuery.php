@@ -1,12 +1,12 @@
 <?php
 
-namespace Models\Base;
+namespace Api\Models\Base;
 
 use \Exception;
 use \PDO;
-use Models\Usuarios as ChildUsuarios;
-use Models\UsuariosQuery as ChildUsuariosQuery;
-use Models\Map\UsuariosTableMap;
+use Api\Models\Usuarios as ChildUsuarios;
+use Api\Models\UsuariosQuery as ChildUsuariosQuery;
+use Api\Models\Map\UsuariosTableMap;
 use Propel\Runtime\Propel;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\ActiveQuery\ModelCriteria;
@@ -66,13 +66,13 @@ abstract class UsuariosQuery extends ModelCriteria
     protected $entityNotFoundExceptionClass = '\\Propel\\Runtime\\Exception\\EntityNotFoundException';
 
     /**
-     * Initializes internal state of \Models\Base\UsuariosQuery object.
+     * Initializes internal state of \Api\Models\Base\UsuariosQuery object.
      *
      * @param string $dbName The database name
      * @param string $modelName The phpName of a model, e.g. 'Book'
      * @param string $modelAlias The alias for the model in this query, e.g. 'b'
      */
-    public function __construct($dbName = 'default', $modelName = '\\Models\\Usuarios', $modelAlias = null)
+    public function __construct($dbName = 'default', $modelName = '\\Api\\Models\\Usuarios', $modelAlias = null)
     {
         parent::__construct($dbName, $modelName, $modelAlias);
     }

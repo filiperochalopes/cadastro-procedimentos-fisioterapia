@@ -1,8 +1,8 @@
 <?php
 
-namespace Models;
+namespace Api\Models;
 
-use Models\Base\Registro as BaseRegistro;
+use \Api\Models\Base\Registro as BaseRegistro;
 
 /**
  * Skeleton subclass for representing a row from the 'registros' table.

@@ -1,9 +1,9 @@
 <?php
 
-namespace Models\Map;
+namespace Api\Models\Map;
 
-use Models\Tabela;
-use Models\TabelaQuery;
+use Api\Models\Tabela;
+use Api\Models\TabelaQuery;
 use Propel\Runtime\Propel;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\ActiveQuery\InstancePoolTrait;
@@ -33,7 +33,7 @@ class TabelaTableMap extends TableMap
     /**
      * The (dot-path) name of this class
      */
-    public const CLASS_NAME = 'Models.Map.TabelaTableMap';
+    public const CLASS_NAME = 'Api.Models.Map.TabelaTableMap';
 
     /**
      * The default database name for this class
@@ -48,12 +48,12 @@ class TabelaTableMap extends TableMap
     /**
      * The related Propel class for this table
      */
-    public const OM_CLASS = '\\Models\\Tabela';
+    public const OM_CLASS = '\\Api\\Models\\Tabela';
 
     /**
      * A class that can be returned by this tableMap
      */
-    public const CLASS_DEFAULT = 'Models.Tabela';
+    public const CLASS_DEFAULT = 'Api.Models.Tabela';
 
     /**
      * The total number of columns
@@ -619,8 +619,8 @@ class TabelaTableMap extends TableMap
         $this->setName('tabela');
         $this->setPhpName('Tabela');
         $this->setIdentifierQuoting(false);
-        $this->setClassName('\\Models\\Tabela');
-        $this->setPackage('Models');
+        $this->setClassName('\\Api\\Models\\Tabela');
+        $this->setPackage('Api.Models');
         $this->setUseIdGenerator(true);
         // columns
         $this->addPrimaryKey('id', 'Id', 'INTEGER', true, null, null);
@@ -1026,7 +1026,7 @@ class TabelaTableMap extends TableMap
         if ($values instanceof Criteria) {
             // rename for clarity
             $criteria = $values;
-        } elseif ($values instanceof \Models\Tabela) { // it's a model object
+        } elseif ($values instanceof \Api\Models\Tabela) { // it's a model object
             // create criteria based on pk values
             $criteria = $values->buildPkeyCriteria();
         } else { // it's a primary key, or an array of pks

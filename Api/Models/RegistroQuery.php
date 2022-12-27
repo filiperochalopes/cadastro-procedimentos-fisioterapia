@@ -1,8 +1,8 @@
 <?php
 
-namespace Models;
+namespace Api\Models;
 
-use Models\Base\RegistroQuery as BaseRegistroQuery;
+use \Api\Models\Base\RegistroQuery as BaseRegistroQuery;
 
 /**
  * Skeleton subclass for performing query and update operations on the 'registros' table.

@@ -1,15 +1,15 @@
 <?php
 
-namespace Models\Base;
+namespace Api\Models\Base;
 
 use \Exception;
 use \PDO;
-use Models\Procedimento as ChildProcedimento;
-use Models\ProcedimentoQuery as ChildProcedimentoQuery;
-use Models\Registro as ChildRegistro;
-use Models\RegistroProcedimentoQuery as ChildRegistroProcedimentoQuery;
-use Models\RegistroQuery as ChildRegistroQuery;
-use Models\Map\RegistroProcedimentoTableMap;
+use Api\Models\Procedimento as ChildProcedimento;
+use Api\Models\ProcedimentoQuery as ChildProcedimentoQuery;
+use Api\Models\Registro as ChildRegistro;
+use Api\Models\RegistroProcedimentoQuery as ChildRegistroProcedimentoQuery;
+use Api\Models\RegistroQuery as ChildRegistroQuery;
+use Api\Models\Map\RegistroProcedimentoTableMap;
 use Propel\Runtime\Propel;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\ActiveQuery\ModelCriteria;
@@ -27,7 +27,7 @@ use Propel\Runtime\Parser\AbstractParser;
  *
  *
  *
- * @package    propel.generator.Models.Base
+ * @package    propel.generator.Api.Models.Base
  */
 abstract class RegistroProcedimento implements ActiveRecordInterface
 {
@@ -36,7 +36,7 @@ abstract class RegistroProcedimento implements ActiveRecordInterface
      *
      * @var string
      */
-    public const TABLE_MAP = '\\Models\\Map\\RegistroProcedimentoTableMap';
+    public const TABLE_MAP = '\\Api\\Models\\Map\\RegistroProcedimentoTableMap';
 
 
     /**
@@ -98,7 +98,7 @@ abstract class RegistroProcedimento implements ActiveRecordInterface
     protected $alreadyInSave = false;
 
     /**
-     * Initializes internal state of Models\Base\RegistroProcedimento object.
+     * Initializes internal state of Api\Models\Base\RegistroProcedimento object.
      */
     public function __construct()
     {
@@ -443,7 +443,7 @@ abstract class RegistroProcedimento implements ActiveRecordInterface
             return $startcol + 2; // 2 = RegistroProcedimentoTableMap::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
-            throw new PropelException(sprintf('Error populating %s object', '\\Models\\RegistroProcedimento'), 0, $e);
+            throw new PropelException(sprintf('Error populating %s object', '\\Api\\Models\\RegistroProcedimento'), 0, $e);
         }
     }
 
@@ -1041,7 +1041,7 @@ abstract class RegistroProcedimento implements ActiveRecordInterface
      * If desired, this method can also make copies of all associated (fkey referrers)
      * objects.
      *
-     * @param object $copyObj An object of \Models\RegistroProcedimento (or compatible) type.
+     * @param object $copyObj An object of \Api\Models\RegistroProcedimento (or compatible) type.
      * @param bool $deepCopy Whether to also copy all rows that refer (by fkey) to the current row.
      * @param bool $makeNew Whether to reset autoincrement PKs and make the object new.
      * @throws \Propel\Runtime\Exception\PropelException
@@ -1065,7 +1065,7 @@ abstract class RegistroProcedimento implements ActiveRecordInterface
      * objects.
      *
      * @param bool $deepCopy Whether to also copy all rows that refer (by fkey) to the current row.
-     * @return \Models\RegistroProcedimento Clone of current object.
+     * @return \Api\Models\RegistroProcedimento Clone of current object.
      * @throws \Propel\Runtime\Exception\PropelException
      */
     public function copy(bool $deepCopy = false)

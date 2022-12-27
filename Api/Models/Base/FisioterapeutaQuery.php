@@ -1,12 +1,12 @@
 <?php
 
-namespace Models\Base;
+namespace Api\Models\Base;
 
 use \Exception;
 use \PDO;
-use Models\Fisioterapeuta as ChildFisioterapeuta;
-use Models\FisioterapeutaQuery as ChildFisioterapeutaQuery;
-use Models\Map\FisioterapeutaTableMap;
+use Api\Models\Fisioterapeuta as ChildFisioterapeuta;
+use Api\Models\FisioterapeutaQuery as ChildFisioterapeutaQuery;
+use Api\Models\Map\FisioterapeutaTableMap;
 use Propel\Runtime\Propel;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\ActiveQuery\ModelCriteria;
@@ -45,7 +45,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildFisioterapeutaQuery rightJoinWithRegistro() Adds a RIGHT JOIN clause and with to the query using the Registro relation
  * @method     ChildFisioterapeutaQuery innerJoinWithRegistro() Adds a INNER JOIN clause and with to the query using the Registro relation
  *
- * @method     \Models\RegistroQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
+ * @method     \Api\Models\RegistroQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
  *
  * @method     ChildFisioterapeuta|null findOne(?ConnectionInterface $con = null) Return the first ChildFisioterapeuta matching the query
  * @method     ChildFisioterapeuta findOneOrCreate(?ConnectionInterface $con = null) Return the first ChildFisioterapeuta matching the query, or a new ChildFisioterapeuta object populated from the query conditions when no match is found
@@ -74,13 +74,13 @@ abstract class FisioterapeutaQuery extends ModelCriteria
     protected $entityNotFoundExceptionClass = '\\Propel\\Runtime\\Exception\\EntityNotFoundException';
 
     /**
-     * Initializes internal state of \Models\Base\FisioterapeutaQuery object.
+     * Initializes internal state of \Api\Models\Base\FisioterapeutaQuery object.
      *
      * @param string $dbName The database name
      * @param string $modelName The phpName of a model, e.g. 'Book'
      * @param string $modelAlias The alias for the model in this query, e.g. 'b'
      */
-    public function __construct($dbName = 'default', $modelName = '\\Models\\Fisioterapeuta', $modelAlias = null)
+    public function __construct($dbName = 'default', $modelName = '\\Api\\Models\\Fisioterapeuta', $modelAlias = null)
     {
         parent::__construct($dbName, $modelName, $modelAlias);
     }
@@ -330,16 +330,16 @@ abstract class FisioterapeutaQuery extends ModelCriteria
     }
 
     /**
-     * Filter the query by a related \Models\Registro object
+     * Filter the query by a related \Api\Models\Registro object
      *
-     * @param \Models\Registro|ObjectCollection $registro the related object to use as filter
+     * @param \Api\Models\Registro|ObjectCollection $registro the related object to use as filter
      * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return $this The current query, for fluid interface
      */
     public function filterByRegistro($registro, ?string $comparison = null)
     {
-        if ($registro instanceof \Models\Registro) {
+        if ($registro instanceof \Api\Models\Registro) {
             $this
                 ->addUsingAlias(FisioterapeutaTableMap::COL_ID, $registro->getFisioterapeutaId(), $comparison);
 
@@ -352,7 +352,7 @@ abstract class FisioterapeutaQuery extends ModelCriteria
 
             return $this;
         } else {
-            throw new PropelException('filterByRegistro() only accepts arguments of type \Models\Registro or Collection');
+            throw new PropelException('filterByRegistro() only accepts arguments of type \Api\Models\Registro or Collection');
         }
     }
 
@@ -397,19 +397,19 @@ abstract class FisioterapeutaQuery extends ModelCriteria
      *                                   to be used as main alias in the secondary query
      * @param string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
      *
-     * @return \Models\RegistroQuery A secondary query class using the current class as primary query
+     * @return \Api\Models\RegistroQuery A secondary query class using the current class as primary query
      */
     public function useRegistroQuery($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
     {
         return $this
             ->joinRegistro($relationAlias, $joinType)
-            ->useQuery($relationAlias ? $relationAlias : 'Registro', '\Models\RegistroQuery');
+            ->useQuery($relationAlias ? $relationAlias : 'Registro', '\Api\Models\RegistroQuery');
     }
 
     /**
      * Use the Registro relation Registro object
      *
-     * @param callable(\Models\RegistroQuery):\Models\RegistroQuery $callable A function working on the related query
+     * @param callable(\Api\Models\RegistroQuery):\Api\Models\RegistroQuery $callable A function working on the related query
      *
      * @param string|null $relationAlias optional alias for the relation
      *
@@ -440,7 +440,7 @@ abstract class FisioterapeutaQuery extends ModelCriteria
      * @param string|null $modelAlias sets an alias for the nested query
      * @param string $typeOfExists Either ExistsCriterion::TYPE_EXISTS or ExistsCriterion::TYPE_NOT_EXISTS
      *
-     * @return \Models\RegistroQuery The inner query object of the EXISTS statement
+     * @return \Api\Models\RegistroQuery The inner query object of the EXISTS statement
      */
     public function useRegistroExistsQuery($modelAlias = null, $queryClass = null, $typeOfExists = 'EXISTS')
     {
@@ -455,7 +455,7 @@ abstract class FisioterapeutaQuery extends ModelCriteria
      * @param string|null $modelAlias sets an alias for the nested query
      * @param string|null $queryClass Allows to use a custom query class for the exists query, like ExtendedBookQuery::class
      *
-     * @return \Models\RegistroQuery The inner query object of the NOT EXISTS statement
+     * @return \Api\Models\RegistroQuery The inner query object of the NOT EXISTS statement
      */
     public function useRegistroNotExistsQuery($modelAlias = null, $queryClass = null)
     {

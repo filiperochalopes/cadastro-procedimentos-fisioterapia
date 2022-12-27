@@ -1,9 +1,9 @@
 <?php
 
-namespace Models\Map;
+namespace Api\Models\Map;
 
-use Models\Fisioterapeuta;
-use Models\FisioterapeutaQuery;
+use Api\Models\Fisioterapeuta;
+use Api\Models\FisioterapeutaQuery;
 use Propel\Runtime\Propel;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\ActiveQuery\InstancePoolTrait;
@@ -33,7 +33,7 @@ class FisioterapeutaTableMap extends TableMap
     /**
      * The (dot-path) name of this class
      */
-    public const CLASS_NAME = 'Models.Map.FisioterapeutaTableMap';
+    public const CLASS_NAME = 'Api.Models.Map.FisioterapeutaTableMap';
 
     /**
      * The default database name for this class
@@ -48,12 +48,12 @@ class FisioterapeutaTableMap extends TableMap
     /**
      * The related Propel class for this table
      */
-    public const OM_CLASS = '\\Models\\Fisioterapeuta';
+    public const OM_CLASS = '\\Api\\Models\\Fisioterapeuta';
 
     /**
      * A class that can be returned by this tableMap
      */
-    public const CLASS_DEFAULT = 'Models.Fisioterapeuta';
+    public const CLASS_DEFAULT = 'Api.Models.Fisioterapeuta';
 
     /**
      * The total number of columns
@@ -152,8 +152,8 @@ class FisioterapeutaTableMap extends TableMap
         $this->setName('fisioterapeutas');
         $this->setPhpName('Fisioterapeuta');
         $this->setIdentifierQuoting(false);
-        $this->setClassName('\\Models\\Fisioterapeuta');
-        $this->setPackage('Models');
+        $this->setClassName('\\Api\\Models\\Fisioterapeuta');
+        $this->setPackage('Api.Models');
         $this->setUseIdGenerator(true);
         // columns
         $this->addPrimaryKey('id', 'Id', 'INTEGER', true, null, null);
@@ -167,7 +167,7 @@ class FisioterapeutaTableMap extends TableMap
      */
     public function buildRelations(): void
     {
-        $this->addRelation('Registro', '\\Models\\Registro', RelationMap::ONE_TO_MANY, array (
+        $this->addRelation('Registro', '\\Api\\Models\\Registro', RelationMap::ONE_TO_MANY, array (
   0 =>
   array (
     0 => ':fisioterapeuta_id',
@@ -381,7 +381,7 @@ class FisioterapeutaTableMap extends TableMap
         if ($values instanceof Criteria) {
             // rename for clarity
             $criteria = $values;
-        } elseif ($values instanceof \Models\Fisioterapeuta) { // it's a model object
+        } elseif ($values instanceof \Api\Models\Fisioterapeuta) { // it's a model object
             // create criteria based on pk values
             $criteria = $values->buildPkeyCriteria();
         } else { // it's a primary key, or an array of pks

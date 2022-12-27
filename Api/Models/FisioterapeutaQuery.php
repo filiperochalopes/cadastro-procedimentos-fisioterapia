@@ -1,8 +1,8 @@
 <?php
 
-namespace Models;
+namespace Api\Models;
 
-use Models\Base\FisioterapeutaQuery as BaseFisioterapeutaQuery;
+use \Api\Models\Base\FisioterapeutaQuery as BaseFisioterapeutaQuery;
 
 /**
  * Skeleton subclass for performing query and update operations on the 'fisioterapeutas' table.

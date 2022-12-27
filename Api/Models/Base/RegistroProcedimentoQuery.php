@@ -1,12 +1,12 @@
 <?php
 
-namespace Models\Base;
+namespace Api\Models\Base;
 
 use \Exception;
 use \PDO;
-use Models\RegistroProcedimento as ChildRegistroProcedimento;
-use Models\RegistroProcedimentoQuery as ChildRegistroProcedimentoQuery;
-use Models\Map\RegistroProcedimentoTableMap;
+use Api\Models\RegistroProcedimento as ChildRegistroProcedimento;
+use Api\Models\RegistroProcedimentoQuery as ChildRegistroProcedimentoQuery;
+use Api\Models\Map\RegistroProcedimentoTableMap;
 use Propel\Runtime\Propel;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\ActiveQuery\ModelCriteria;
@@ -55,7 +55,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildRegistroProcedimentoQuery rightJoinWithProcedimento() Adds a RIGHT JOIN clause and with to the query using the Procedimento relation
  * @method     ChildRegistroProcedimentoQuery innerJoinWithProcedimento() Adds a INNER JOIN clause and with to the query using the Procedimento relation
  *
- * @method     \Models\RegistroQuery|\Models\ProcedimentoQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
+ * @method     \Api\Models\RegistroQuery|\Api\Models\ProcedimentoQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
  *
  * @method     ChildRegistroProcedimento|null findOne(?ConnectionInterface $con = null) Return the first ChildRegistroProcedimento matching the query
  * @method     ChildRegistroProcedimento findOneOrCreate(?ConnectionInterface $con = null) Return the first ChildRegistroProcedimento matching the query, or a new ChildRegistroProcedimento object populated from the query conditions when no match is found
@@ -84,13 +84,13 @@ abstract class RegistroProcedimentoQuery extends ModelCriteria
     protected $entityNotFoundExceptionClass = '\\Propel\\Runtime\\Exception\\EntityNotFoundException';
 
     /**
-     * Initializes internal state of \Models\Base\RegistroProcedimentoQuery object.
+     * Initializes internal state of \Api\Models\Base\RegistroProcedimentoQuery object.
      *
      * @param string $dbName The database name
      * @param string $modelName The phpName of a model, e.g. 'Book'
      * @param string $modelAlias The alias for the model in this query, e.g. 'b'
      */
-    public function __construct($dbName = 'default', $modelName = '\\Models\\RegistroProcedimento', $modelAlias = null)
+    public function __construct($dbName = 'default', $modelName = '\\Api\\Models\\RegistroProcedimento', $modelAlias = null)
     {
         parent::__construct($dbName, $modelName, $modelAlias);
     }
@@ -369,9 +369,9 @@ abstract class RegistroProcedimentoQuery extends ModelCriteria
     }
 
     /**
-     * Filter the query by a related \Models\Registro object
+     * Filter the query by a related \Api\Models\Registro object
      *
-     * @param \Models\Registro|ObjectCollection $registro The related object(s) to use as filter
+     * @param \Api\Models\Registro|ObjectCollection $registro The related object(s) to use as filter
      * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @throws \Propel\Runtime\Exception\PropelException
@@ -380,7 +380,7 @@ abstract class RegistroProcedimentoQuery extends ModelCriteria
      */
     public function filterByRegistro($registro, ?string $comparison = null)
     {
-        if ($registro instanceof \Models\Registro) {
+        if ($registro instanceof \Api\Models\Registro) {
             return $this
                 ->addUsingAlias(RegistroProcedimentoTableMap::COL_REGISTRO_ID, $registro->getId(), $comparison);
         } elseif ($registro instanceof ObjectCollection) {
@@ -393,7 +393,7 @@ abstract class RegistroProcedimentoQuery extends ModelCriteria
 
             return $this;
         } else {
-            throw new PropelException('filterByRegistro() only accepts arguments of type \Models\Registro or Collection');
+            throw new PropelException('filterByRegistro() only accepts arguments of type \Api\Models\Registro or Collection');
         }
     }
 
@@ -438,19 +438,19 @@ abstract class RegistroProcedimentoQuery extends ModelCriteria
      *                                   to be used as main alias in the secondary query
      * @param string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
      *
-     * @return \Models\RegistroQuery A secondary query class using the current class as primary query
+     * @return \Api\Models\RegistroQuery A secondary query class using the current class as primary query
      */
     public function useRegistroQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
     {
         return $this
             ->joinRegistro($relationAlias, $joinType)
-            ->useQuery($relationAlias ? $relationAlias : 'Registro', '\Models\RegistroQuery');
+            ->useQuery($relationAlias ? $relationAlias : 'Registro', '\Api\Models\RegistroQuery');
     }
 
     /**
      * Use the Registro relation Registro object
      *
-     * @param callable(\Models\RegistroQuery):\Models\RegistroQuery $callable A function working on the related query
+     * @param callable(\Api\Models\RegistroQuery):\Api\Models\RegistroQuery $callable A function working on the related query
      *
      * @param string|null $relationAlias optional alias for the relation
      *
@@ -481,7 +481,7 @@ abstract class RegistroProcedimentoQuery extends ModelCriteria
      * @param string|null $modelAlias sets an alias for the nested query
      * @param string $typeOfExists Either ExistsCriterion::TYPE_EXISTS or ExistsCriterion::TYPE_NOT_EXISTS
      *
-     * @return \Models\RegistroQuery The inner query object of the EXISTS statement
+     * @return \Api\Models\RegistroQuery The inner query object of the EXISTS statement
      */
     public function useRegistroExistsQuery($modelAlias = null, $queryClass = null, $typeOfExists = 'EXISTS')
     {
@@ -496,16 +496,16 @@ abstract class RegistroProcedimentoQuery extends ModelCriteria
      * @param string|null $modelAlias sets an alias for the nested query
      * @param string|null $queryClass Allows to use a custom query class for the exists query, like ExtendedBookQuery::class
      *
-     * @return \Models\RegistroQuery The inner query object of the NOT EXISTS statement
+     * @return \Api\Models\RegistroQuery The inner query object of the NOT EXISTS statement
      */
     public function useRegistroNotExistsQuery($modelAlias = null, $queryClass = null)
     {
         return $this->useExistsQuery('Registro', $modelAlias, $queryClass, 'NOT EXISTS');
     }
     /**
-     * Filter the query by a related \Models\Procedimento object
+     * Filter the query by a related \Api\Models\Procedimento object
      *
-     * @param \Models\Procedimento|ObjectCollection $procedimento The related object(s) to use as filter
+     * @param \Api\Models\Procedimento|ObjectCollection $procedimento The related object(s) to use as filter
      * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @throws \Propel\Runtime\Exception\PropelException
@@ -514,7 +514,7 @@ abstract class RegistroProcedimentoQuery extends ModelCriteria
      */
     public function filterByProcedimento($procedimento, ?string $comparison = null)
     {
-        if ($procedimento instanceof \Models\Procedimento) {
+        if ($procedimento instanceof \Api\Models\Procedimento) {
             return $this
                 ->addUsingAlias(RegistroProcedimentoTableMap::COL_PROCEDIMENTO_ID, $procedimento->getId(), $comparison);
         } elseif ($procedimento instanceof ObjectCollection) {
@@ -527,7 +527,7 @@ abstract class RegistroProcedimentoQuery extends ModelCriteria
 
             return $this;
         } else {
-            throw new PropelException('filterByProcedimento() only accepts arguments of type \Models\Procedimento or Collection');
+            throw new PropelException('filterByProcedimento() only accepts arguments of type \Api\Models\Procedimento or Collection');
         }
     }
 
@@ -572,19 +572,19 @@ abstract class RegistroProcedimentoQuery extends ModelCriteria
      *                                   to be used as main alias in the secondary query
      * @param string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
      *
-     * @return \Models\ProcedimentoQuery A secondary query class using the current class as primary query
+     * @return \Api\Models\ProcedimentoQuery A secondary query class using the current class as primary query
      */
     public function useProcedimentoQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
     {
         return $this
             ->joinProcedimento($relationAlias, $joinType)
-            ->useQuery($relationAlias ? $relationAlias : 'Procedimento', '\Models\ProcedimentoQuery');
+            ->useQuery($relationAlias ? $relationAlias : 'Procedimento', '\Api\Models\ProcedimentoQuery');
     }
 
     /**
      * Use the Procedimento relation Procedimento object
      *
-     * @param callable(\Models\ProcedimentoQuery):\Models\ProcedimentoQuery $callable A function working on the related query
+     * @param callable(\Api\Models\ProcedimentoQuery):\Api\Models\ProcedimentoQuery $callable A function working on the related query
      *
      * @param string|null $relationAlias optional alias for the relation
      *
@@ -615,7 +615,7 @@ abstract class RegistroProcedimentoQuery extends ModelCriteria
      * @param string|null $modelAlias sets an alias for the nested query
      * @param string $typeOfExists Either ExistsCriterion::TYPE_EXISTS or ExistsCriterion::TYPE_NOT_EXISTS
      *
-     * @return \Models\ProcedimentoQuery The inner query object of the EXISTS statement
+     * @return \Api\Models\ProcedimentoQuery The inner query object of the EXISTS statement
      */
     public function useProcedimentoExistsQuery($modelAlias = null, $queryClass = null, $typeOfExists = 'EXISTS')
     {
@@ -630,7 +630,7 @@ abstract class RegistroProcedimentoQuery extends ModelCriteria
      * @param string|null $modelAlias sets an alias for the nested query
      * @param string|null $queryClass Allows to use a custom query class for the exists query, like ExtendedBookQuery::class
      *
-     * @return \Models\ProcedimentoQuery The inner query object of the NOT EXISTS statement
+     * @return \Api\Models\ProcedimentoQuery The inner query object of the NOT EXISTS statement
      */
     public function useProcedimentoNotExistsQuery($modelAlias = null, $queryClass = null)
     {

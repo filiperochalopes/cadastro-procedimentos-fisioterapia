@@ -1,12 +1,12 @@
 <?php
 
-namespace Models\Base;
+namespace Api\Models\Base;
 
 use \DateTime;
 use \Exception;
 use \PDO;
-use Models\TabelaQuery as ChildTabelaQuery;
-use Models\Map\TabelaTableMap;
+use Api\Models\TabelaQuery as ChildTabelaQuery;
+use Api\Models\Map\TabelaTableMap;
 use Propel\Runtime\Propel;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\ActiveQuery\ModelCriteria;
@@ -25,7 +25,7 @@ use Propel\Runtime\Util\PropelDateTime;
  *
  *
  *
- * @package    propel.generator.Models.Base
+ * @package    propel.generator.Api.Models.Base
  */
 abstract class Tabela implements ActiveRecordInterface
 {
@@ -34,7 +34,7 @@ abstract class Tabela implements ActiveRecordInterface
      *
      * @var string
      */
-    public const TABLE_MAP = '\\Models\\Map\\TabelaTableMap';
+    public const TABLE_MAP = '\\Api\\Models\\Map\\TabelaTableMap';
 
 
     /**
@@ -345,7 +345,7 @@ abstract class Tabela implements ActiveRecordInterface
     protected $alreadyInSave = false;
 
     /**
-     * Initializes internal state of Models\Base\Tabela object.
+     * Initializes internal state of Api\Models\Base\Tabela object.
      */
     public function __construct()
     {
@@ -1918,7 +1918,7 @@ abstract class Tabela implements ActiveRecordInterface
             return $startcol + 39; // 39 = TabelaTableMap::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
-            throw new PropelException(sprintf('Error populating %s object', '\\Models\\Tabela'), 0, $e);
+            throw new PropelException(sprintf('Error populating %s object', '\\Api\\Models\\Tabela'), 0, $e);
         }
     }
 
@@ -3152,7 +3152,7 @@ abstract class Tabela implements ActiveRecordInterface
      * If desired, this method can also make copies of all associated (fkey referrers)
      * objects.
      *
-     * @param object $copyObj An object of \Models\Tabela (or compatible) type.
+     * @param object $copyObj An object of \Api\Models\Tabela (or compatible) type.
      * @param bool $deepCopy Whether to also copy all rows that refer (by fkey) to the current row.
      * @param bool $makeNew Whether to reset autoincrement PKs and make the object new.
      * @throws \Propel\Runtime\Exception\PropelException
@@ -3213,7 +3213,7 @@ abstract class Tabela implements ActiveRecordInterface
      * objects.
      *
      * @param bool $deepCopy Whether to also copy all rows that refer (by fkey) to the current row.
-     * @return \Models\Tabela Clone of current object.
+     * @return \Api\Models\Tabela Clone of current object.
      * @throws \Propel\Runtime\Exception\PropelException
      */
     public function copy(bool $deepCopy = false)

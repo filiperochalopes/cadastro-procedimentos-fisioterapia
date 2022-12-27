@@ -1,12 +1,12 @@
 <?php
 
-namespace Models\Base;
+namespace Api\Models\Base;
 
 use \Exception;
 use \PDO;
-use Models\Registro as ChildRegistro;
-use Models\RegistroQuery as ChildRegistroQuery;
-use Models\Map\RegistroTableMap;
+use Api\Models\Registro as ChildRegistro;
+use Api\Models\RegistroQuery as ChildRegistroQuery;
+use Api\Models\Map\RegistroTableMap;
 use Propel\Runtime\Propel;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\ActiveQuery\ModelCriteria;
@@ -81,7 +81,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildRegistroQuery rightJoinWithRegistroProcedimento() Adds a RIGHT JOIN clause and with to the query using the RegistroProcedimento relation
  * @method     ChildRegistroQuery innerJoinWithRegistroProcedimento() Adds a INNER JOIN clause and with to the query using the RegistroProcedimento relation
  *
- * @method     \Models\FisioterapeutaQuery|\Models\PacienteQuery|\Models\RegistroProcedimentoQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
+ * @method     \Api\Models\FisioterapeutaQuery|\Api\Models\PacienteQuery|\Api\Models\RegistroProcedimentoQuery endUse() Finalizes a secondary criteria and merges it with its primary Criteria
  *
  * @method     ChildRegistro|null findOne(?ConnectionInterface $con = null) Return the first ChildRegistro matching the query
  * @method     ChildRegistro findOneOrCreate(?ConnectionInterface $con = null) Return the first ChildRegistro matching the query, or a new ChildRegistro object populated from the query conditions when no match is found
@@ -142,13 +142,13 @@ abstract class RegistroQuery extends ModelCriteria
     protected $entityNotFoundExceptionClass = '\\Propel\\Runtime\\Exception\\EntityNotFoundException';
 
     /**
-     * Initializes internal state of \Models\Base\RegistroQuery object.
+     * Initializes internal state of \Api\Models\Base\RegistroQuery object.
      *
      * @param string $dbName The database name
      * @param string $modelName The phpName of a model, e.g. 'Book'
      * @param string $modelAlias The alias for the model in this query, e.g. 'b'
      */
-    public function __construct($dbName = 'default', $modelName = '\\Models\\Registro', $modelAlias = null)
+    public function __construct($dbName = 'default', $modelName = '\\Api\\Models\\Registro', $modelAlias = null)
     {
         parent::__construct($dbName, $modelName, $modelAlias);
     }
@@ -673,9 +673,9 @@ abstract class RegistroQuery extends ModelCriteria
     }
 
     /**
-     * Filter the query by a related \Models\Fisioterapeuta object
+     * Filter the query by a related \Api\Models\Fisioterapeuta object
      *
-     * @param \Models\Fisioterapeuta|ObjectCollection $fisioterapeuta The related object(s) to use as filter
+     * @param \Api\Models\Fisioterapeuta|ObjectCollection $fisioterapeuta The related object(s) to use as filter
      * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @throws \Propel\Runtime\Exception\PropelException
@@ -684,7 +684,7 @@ abstract class RegistroQuery extends ModelCriteria
      */
     public function filterByFisioterapeuta($fisioterapeuta, ?string $comparison = null)
     {
-        if ($fisioterapeuta instanceof \Models\Fisioterapeuta) {
+        if ($fisioterapeuta instanceof \Api\Models\Fisioterapeuta) {
             return $this
                 ->addUsingAlias(RegistroTableMap::COL_FISIOTERAPEUTA_ID, $fisioterapeuta->getId(), $comparison);
         } elseif ($fisioterapeuta instanceof ObjectCollection) {
@@ -697,7 +697,7 @@ abstract class RegistroQuery extends ModelCriteria
 
             return $this;
         } else {
-            throw new PropelException('filterByFisioterapeuta() only accepts arguments of type \Models\Fisioterapeuta or Collection');
+            throw new PropelException('filterByFisioterapeuta() only accepts arguments of type \Api\Models\Fisioterapeuta or Collection');
         }
     }
 
@@ -742,19 +742,19 @@ abstract class RegistroQuery extends ModelCriteria
      *                                   to be used as main alias in the secondary query
      * @param string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
      *
-     * @return \Models\FisioterapeutaQuery A secondary query class using the current class as primary query
+     * @return \Api\Models\FisioterapeutaQuery A secondary query class using the current class as primary query
      */
     public function useFisioterapeutaQuery($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
     {
         return $this
             ->joinFisioterapeuta($relationAlias, $joinType)
-            ->useQuery($relationAlias ? $relationAlias : 'Fisioterapeuta', '\Models\FisioterapeutaQuery');
+            ->useQuery($relationAlias ? $relationAlias : 'Fisioterapeuta', '\Api\Models\FisioterapeutaQuery');
     }
 
     /**
      * Use the Fisioterapeuta relation Fisioterapeuta object
      *
-     * @param callable(\Models\FisioterapeutaQuery):\Models\FisioterapeutaQuery $callable A function working on the related query
+     * @param callable(\Api\Models\FisioterapeutaQuery):\Api\Models\FisioterapeutaQuery $callable A function working on the related query
      *
      * @param string|null $relationAlias optional alias for the relation
      *
@@ -785,7 +785,7 @@ abstract class RegistroQuery extends ModelCriteria
      * @param string|null $modelAlias sets an alias for the nested query
      * @param string $typeOfExists Either ExistsCriterion::TYPE_EXISTS or ExistsCriterion::TYPE_NOT_EXISTS
      *
-     * @return \Models\FisioterapeutaQuery The inner query object of the EXISTS statement
+     * @return \Api\Models\FisioterapeutaQuery The inner query object of the EXISTS statement
      */
     public function useFisioterapeutaExistsQuery($modelAlias = null, $queryClass = null, $typeOfExists = 'EXISTS')
     {
@@ -800,16 +800,16 @@ abstract class RegistroQuery extends ModelCriteria
      * @param string|null $modelAlias sets an alias for the nested query
      * @param string|null $queryClass Allows to use a custom query class for the exists query, like ExtendedBookQuery::class
      *
-     * @return \Models\FisioterapeutaQuery The inner query object of the NOT EXISTS statement
+     * @return \Api\Models\FisioterapeutaQuery The inner query object of the NOT EXISTS statement
      */
     public function useFisioterapeutaNotExistsQuery($modelAlias = null, $queryClass = null)
     {
         return $this->useExistsQuery('Fisioterapeuta', $modelAlias, $queryClass, 'NOT EXISTS');
     }
     /**
-     * Filter the query by a related \Models\Paciente object
+     * Filter the query by a related \Api\Models\Paciente object
      *
-     * @param \Models\Paciente|ObjectCollection $paciente The related object(s) to use as filter
+     * @param \Api\Models\Paciente|ObjectCollection $paciente The related object(s) to use as filter
      * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @throws \Propel\Runtime\Exception\PropelException
@@ -818,7 +818,7 @@ abstract class RegistroQuery extends ModelCriteria
      */
     public function filterByPaciente($paciente, ?string $comparison = null)
     {
-        if ($paciente instanceof \Models\Paciente) {
+        if ($paciente instanceof \Api\Models\Paciente) {
             return $this
                 ->addUsingAlias(RegistroTableMap::COL_PACIENTE_ID, $paciente->getId(), $comparison);
         } elseif ($paciente instanceof ObjectCollection) {
@@ -831,7 +831,7 @@ abstract class RegistroQuery extends ModelCriteria
 
             return $this;
         } else {
-            throw new PropelException('filterByPaciente() only accepts arguments of type \Models\Paciente or Collection');
+            throw new PropelException('filterByPaciente() only accepts arguments of type \Api\Models\Paciente or Collection');
         }
     }
 
@@ -876,19 +876,19 @@ abstract class RegistroQuery extends ModelCriteria
      *                                   to be used as main alias in the secondary query
      * @param string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
      *
-     * @return \Models\PacienteQuery A secondary query class using the current class as primary query
+     * @return \Api\Models\PacienteQuery A secondary query class using the current class as primary query
      */
     public function usePacienteQuery($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
     {
         return $this
             ->joinPaciente($relationAlias, $joinType)
-            ->useQuery($relationAlias ? $relationAlias : 'Paciente', '\Models\PacienteQuery');
+            ->useQuery($relationAlias ? $relationAlias : 'Paciente', '\Api\Models\PacienteQuery');
     }
 
     /**
      * Use the Paciente relation Paciente object
      *
-     * @param callable(\Models\PacienteQuery):\Models\PacienteQuery $callable A function working on the related query
+     * @param callable(\Api\Models\PacienteQuery):\Api\Models\PacienteQuery $callable A function working on the related query
      *
      * @param string|null $relationAlias optional alias for the relation
      *
@@ -919,7 +919,7 @@ abstract class RegistroQuery extends ModelCriteria
      * @param string|null $modelAlias sets an alias for the nested query
      * @param string $typeOfExists Either ExistsCriterion::TYPE_EXISTS or ExistsCriterion::TYPE_NOT_EXISTS
      *
-     * @return \Models\PacienteQuery The inner query object of the EXISTS statement
+     * @return \Api\Models\PacienteQuery The inner query object of the EXISTS statement
      */
     public function usePacienteExistsQuery($modelAlias = null, $queryClass = null, $typeOfExists = 'EXISTS')
     {
@@ -934,23 +934,23 @@ abstract class RegistroQuery extends ModelCriteria
      * @param string|null $modelAlias sets an alias for the nested query
      * @param string|null $queryClass Allows to use a custom query class for the exists query, like ExtendedBookQuery::class
      *
-     * @return \Models\PacienteQuery The inner query object of the NOT EXISTS statement
+     * @return \Api\Models\PacienteQuery The inner query object of the NOT EXISTS statement
      */
     public function usePacienteNotExistsQuery($modelAlias = null, $queryClass = null)
     {
         return $this->useExistsQuery('Paciente', $modelAlias, $queryClass, 'NOT EXISTS');
     }
     /**
-     * Filter the query by a related \Models\RegistroProcedimento object
+     * Filter the query by a related \Api\Models\RegistroProcedimento object
      *
-     * @param \Models\RegistroProcedimento|ObjectCollection $registroProcedimento the related object to use as filter
+     * @param \Api\Models\RegistroProcedimento|ObjectCollection $registroProcedimento the related object to use as filter
      * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return $this The current query, for fluid interface
      */
     public function filterByRegistroProcedimento($registroProcedimento, ?string $comparison = null)
     {
-        if ($registroProcedimento instanceof \Models\RegistroProcedimento) {
+        if ($registroProcedimento instanceof \Api\Models\RegistroProcedimento) {
             $this
                 ->addUsingAlias(RegistroTableMap::COL_ID, $registroProcedimento->getRegistroId(), $comparison);
 
@@ -963,7 +963,7 @@ abstract class RegistroQuery extends ModelCriteria
 
             return $this;
         } else {
-            throw new PropelException('filterByRegistroProcedimento() only accepts arguments of type \Models\RegistroProcedimento or Collection');
+            throw new PropelException('filterByRegistroProcedimento() only accepts arguments of type \Api\Models\RegistroProcedimento or Collection');
         }
     }
 
@@ -1008,19 +1008,19 @@ abstract class RegistroQuery extends ModelCriteria
      *                                   to be used as main alias in the secondary query
      * @param string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
      *
-     * @return \Models\RegistroProcedimentoQuery A secondary query class using the current class as primary query
+     * @return \Api\Models\RegistroProcedimentoQuery A secondary query class using the current class as primary query
      */
     public function useRegistroProcedimentoQuery($relationAlias = null, $joinType = Criteria::INNER_JOIN)
     {
         return $this
             ->joinRegistroProcedimento($relationAlias, $joinType)
-            ->useQuery($relationAlias ? $relationAlias : 'RegistroProcedimento', '\Models\RegistroProcedimentoQuery');
+            ->useQuery($relationAlias ? $relationAlias : 'RegistroProcedimento', '\Api\Models\RegistroProcedimentoQuery');
     }
 
     /**
      * Use the RegistroProcedimento relation RegistroProcedimento object
      *
-     * @param callable(\Models\RegistroProcedimentoQuery):\Models\RegistroProcedimentoQuery $callable A function working on the related query
+     * @param callable(\Api\Models\RegistroProcedimentoQuery):\Api\Models\RegistroProcedimentoQuery $callable A function working on the related query
      *
      * @param string|null $relationAlias optional alias for the relation
      *
@@ -1051,7 +1051,7 @@ abstract class RegistroQuery extends ModelCriteria
      * @param string|null $modelAlias sets an alias for the nested query
      * @param string $typeOfExists Either ExistsCriterion::TYPE_EXISTS or ExistsCriterion::TYPE_NOT_EXISTS
      *
-     * @return \Models\RegistroProcedimentoQuery The inner query object of the EXISTS statement
+     * @return \Api\Models\RegistroProcedimentoQuery The inner query object of the EXISTS statement
      */
     public function useRegistroProcedimentoExistsQuery($modelAlias = null, $queryClass = null, $typeOfExists = 'EXISTS')
     {
@@ -1066,7 +1066,7 @@ abstract class RegistroQuery extends ModelCriteria
      * @param string|null $modelAlias sets an alias for the nested query
      * @param string|null $queryClass Allows to use a custom query class for the exists query, like ExtendedBookQuery::class
      *
-     * @return \Models\RegistroProcedimentoQuery The inner query object of the NOT EXISTS statement
+     * @return \Api\Models\RegistroProcedimentoQuery The inner query object of the NOT EXISTS statement
      */
     public function useRegistroProcedimentoNotExistsQuery($modelAlias = null, $queryClass = null)
     {

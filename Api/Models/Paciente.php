@@ -1,8 +1,8 @@
 <?php
 
-namespace Models;
+namespace Api\Models;
 
-use Models\Base\Paciente as BasePaciente;
+use \Api\Models\Base\Paciente as BasePaciente;
 
 /**
  * Skeleton subclass for representing a row from the 'pacientes' table.

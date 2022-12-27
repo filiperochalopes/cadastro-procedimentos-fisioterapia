@@ -1,8 +1,8 @@
 <?php
 
-namespace Models;
+namespace Api\Models;
 
-use Models\Base\RegistroProcedimento as BaseRegistroProcedimento;
+use \Api\Models\Base\RegistroProcedimento as BaseRegistroProcedimento;
 
 /**
  * Skeleton subclass for representing a row from the 'registro_procedimento' table.

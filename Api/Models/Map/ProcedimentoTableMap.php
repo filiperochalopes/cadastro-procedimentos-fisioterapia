@@ -1,9 +1,9 @@
 <?php
 
-namespace Models\Map;
+namespace Api\Models\Map;
 
-use Models\Procedimento;
-use Models\ProcedimentoQuery;
+use Api\Models\Procedimento;
+use Api\Models\ProcedimentoQuery;
 use Propel\Runtime\Propel;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\ActiveQuery\InstancePoolTrait;
@@ -33,7 +33,7 @@ class ProcedimentoTableMap extends TableMap
     /**
      * The (dot-path) name of this class
      */
-    public const CLASS_NAME = 'Models.Map.ProcedimentoTableMap';
+    public const CLASS_NAME = 'Api.Models.Map.ProcedimentoTableMap';
 
     /**
      * The default database name for this class
@@ -48,12 +48,12 @@ class ProcedimentoTableMap extends TableMap
     /**
      * The related Propel class for this table
      */
-    public const OM_CLASS = '\\Models\\Procedimento';
+    public const OM_CLASS = '\\Api\\Models\\Procedimento';
 
     /**
      * A class that can be returned by this tableMap
      */
-    public const CLASS_DEFAULT = 'Models.Procedimento';
+    public const CLASS_DEFAULT = 'Api.Models.Procedimento';
 
     /**
      * The total number of columns
@@ -152,8 +152,8 @@ class ProcedimentoTableMap extends TableMap
         $this->setName('procedimentos');
         $this->setPhpName('Procedimento');
         $this->setIdentifierQuoting(false);
-        $this->setClassName('\\Models\\Procedimento');
-        $this->setPackage('Models');
+        $this->setClassName('\\Api\\Models\\Procedimento');
+        $this->setPackage('Api.Models');
         $this->setUseIdGenerator(true);
         // columns
         $this->addPrimaryKey('id', 'Id', 'INTEGER', true, null, null);
@@ -167,14 +167,14 @@ class ProcedimentoTableMap extends TableMap
      */
     public function buildRelations(): void
     {
-        $this->addRelation('RegistroProcedimento', '\\Models\\RegistroProcedimento', RelationMap::ONE_TO_MANY, array (
+        $this->addRelation('RegistroProcedimento', '\\Api\\Models\\RegistroProcedimento', RelationMap::ONE_TO_MANY, array (
   0 =>
   array (
     0 => ':procedimento_id',
     1 => ':id',
   ),
 ), null, null, 'RegistroProcedimentos', false);
-        $this->addRelation('Registro', '\\Models\\Registro', RelationMap::MANY_TO_MANY, array(), null, null, 'Registros');
+        $this->addRelation('Registro', '\\Api\\Models\\Registro', RelationMap::MANY_TO_MANY, array(), null, null, 'Registros');
     }
 
     /**
@@ -382,7 +382,7 @@ class ProcedimentoTableMap extends TableMap
         if ($values instanceof Criteria) {
             // rename for clarity
             $criteria = $values;
-        } elseif ($values instanceof \Models\Procedimento) { // it's a model object
+        } elseif ($values instanceof \Api\Models\Procedimento) { // it's a model object
             // create criteria based on pk values
             $criteria = $values->buildPkeyCriteria();
         } else { // it's a primary key, or an array of pks
