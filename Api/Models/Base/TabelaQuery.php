@@ -1,12 +1,12 @@
 <?php
 
-namespace Api\Models\Base;
+namespace Models\Base;
 
 use \Exception;
 use \PDO;
-use Api\Models\Tabela as ChildTabela;
-use Api\Models\TabelaQuery as ChildTabelaQuery;
-use Api\Models\Map\TabelaTableMap;
+use Models\Tabela as ChildTabela;
+use Models\TabelaQuery as ChildTabelaQuery;
+use Models\Map\TabelaTableMap;
 use Propel\Runtime\Propel;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\ActiveQuery\ModelCriteria;
@@ -282,13 +282,13 @@ abstract class TabelaQuery extends ModelCriteria
     protected $entityNotFoundExceptionClass = '\\Propel\\Runtime\\Exception\\EntityNotFoundException';
 
     /**
-     * Initializes internal state of \Api\Models\Base\TabelaQuery object.
+     * Initializes internal state of \Models\Base\TabelaQuery object.
      *
      * @param string $dbName The database name
      * @param string $modelName The phpName of a model, e.g. 'Book'
      * @param string $modelAlias The alias for the model in this query, e.g. 'b'
      */
-    public function __construct($dbName = 'default', $modelName = '\\Api\\Models\\Tabela', $modelAlias = null)
+    public function __construct($dbName = 'default', $modelName = '\\Models\\Tabela', $modelAlias = null)
     {
         parent::__construct($dbName, $modelName, $modelAlias);
     }
@@ -514,20 +514,37 @@ abstract class TabelaQuery extends ModelCriteria
      *
      * Example usage:
      * <code>
-     * $query->filterByData('fooValue');   // WHERE data = 'fooValue'
-     * $query->filterByData('%fooValue%', Criteria::LIKE); // WHERE data LIKE '%fooValue%'
-     * $query->filterByData(['foo', 'bar']); // WHERE data IN ('foo', 'bar')
+     * $query->filterByData('2011-03-14'); // WHERE data = '2011-03-14'
+     * $query->filterByData('now'); // WHERE data = '2011-03-14'
+     * $query->filterByData(array('max' => 'yesterday')); // WHERE data > '2011-03-13'
      * </code>
      *
-     * @param string|string[] $data The value to use as filter.
+     * @param mixed $data The value to use as filter.
+     *              Values can be integers (unix timestamps), DateTime objects, or strings.
+     *              Empty strings are treated as NULL.
+     *              Use scalar values for equality.
+     *              Use array values for in_array() equivalent.
+     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
      * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return $this The current query, for fluid interface
      */
     public function filterByData($data = null, ?string $comparison = null)
     {
-        if (null === $comparison) {
-            if (is_array($data)) {
+        if (is_array($data)) {
+            $useMinMax = false;
+            if (isset($data['min'])) {
+                $this->addUsingAlias(TabelaTableMap::COL_DATA, $data['min'], Criteria::GREATER_EQUAL);
+                $useMinMax = true;
+            }
+            if (isset($data['max'])) {
+                $this->addUsingAlias(TabelaTableMap::COL_DATA, $data['max'], Criteria::LESS_EQUAL);
+                $useMinMax = true;
+            }
+            if ($useMinMax) {
+                return $this;
+            }
+            if (null === $comparison) {
                 $comparison = Criteria::IN;
             }
         }

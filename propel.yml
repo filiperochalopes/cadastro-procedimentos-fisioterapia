@@ -8,3 +8,11 @@ propel:
                 password: securePass
                 settings:
                     charset: utf8
+    runtime:
+        defaultConnection: default
+        connections:
+            - default
+    generator:
+        defaultConnection: default
+        connections:
+            - default

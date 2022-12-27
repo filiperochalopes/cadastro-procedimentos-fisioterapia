@@ -1,16 +1,23 @@
 <?php
 
-namespace Api\Models\Base;
+namespace Models\Base;
 
 use \Exception;
 use \PDO;
-use Api\Models\FisioterapeutasQuery as ChildFisioterapeutasQuery;
-use Api\Models\Map\FisioterapeutasTableMap;
+use Models\Procedimento as ChildProcedimento;
+use Models\ProcedimentoQuery as ChildProcedimentoQuery;
+use Models\Registro as ChildRegistro;
+use Models\RegistroProcedimento as ChildRegistroProcedimento;
+use Models\RegistroProcedimentoQuery as ChildRegistroProcedimentoQuery;
+use Models\RegistroQuery as ChildRegistroQuery;
+use Models\Map\ProcedimentoTableMap;
+use Models\Map\RegistroProcedimentoTableMap;
 use Propel\Runtime\Propel;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\ActiveQuery\ModelCriteria;
 use Propel\Runtime\ActiveRecord\ActiveRecordInterface;
 use Propel\Runtime\Collection\Collection;
+use Propel\Runtime\Collection\ObjectCollection;
 use Propel\Runtime\Connection\ConnectionInterface;
 use Propel\Runtime\Exception\BadMethodCallException;
 use Propel\Runtime\Exception\LogicException;
@@ -19,20 +26,20 @@ use Propel\Runtime\Map\TableMap;
 use Propel\Runtime\Parser\AbstractParser;
 
 /**
- * Base class that represents a row from the 'fisioterapeutas' table.
+ * Base class that represents a row from the 'procedimentos' table.
  *
  *
  *
- * @package    propel.generator.Api.Models.Base
+ * @package    propel.generator.Models.Base
  */
-abstract class Fisioterapeutas implements ActiveRecordInterface
+abstract class Procedimento implements ActiveRecordInterface
 {
     /**
      * TableMap class name
      *
      * @var string
      */
-    public const TABLE_MAP = '\\Api\\Models\\Map\\FisioterapeutasTableMap';
+    public const TABLE_MAP = '\\Models\\Map\\ProcedimentoTableMap';
 
 
     /**
@@ -69,11 +76,29 @@ abstract class Fisioterapeutas implements ActiveRecordInterface
     protected $id;
 
     /**
-     * The value for the fisioterapeuta field.
+     * The value for the nome field.
      *
      * @var        string
      */
-    protected $fisioterapeuta;
+    protected $nome;
+
+    /**
+     * @var        ObjectCollection|ChildRegistroProcedimento[] Collection to store aggregation of ChildRegistroProcedimento objects.
+     * @phpstan-var ObjectCollection&\Traversable<ChildRegistroProcedimento> Collection to store aggregation of ChildRegistroProcedimento objects.
+     */
+    protected $collRegistroProcedimentos;
+    protected $collRegistroProcedimentosPartial;
+
+    /**
+     * @var        ObjectCollection|ChildRegistro[] Cross Collection to store aggregation of ChildRegistro objects.
+     * @phpstan-var ObjectCollection&\Traversable<ChildRegistro> Cross Collection to store aggregation of ChildRegistro objects.
+     */
+    protected $collRegistros;
+
+    /**
+     * @var bool
+     */
+    protected $collRegistrosPartial;
 
     /**
      * Flag to prevent endless save loop, if this object is referenced
@@ -84,7 +109,21 @@ abstract class Fisioterapeutas implements ActiveRecordInterface
     protected $alreadyInSave = false;
 
     /**
-     * Initializes internal state of Api\Models\Base\Fisioterapeutas object.
+     * An array of objects scheduled for deletion.
+     * @var ObjectCollection|ChildRegistro[]
+     * @phpstan-var ObjectCollection&\Traversable<ChildRegistro>
+     */
+    protected $registrosScheduledForDeletion = null;
+
+    /**
+     * An array of objects scheduled for deletion.
+     * @var ObjectCollection|ChildRegistroProcedimento[]
+     * @phpstan-var ObjectCollection&\Traversable<ChildRegistroProcedimento>
+     */
+    protected $registroProcedimentosScheduledForDeletion = null;
+
+    /**
+     * Initializes internal state of Models\Base\Procedimento object.
      */
     public function __construct()
     {
@@ -177,9 +216,9 @@ abstract class Fisioterapeutas implements ActiveRecordInterface
     }
 
     /**
-     * Compares this with another <code>Fisioterapeutas</code> instance.  If
-     * <code>obj</code> is an instance of <code>Fisioterapeutas</code>, delegates to
-     * <code>equals(Fisioterapeutas)</code>.  Otherwise, returns <code>false</code>.
+     * Compares this with another <code>Procedimento</code> instance.  If
+     * <code>obj</code> is an instance of <code>Procedimento</code>, delegates to
+     * <code>equals(Procedimento)</code>.  Otherwise, returns <code>false</code>.
      *
      * @param mixed $obj The object to compare to.
      * @return bool Whether equal to the object specified.
@@ -320,13 +359,13 @@ abstract class Fisioterapeutas implements ActiveRecordInterface
     }
 
     /**
-     * Get the [fisioterapeuta] column value.
+     * Get the [nome] column value.
      *
      * @return string
      */
-    public function getFisioterapeuta()
+    public function getNome()
     {
-        return $this->fisioterapeuta;
+        return $this->nome;
     }
 
     /**
@@ -343,27 +382,27 @@ abstract class Fisioterapeutas implements ActiveRecordInterface
 
         if ($this->id !== $v) {
             $this->id = $v;
-            $this->modifiedColumns[FisioterapeutasTableMap::COL_ID] = true;
+            $this->modifiedColumns[ProcedimentoTableMap::COL_ID] = true;
         }
 
         return $this;
     }
 
     /**
-     * Set the value of [fisioterapeuta] column.
+     * Set the value of [nome] column.
      *
      * @param string $v New value
      * @return $this The current object (for fluent API support)
      */
-    public function setFisioterapeuta($v)
+    public function setNome($v)
     {
         if ($v !== null) {
             $v = (string) $v;
         }
 
-        if ($this->fisioterapeuta !== $v) {
-            $this->fisioterapeuta = $v;
-            $this->modifiedColumns[FisioterapeutasTableMap::COL_FISIOTERAPEUTA] = true;
+        if ($this->nome !== $v) {
+            $this->nome = $v;
+            $this->modifiedColumns[ProcedimentoTableMap::COL_NOME] = true;
         }
 
         return $this;
@@ -405,11 +444,11 @@ abstract class Fisioterapeutas implements ActiveRecordInterface
     {
         try {
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 0 + $startcol : FisioterapeutasTableMap::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 0 + $startcol : ProcedimentoTableMap::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)];
             $this->id = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : FisioterapeutasTableMap::translateFieldName('Fisioterapeuta', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->fisioterapeuta = (null !== $col) ? (string) $col : null;
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : ProcedimentoTableMap::translateFieldName('Nome', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->nome = (null !== $col) ? (string) $col : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -418,10 +457,10 @@ abstract class Fisioterapeutas implements ActiveRecordInterface
                 $this->ensureConsistency();
             }
 
-            return $startcol + 2; // 2 = FisioterapeutasTableMap::NUM_HYDRATE_COLUMNS.
+            return $startcol + 2; // 2 = ProcedimentoTableMap::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
-            throw new PropelException(sprintf('Error populating %s object', '\\Api\\Models\\Fisioterapeutas'), 0, $e);
+            throw new PropelException(sprintf('Error populating %s object', '\\Models\\Procedimento'), 0, $e);
         }
     }
 
@@ -464,13 +503,13 @@ abstract class Fisioterapeutas implements ActiveRecordInterface
         }
 
         if ($con === null) {
-            $con = Propel::getServiceContainer()->getReadConnection(FisioterapeutasTableMap::DATABASE_NAME);
+            $con = Propel::getServiceContainer()->getReadConnection(ProcedimentoTableMap::DATABASE_NAME);
         }
 
         // We don't need to alter the object instance pool; we're just modifying this instance
         // already in the pool.
 
-        $dataFetcher = ChildFisioterapeutasQuery::create(null, $this->buildPkeyCriteria())->setFormatter(ModelCriteria::FORMAT_STATEMENT)->find($con);
+        $dataFetcher = ChildProcedimentoQuery::create(null, $this->buildPkeyCriteria())->setFormatter(ModelCriteria::FORMAT_STATEMENT)->find($con);
         $row = $dataFetcher->fetch();
         $dataFetcher->close();
         if (!$row) {
@@ -480,6 +519,9 @@ abstract class Fisioterapeutas implements ActiveRecordInterface
 
         if ($deep) {  // also de-associate any related objects?
 
+            $this->collRegistroProcedimentos = null;
+
+            $this->collRegistros = null;
         } // if (deep)
     }
 
@@ -489,8 +531,8 @@ abstract class Fisioterapeutas implements ActiveRecordInterface
      * @param ConnectionInterface $con
      * @return void
      * @throws \Propel\Runtime\Exception\PropelException
-     * @see Fisioterapeutas::setDeleted()
-     * @see Fisioterapeutas::isDeleted()
+     * @see Procedimento::setDeleted()
+     * @see Procedimento::isDeleted()
      */
     public function delete(?ConnectionInterface $con = null): void
     {
@@ -499,11 +541,11 @@ abstract class Fisioterapeutas implements ActiveRecordInterface
         }
 
         if ($con === null) {
-            $con = Propel::getServiceContainer()->getWriteConnection(FisioterapeutasTableMap::DATABASE_NAME);
+            $con = Propel::getServiceContainer()->getWriteConnection(ProcedimentoTableMap::DATABASE_NAME);
         }
 
         $con->transaction(function () use ($con) {
-            $deleteQuery = ChildFisioterapeutasQuery::create()
+            $deleteQuery = ChildProcedimentoQuery::create()
                 ->filterByPrimaryKey($this->getPrimaryKey());
             $ret = $this->preDelete($con);
             if ($ret) {
@@ -538,7 +580,7 @@ abstract class Fisioterapeutas implements ActiveRecordInterface
         }
 
         if ($con === null) {
-            $con = Propel::getServiceContainer()->getWriteConnection(FisioterapeutasTableMap::DATABASE_NAME);
+            $con = Propel::getServiceContainer()->getWriteConnection(ProcedimentoTableMap::DATABASE_NAME);
         }
 
         return $con->transaction(function () use ($con) {
@@ -557,7 +599,7 @@ abstract class Fisioterapeutas implements ActiveRecordInterface
                     $this->postUpdate($con);
                 }
                 $this->postSave($con);
-                FisioterapeutasTableMap::addInstanceToPool($this);
+                ProcedimentoTableMap::addInstanceToPool($this);
             } else {
                 $affectedRows = 0;
             }
@@ -594,6 +636,52 @@ abstract class Fisioterapeutas implements ActiveRecordInterface
                 $this->resetModified();
             }
 
+            if ($this->registrosScheduledForDeletion !== null) {
+                if (!$this->registrosScheduledForDeletion->isEmpty()) {
+                    $pks = [];
+                    foreach ($this->registrosScheduledForDeletion as $entry) {
+                        $entryPk = [];
+
+                        $entryPk[1] = $this->getId();
+                        $entryPk[0] = $entry->getId();
+                        $pks[] = $entryPk;
+                    }
+
+                    \Models\RegistroProcedimentoQuery::create()
+                        ->filterByPrimaryKeys($pks)
+                        ->delete($con);
+
+                    $this->registrosScheduledForDeletion = null;
+                }
+
+            }
+
+            if ($this->collRegistros) {
+                foreach ($this->collRegistros as $registro) {
+                    if (!$registro->isDeleted() && ($registro->isNew() || $registro->isModified())) {
+                        $registro->save($con);
+                    }
+                }
+            }
+
+
+            if ($this->registroProcedimentosScheduledForDeletion !== null) {
+                if (!$this->registroProcedimentosScheduledForDeletion->isEmpty()) {
+                    \Models\RegistroProcedimentoQuery::create()
+                        ->filterByPrimaryKeys($this->registroProcedimentosScheduledForDeletion->getPrimaryKeys(false))
+                        ->delete($con);
+                    $this->registroProcedimentosScheduledForDeletion = null;
+                }
+            }
+
+            if ($this->collRegistroProcedimentos !== null) {
+                foreach ($this->collRegistroProcedimentos as $referrerFK) {
+                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
+                        $affectedRows += $referrerFK->save($con);
+                    }
+                }
+            }
+
             $this->alreadyInSave = false;
 
         }
@@ -614,21 +702,21 @@ abstract class Fisioterapeutas implements ActiveRecordInterface
         $modifiedColumns = [];
         $index = 0;
 
-        $this->modifiedColumns[FisioterapeutasTableMap::COL_ID] = true;
+        $this->modifiedColumns[ProcedimentoTableMap::COL_ID] = true;
         if (null !== $this->id) {
-            throw new PropelException('Cannot insert a value for auto-increment primary key (' . FisioterapeutasTableMap::COL_ID . ')');
+            throw new PropelException('Cannot insert a value for auto-increment primary key (' . ProcedimentoTableMap::COL_ID . ')');
         }
 
          // check the columns in natural order for more readable SQL queries
-        if ($this->isColumnModified(FisioterapeutasTableMap::COL_ID)) {
+        if ($this->isColumnModified(ProcedimentoTableMap::COL_ID)) {
             $modifiedColumns[':p' . $index++]  = 'id';
         }
-        if ($this->isColumnModified(FisioterapeutasTableMap::COL_FISIOTERAPEUTA)) {
-            $modifiedColumns[':p' . $index++]  = 'fisioterapeuta';
+        if ($this->isColumnModified(ProcedimentoTableMap::COL_NOME)) {
+            $modifiedColumns[':p' . $index++]  = 'nome';
         }
 
         $sql = sprintf(
-            'INSERT INTO fisioterapeutas (%s) VALUES (%s)',
+            'INSERT INTO procedimentos (%s) VALUES (%s)',
             implode(', ', $modifiedColumns),
             implode(', ', array_keys($modifiedColumns))
         );
@@ -640,8 +728,8 @@ abstract class Fisioterapeutas implements ActiveRecordInterface
                     case 'id':
                         $stmt->bindValue($identifier, $this->id, PDO::PARAM_INT);
                         break;
-                    case 'fisioterapeuta':
-                        $stmt->bindValue($identifier, $this->fisioterapeuta, PDO::PARAM_STR);
+                    case 'nome':
+                        $stmt->bindValue($identifier, $this->nome, PDO::PARAM_STR);
                         break;
                 }
             }
@@ -689,7 +777,7 @@ abstract class Fisioterapeutas implements ActiveRecordInterface
      */
     public function getByName(string $name, string $type = TableMap::TYPE_PHPNAME)
     {
-        $pos = FisioterapeutasTableMap::translateFieldName($name, $type, TableMap::TYPE_NUM);
+        $pos = ProcedimentoTableMap::translateFieldName($name, $type, TableMap::TYPE_NUM);
         $field = $this->getByPosition($pos);
 
         return $field;
@@ -709,7 +797,7 @@ abstract class Fisioterapeutas implements ActiveRecordInterface
                 return $this->getId();
 
             case 1:
-                return $this->getFisioterapeuta();
+                return $this->getNome();
 
             default:
                 return null;
@@ -727,25 +815,43 @@ abstract class Fisioterapeutas implements ActiveRecordInterface
      *                    Defaults to TableMap::TYPE_PHPNAME.
      * @param bool $includeLazyLoadColumns (optional) Whether to include lazy loaded columns. Defaults to TRUE.
      * @param array $alreadyDumpedObjects List of objects to skip to avoid recursion
+     * @param bool $includeForeignObjects (optional) Whether to include hydrated related objects. Default to FALSE.
      *
      * @return array An associative array containing the field names (as keys) and field values
      */
-    public function toArray(string $keyType = TableMap::TYPE_PHPNAME, bool $includeLazyLoadColumns = true, array $alreadyDumpedObjects = []): array
+    public function toArray(string $keyType = TableMap::TYPE_PHPNAME, bool $includeLazyLoadColumns = true, array $alreadyDumpedObjects = [], bool $includeForeignObjects = false): array
     {
-        if (isset($alreadyDumpedObjects['Fisioterapeutas'][$this->hashCode()])) {
+        if (isset($alreadyDumpedObjects['Procedimento'][$this->hashCode()])) {
             return ['*RECURSION*'];
         }
-        $alreadyDumpedObjects['Fisioterapeutas'][$this->hashCode()] = true;
-        $keys = FisioterapeutasTableMap::getFieldNames($keyType);
+        $alreadyDumpedObjects['Procedimento'][$this->hashCode()] = true;
+        $keys = ProcedimentoTableMap::getFieldNames($keyType);
         $result = [
             $keys[0] => $this->getId(),
-            $keys[1] => $this->getFisioterapeuta(),
+            $keys[1] => $this->getNome(),
         ];
         $virtualColumns = $this->virtualColumns;
         foreach ($virtualColumns as $key => $virtualColumn) {
             $result[$key] = $virtualColumn;
         }
 
+        if ($includeForeignObjects) {
+            if (null !== $this->collRegistroProcedimentos) {
+
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'registroProcedimentos';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'registro_procedimentos';
+                        break;
+                    default:
+                        $key = 'RegistroProcedimentos';
+                }
+
+                $result[$key] = $this->collRegistroProcedimentos->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
+            }
+        }
 
         return $result;
     }
@@ -763,7 +869,7 @@ abstract class Fisioterapeutas implements ActiveRecordInterface
      */
     public function setByName(string $name, $value, string $type = TableMap::TYPE_PHPNAME)
     {
-        $pos = FisioterapeutasTableMap::translateFieldName($name, $type, TableMap::TYPE_NUM);
+        $pos = ProcedimentoTableMap::translateFieldName($name, $type, TableMap::TYPE_NUM);
 
         $this->setByPosition($pos, $value);
 
@@ -785,7 +891,7 @@ abstract class Fisioterapeutas implements ActiveRecordInterface
                 $this->setId($value);
                 break;
             case 1:
-                $this->setFisioterapeuta($value);
+                $this->setNome($value);
                 break;
         } // switch()
 
@@ -811,13 +917,13 @@ abstract class Fisioterapeutas implements ActiveRecordInterface
      */
     public function fromArray(array $arr, string $keyType = TableMap::TYPE_PHPNAME)
     {
-        $keys = FisioterapeutasTableMap::getFieldNames($keyType);
+        $keys = ProcedimentoTableMap::getFieldNames($keyType);
 
         if (array_key_exists($keys[0], $arr)) {
             $this->setId($arr[$keys[0]]);
         }
         if (array_key_exists($keys[1], $arr)) {
-            $this->setFisioterapeuta($arr[$keys[1]]);
+            $this->setNome($arr[$keys[1]]);
         }
 
         return $this;
@@ -860,13 +966,13 @@ abstract class Fisioterapeutas implements ActiveRecordInterface
      */
     public function buildCriteria(): Criteria
     {
-        $criteria = new Criteria(FisioterapeutasTableMap::DATABASE_NAME);
+        $criteria = new Criteria(ProcedimentoTableMap::DATABASE_NAME);
 
-        if ($this->isColumnModified(FisioterapeutasTableMap::COL_ID)) {
-            $criteria->add(FisioterapeutasTableMap::COL_ID, $this->id);
+        if ($this->isColumnModified(ProcedimentoTableMap::COL_ID)) {
+            $criteria->add(ProcedimentoTableMap::COL_ID, $this->id);
         }
-        if ($this->isColumnModified(FisioterapeutasTableMap::COL_FISIOTERAPEUTA)) {
-            $criteria->add(FisioterapeutasTableMap::COL_FISIOTERAPEUTA, $this->fisioterapeuta);
+        if ($this->isColumnModified(ProcedimentoTableMap::COL_NOME)) {
+            $criteria->add(ProcedimentoTableMap::COL_NOME, $this->nome);
         }
 
         return $criteria;
@@ -884,8 +990,8 @@ abstract class Fisioterapeutas implements ActiveRecordInterface
      */
     public function buildPkeyCriteria(): Criteria
     {
-        $criteria = ChildFisioterapeutasQuery::create();
-        $criteria->add(FisioterapeutasTableMap::COL_ID, $this->id);
+        $criteria = ChildProcedimentoQuery::create();
+        $criteria->add(ProcedimentoTableMap::COL_ID, $this->id);
 
         return $criteria;
     }
@@ -948,7 +1054,7 @@ abstract class Fisioterapeutas implements ActiveRecordInterface
      * If desired, this method can also make copies of all associated (fkey referrers)
      * objects.
      *
-     * @param object $copyObj An object of \Api\Models\Fisioterapeutas (or compatible) type.
+     * @param object $copyObj An object of \Models\Procedimento (or compatible) type.
      * @param bool $deepCopy Whether to also copy all rows that refer (by fkey) to the current row.
      * @param bool $makeNew Whether to reset autoincrement PKs and make the object new.
      * @throws \Propel\Runtime\Exception\PropelException
@@ -956,7 +1062,21 @@ abstract class Fisioterapeutas implements ActiveRecordInterface
      */
     public function copyInto(object $copyObj, bool $deepCopy = false, bool $makeNew = true): void
     {
-        $copyObj->setFisioterapeuta($this->getFisioterapeuta());
+        $copyObj->setNome($this->getNome());
+
+        if ($deepCopy) {
+            // important: temporarily setNew(false) because this affects the behavior of
+            // the getter/setter methods for fkey referrer objects.
+            $copyObj->setNew(false);
+
+            foreach ($this->getRegistroProcedimentos() as $relObj) {
+                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
+                    $copyObj->addRegistroProcedimento($relObj->copy($deepCopy));
+                }
+            }
+
+        } // if ($deepCopy)
+
         if ($makeNew) {
             $copyObj->setNew(true);
             $copyObj->setId(NULL); // this is a auto-increment column, so set to default value
@@ -972,7 +1092,7 @@ abstract class Fisioterapeutas implements ActiveRecordInterface
      * objects.
      *
      * @param bool $deepCopy Whether to also copy all rows that refer (by fkey) to the current row.
-     * @return \Api\Models\Fisioterapeutas Clone of current object.
+     * @return \Models\Procedimento Clone of current object.
      * @throws \Propel\Runtime\Exception\PropelException
      */
     public function copy(bool $deepCopy = false)
@@ -985,6 +1105,535 @@ abstract class Fisioterapeutas implements ActiveRecordInterface
         return $copyObj;
     }
 
+
+    /**
+     * Initializes a collection based on the name of a relation.
+     * Avoids crafting an 'init[$relationName]s' method name
+     * that wouldn't work when StandardEnglishPluralizer is used.
+     *
+     * @param string $relationName The name of the relation to initialize
+     * @return void
+     */
+    public function initRelation($relationName): void
+    {
+        if ('RegistroProcedimento' === $relationName) {
+            $this->initRegistroProcedimentos();
+            return;
+        }
+    }
+
+    /**
+     * Clears out the collRegistroProcedimentos collection
+     *
+     * This does not modify the database; however, it will remove any associated objects, causing
+     * them to be refetched by subsequent calls to accessor method.
+     *
+     * @return $this
+     * @see addRegistroProcedimentos()
+     */
+    public function clearRegistroProcedimentos()
+    {
+        $this->collRegistroProcedimentos = null; // important to set this to NULL since that means it is uninitialized
+
+        return $this;
+    }
+
+    /**
+     * Reset is the collRegistroProcedimentos collection loaded partially.
+     *
+     * @return void
+     */
+    public function resetPartialRegistroProcedimentos($v = true): void
+    {
+        $this->collRegistroProcedimentosPartial = $v;
+    }
+
+    /**
+     * Initializes the collRegistroProcedimentos collection.
+     *
+     * By default this just sets the collRegistroProcedimentos collection to an empty array (like clearcollRegistroProcedimentos());
+     * however, you may wish to override this method in your stub class to provide setting appropriate
+     * to your application -- for example, setting the initial array to the values stored in database.
+     *
+     * @param bool $overrideExisting If set to true, the method call initializes
+     *                                        the collection even if it is not empty
+     *
+     * @return void
+     */
+    public function initRegistroProcedimentos(bool $overrideExisting = true): void
+    {
+        if (null !== $this->collRegistroProcedimentos && !$overrideExisting) {
+            return;
+        }
+
+        $collectionClassName = RegistroProcedimentoTableMap::getTableMap()->getCollectionClassName();
+
+        $this->collRegistroProcedimentos = new $collectionClassName;
+        $this->collRegistroProcedimentos->setModel('\Models\RegistroProcedimento');
+    }
+
+    /**
+     * Gets an array of ChildRegistroProcedimento objects which contain a foreign key that references this object.
+     *
+     * If the $criteria is not null, it is used to always fetch the results from the database.
+     * Otherwise the results are fetched from the database the first time, then cached.
+     * Next time the same method is called without $criteria, the cached collection is returned.
+     * If this ChildProcedimento is new, it will return
+     * an empty collection or the current collection; the criteria is ignored on a new object.
+     *
+     * @param Criteria $criteria optional Criteria object to narrow the query
+     * @param ConnectionInterface $con optional connection object
+     * @return ObjectCollection|ChildRegistroProcedimento[] List of ChildRegistroProcedimento objects
+     * @phpstan-return ObjectCollection&\Traversable<ChildRegistroProcedimento> List of ChildRegistroProcedimento objects
+     * @throws \Propel\Runtime\Exception\PropelException
+     */
+    public function getRegistroProcedimentos(?Criteria $criteria = null, ?ConnectionInterface $con = null)
+    {
+        $partial = $this->collRegistroProcedimentosPartial && !$this->isNew();
+        if (null === $this->collRegistroProcedimentos || null !== $criteria || $partial) {
+            if ($this->isNew()) {
+                // return empty collection
+                if (null === $this->collRegistroProcedimentos) {
+                    $this->initRegistroProcedimentos();
+                } else {
+                    $collectionClassName = RegistroProcedimentoTableMap::getTableMap()->getCollectionClassName();
+
+                    $collRegistroProcedimentos = new $collectionClassName;
+                    $collRegistroProcedimentos->setModel('\Models\RegistroProcedimento');
+
+                    return $collRegistroProcedimentos;
+                }
+            } else {
+                $collRegistroProcedimentos = ChildRegistroProcedimentoQuery::create(null, $criteria)
+                    ->filterByProcedimento($this)
+                    ->find($con);
+
+                if (null !== $criteria) {
+                    if (false !== $this->collRegistroProcedimentosPartial && count($collRegistroProcedimentos)) {
+                        $this->initRegistroProcedimentos(false);
+
+                        foreach ($collRegistroProcedimentos as $obj) {
+                            if (false == $this->collRegistroProcedimentos->contains($obj)) {
+                                $this->collRegistroProcedimentos->append($obj);
+                            }
+                        }
+
+                        $this->collRegistroProcedimentosPartial = true;
+                    }
+
+                    return $collRegistroProcedimentos;
+                }
+
+                if ($partial && $this->collRegistroProcedimentos) {
+                    foreach ($this->collRegistroProcedimentos as $obj) {
+                        if ($obj->isNew()) {
+                            $collRegistroProcedimentos[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collRegistroProcedimentos = $collRegistroProcedimentos;
+                $this->collRegistroProcedimentosPartial = false;
+            }
+        }
+
+        return $this->collRegistroProcedimentos;
+    }
+
+    /**
+     * Sets a collection of ChildRegistroProcedimento objects related by a one-to-many relationship
+     * to the current object.
+     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
+     * and new objects from the given Propel collection.
+     *
+     * @param Collection $registroProcedimentos A Propel collection.
+     * @param ConnectionInterface $con Optional connection object
+     * @return $this The current object (for fluent API support)
+     */
+    public function setRegistroProcedimentos(Collection $registroProcedimentos, ?ConnectionInterface $con = null)
+    {
+        /** @var ChildRegistroProcedimento[] $registroProcedimentosToDelete */
+        $registroProcedimentosToDelete = $this->getRegistroProcedimentos(new Criteria(), $con)->diff($registroProcedimentos);
+
+
+        //since at least one column in the foreign key is at the same time a PK
+        //we can not just set a PK to NULL in the lines below. We have to store
+        //a backup of all values, so we are able to manipulate these items based on the onDelete value later.
+        $this->registroProcedimentosScheduledForDeletion = clone $registroProcedimentosToDelete;
+
+        foreach ($registroProcedimentosToDelete as $registroProcedimentoRemoved) {
+            $registroProcedimentoRemoved->setProcedimento(null);
+        }
+
+        $this->collRegistroProcedimentos = null;
+        foreach ($registroProcedimentos as $registroProcedimento) {
+            $this->addRegistroProcedimento($registroProcedimento);
+        }
+
+        $this->collRegistroProcedimentos = $registroProcedimentos;
+        $this->collRegistroProcedimentosPartial = false;
+
+        return $this;
+    }
+
+    /**
+     * Returns the number of related RegistroProcedimento objects.
+     *
+     * @param Criteria $criteria
+     * @param bool $distinct
+     * @param ConnectionInterface $con
+     * @return int Count of related RegistroProcedimento objects.
+     * @throws \Propel\Runtime\Exception\PropelException
+     */
+    public function countRegistroProcedimentos(?Criteria $criteria = null, bool $distinct = false, ?ConnectionInterface $con = null): int
+    {
+        $partial = $this->collRegistroProcedimentosPartial && !$this->isNew();
+        if (null === $this->collRegistroProcedimentos || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collRegistroProcedimentos) {
+                return 0;
+            }
+
+            if ($partial && !$criteria) {
+                return count($this->getRegistroProcedimentos());
+            }
+
+            $query = ChildRegistroProcedimentoQuery::create(null, $criteria);
+            if ($distinct) {
+                $query->distinct();
+            }
+
+            return $query
+                ->filterByProcedimento($this)
+                ->count($con);
+        }
+
+        return count($this->collRegistroProcedimentos);
+    }
+
+    /**
+     * Method called to associate a ChildRegistroProcedimento object to this object
+     * through the ChildRegistroProcedimento foreign key attribute.
+     *
+     * @param ChildRegistroProcedimento $l ChildRegistroProcedimento
+     * @return $this The current object (for fluent API support)
+     */
+    public function addRegistroProcedimento(ChildRegistroProcedimento $l)
+    {
+        if ($this->collRegistroProcedimentos === null) {
+            $this->initRegistroProcedimentos();
+            $this->collRegistroProcedimentosPartial = true;
+        }
+
+        if (!$this->collRegistroProcedimentos->contains($l)) {
+            $this->doAddRegistroProcedimento($l);
+
+            if ($this->registroProcedimentosScheduledForDeletion and $this->registroProcedimentosScheduledForDeletion->contains($l)) {
+                $this->registroProcedimentosScheduledForDeletion->remove($this->registroProcedimentosScheduledForDeletion->search($l));
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param ChildRegistroProcedimento $registroProcedimento The ChildRegistroProcedimento object to add.
+     */
+    protected function doAddRegistroProcedimento(ChildRegistroProcedimento $registroProcedimento): void
+    {
+        $this->collRegistroProcedimentos[]= $registroProcedimento;
+        $registroProcedimento->setProcedimento($this);
+    }
+
+    /**
+     * @param ChildRegistroProcedimento $registroProcedimento The ChildRegistroProcedimento object to remove.
+     * @return $this The current object (for fluent API support)
+     */
+    public function removeRegistroProcedimento(ChildRegistroProcedimento $registroProcedimento)
+    {
+        if ($this->getRegistroProcedimentos()->contains($registroProcedimento)) {
+            $pos = $this->collRegistroProcedimentos->search($registroProcedimento);
+            $this->collRegistroProcedimentos->remove($pos);
+            if (null === $this->registroProcedimentosScheduledForDeletion) {
+                $this->registroProcedimentosScheduledForDeletion = clone $this->collRegistroProcedimentos;
+                $this->registroProcedimentosScheduledForDeletion->clear();
+            }
+            $this->registroProcedimentosScheduledForDeletion[]= clone $registroProcedimento;
+            $registroProcedimento->setProcedimento(null);
+        }
+
+        return $this;
+    }
+
+
+    /**
+     * If this collection has already been initialized with
+     * an identical criteria, it returns the collection.
+     * Otherwise if this Procedimento is new, it will return
+     * an empty collection; or if this Procedimento has previously
+     * been saved, it will retrieve related RegistroProcedimentos from storage.
+     *
+     * This method is protected by default in order to keep the public
+     * api reasonable.  You can provide public methods for those you
+     * actually need in Procedimento.
+     *
+     * @param Criteria $criteria optional Criteria object to narrow the query
+     * @param ConnectionInterface $con optional connection object
+     * @param string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
+     * @return ObjectCollection|ChildRegistroProcedimento[] List of ChildRegistroProcedimento objects
+     * @phpstan-return ObjectCollection&\Traversable<ChildRegistroProcedimento}> List of ChildRegistroProcedimento objects
+     */
+    public function getRegistroProcedimentosJoinRegistro(?Criteria $criteria = null, ?ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
+    {
+        $query = ChildRegistroProcedimentoQuery::create(null, $criteria);
+        $query->joinWith('Registro', $joinBehavior);
+
+        return $this->getRegistroProcedimentos($query, $con);
+    }
+
+    /**
+     * Clears out the collRegistros collection
+     *
+     * This does not modify the database; however, it will remove any associated objects, causing
+     * them to be refetched by subsequent calls to accessor method.
+     *
+     * @return void
+     * @see        addRegistros()
+     */
+    public function clearRegistros()
+    {
+        $this->collRegistros = null; // important to set this to NULL since that means it is uninitialized
+    }
+
+    /**
+     * Initializes the collRegistros crossRef collection.
+     *
+     * By default this just sets the collRegistros collection to an empty collection (like clearRegistros());
+     * however, you may wish to override this method in your stub class to provide setting appropriate
+     * to your application -- for example, setting the initial array to the values stored in database.
+     *
+     * @return void
+     */
+    public function initRegistros()
+    {
+        $collectionClassName = RegistroProcedimentoTableMap::getTableMap()->getCollectionClassName();
+
+        $this->collRegistros = new $collectionClassName;
+        $this->collRegistrosPartial = true;
+        $this->collRegistros->setModel('\Models\Registro');
+    }
+
+    /**
+     * Checks if the collRegistros collection is loaded.
+     *
+     * @return bool
+     */
+    public function isRegistrosLoaded(): bool
+    {
+        return null !== $this->collRegistros;
+    }
+
+    /**
+     * Gets a collection of ChildRegistro objects related by a many-to-many relationship
+     * to the current object by way of the registro_procedimento cross-reference table.
+     *
+     * If the $criteria is not null, it is used to always fetch the results from the database.
+     * Otherwise the results are fetched from the database the first time, then cached.
+     * Next time the same method is called without $criteria, the cached collection is returned.
+     * If this ChildProcedimento is new, it will return
+     * an empty collection or the current collection; the criteria is ignored on a new object.
+     *
+     * @param Criteria $criteria Optional query object to filter the query
+     * @param ConnectionInterface $con Optional connection object
+     *
+     * @return ObjectCollection|ChildRegistro[] List of ChildRegistro objects
+     * @phpstan-return ObjectCollection&\Traversable<ChildRegistro> List of ChildRegistro objects
+     */
+    public function getRegistros(?Criteria $criteria = null, ?ConnectionInterface $con = null)
+    {
+        $partial = $this->collRegistrosPartial && !$this->isNew();
+        if (null === $this->collRegistros || null !== $criteria || $partial) {
+            if ($this->isNew()) {
+                // return empty collection
+                if (null === $this->collRegistros) {
+                    $this->initRegistros();
+                }
+            } else {
+
+                $query = ChildRegistroQuery::create(null, $criteria)
+                    ->filterByProcedimento($this);
+                $collRegistros = $query->find($con);
+                if (null !== $criteria) {
+                    return $collRegistros;
+                }
+
+                if ($partial && $this->collRegistros) {
+                    //make sure that already added objects gets added to the list of the database.
+                    foreach ($this->collRegistros as $obj) {
+                        if (!$collRegistros->contains($obj)) {
+                            $collRegistros[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collRegistros = $collRegistros;
+                $this->collRegistrosPartial = false;
+            }
+        }
+
+        return $this->collRegistros;
+    }
+
+    /**
+     * Sets a collection of Registro objects related by a many-to-many relationship
+     * to the current object by way of the registro_procedimento cross-reference table.
+     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
+     * and new objects from the given Propel collection.
+     *
+     * @param Collection $registros A Propel collection.
+     * @param ConnectionInterface $con Optional connection object
+     * @return $this The current object (for fluent API support)
+     */
+    public function setRegistros(Collection $registros, ?ConnectionInterface $con = null)
+    {
+        $this->clearRegistros();
+        $currentRegistros = $this->getRegistros();
+
+        $registrosScheduledForDeletion = $currentRegistros->diff($registros);
+
+        foreach ($registrosScheduledForDeletion as $toDelete) {
+            $this->removeRegistro($toDelete);
+        }
+
+        foreach ($registros as $registro) {
+            if (!$currentRegistros->contains($registro)) {
+                $this->doAddRegistro($registro);
+            }
+        }
+
+        $this->collRegistrosPartial = false;
+        $this->collRegistros = $registros;
+
+        return $this;
+    }
+
+    /**
+     * Gets the number of Registro objects related by a many-to-many relationship
+     * to the current object by way of the registro_procedimento cross-reference table.
+     *
+     * @param Criteria $criteria Optional query object to filter the query
+     * @param bool $distinct Set to true to force count distinct
+     * @param ConnectionInterface $con Optional connection object
+     *
+     * @return int The number of related Registro objects
+     */
+    public function countRegistros(?Criteria $criteria = null, $distinct = false, ?ConnectionInterface $con = null): int
+    {
+        $partial = $this->collRegistrosPartial && !$this->isNew();
+        if (null === $this->collRegistros || null !== $criteria || $partial) {
+            if ($this->isNew() && null === $this->collRegistros) {
+                return 0;
+            } else {
+
+                if ($partial && !$criteria) {
+                    return count($this->getRegistros());
+                }
+
+                $query = ChildRegistroQuery::create(null, $criteria);
+                if ($distinct) {
+                    $query->distinct();
+                }
+
+                return $query
+                    ->filterByProcedimento($this)
+                    ->count($con);
+            }
+        } else {
+            return count($this->collRegistros);
+        }
+    }
+
+    /**
+     * Associate a ChildRegistro to this object
+     * through the registro_procedimento cross reference table.
+     *
+     * @param ChildRegistro $registro
+     * @return ChildProcedimento The current object (for fluent API support)
+     */
+    public function addRegistro(ChildRegistro $registro)
+    {
+        if ($this->collRegistros === null) {
+            $this->initRegistros();
+        }
+
+        if (!$this->getRegistros()->contains($registro)) {
+            // only add it if the **same** object is not already associated
+            $this->collRegistros->push($registro);
+            $this->doAddRegistro($registro);
+        }
+
+        return $this;
+    }
+
+    /**
+     *
+     * @param ChildRegistro $registro
+     */
+    protected function doAddRegistro(ChildRegistro $registro)
+    {
+        $registroProcedimento = new ChildRegistroProcedimento();
+
+        $registroProcedimento->setRegistro($registro);
+
+        $registroProcedimento->setProcedimento($this);
+
+        $this->addRegistroProcedimento($registroProcedimento);
+
+        // set the back reference to this object directly as using provided method either results
+        // in endless loop or in multiple relations
+        if (!$registro->isProcedimentosLoaded()) {
+            $registro->initProcedimentos();
+            $registro->getProcedimentos()->push($this);
+        } elseif (!$registro->getProcedimentos()->contains($this)) {
+            $registro->getProcedimentos()->push($this);
+        }
+
+    }
+
+    /**
+     * Remove registro of this object
+     * through the registro_procedimento cross reference table.
+     *
+     * @param ChildRegistro $registro
+     * @return ChildProcedimento The current object (for fluent API support)
+     */
+    public function removeRegistro(ChildRegistro $registro)
+    {
+        if ($this->getRegistros()->contains($registro)) {
+            $registroProcedimento = new ChildRegistroProcedimento();
+            $registroProcedimento->setRegistro($registro);
+            if ($registro->isProcedimentosLoaded()) {
+                //remove the back reference if available
+                $registro->getProcedimentos()->removeObject($this);
+            }
+
+            $registroProcedimento->setProcedimento($this);
+            $this->removeRegistroProcedimento(clone $registroProcedimento);
+            $registroProcedimento->clear();
+
+            $this->collRegistros->remove($this->collRegistros->search($registro));
+
+            if (null === $this->registrosScheduledForDeletion) {
+                $this->registrosScheduledForDeletion = clone $this->collRegistros;
+                $this->registrosScheduledForDeletion->clear();
+            }
+
+            $this->registrosScheduledForDeletion->push($registro);
+        }
+
+
+        return $this;
+    }
+
     /**
      * Clears the current object, sets all attributes to their default values and removes
      * outgoing references as well as back-references (from other objects to this one. Results probably in a database
@@ -995,7 +1644,7 @@ abstract class Fisioterapeutas implements ActiveRecordInterface
     public function clear()
     {
         $this->id = null;
-        $this->fisioterapeuta = null;
+        $this->nome = null;
         $this->alreadyInSave = false;
         $this->clearAllReferences();
         $this->resetModified();
@@ -1017,8 +1666,20 @@ abstract class Fisioterapeutas implements ActiveRecordInterface
     public function clearAllReferences(bool $deep = false)
     {
         if ($deep) {
+            if ($this->collRegistroProcedimentos) {
+                foreach ($this->collRegistroProcedimentos as $o) {
+                    $o->clearAllReferences($deep);
+                }
+            }
+            if ($this->collRegistros) {
+                foreach ($this->collRegistros as $o) {
+                    $o->clearAllReferences($deep);
+                }
+            }
         } // if ($deep)
 
+        $this->collRegistroProcedimentos = null;
+        $this->collRegistros = null;
         return $this;
     }
 
@@ -1029,7 +1690,7 @@ abstract class Fisioterapeutas implements ActiveRecordInterface
      */
     public function __toString()
     {
-        return (string) $this->exportTo(FisioterapeutasTableMap::DEFAULT_STRING_FORMAT);
+        return (string) $this->exportTo(ProcedimentoTableMap::DEFAULT_STRING_FORMAT);
     }
 
     /**

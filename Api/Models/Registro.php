@@ -1,11 +1,11 @@
 <?php
 
-namespace Api\Models;
+namespace Models;
 
-use Api\Models\Base\Procedimentos as BaseProcedimentos;
+use Models\Base\Registro as BaseRegistro;
 
 /**
- * Skeleton subclass for representing a row from the 'procedimentos' table.
+ * Skeleton subclass for representing a row from the 'registros' table.
  *
  *
  *
@@ -13,7 +13,7 @@ use Api\Models\Base\Procedimentos as BaseProcedimentos;
  * application requirements.  This class will only be generated as
  * long as it does not already exist in the output directory.
  */
-class Procedimentos extends BaseProcedimentos
+class Registro extends BaseRegistro
 {
 
 }

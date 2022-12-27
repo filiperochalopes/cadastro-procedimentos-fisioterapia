@@ -1,12 +1,15 @@
 <?php
 
-namespace Api\Models\Base;
+namespace Models\Base;
 
-use \DateTime;
 use \Exception;
 use \PDO;
-use Api\Models\RegistrosQuery as ChildRegistrosQuery;
-use Api\Models\Map\RegistrosTableMap;
+use Models\Procedimento as ChildProcedimento;
+use Models\ProcedimentoQuery as ChildProcedimentoQuery;
+use Models\Registro as ChildRegistro;
+use Models\RegistroProcedimentoQuery as ChildRegistroProcedimentoQuery;
+use Models\RegistroQuery as ChildRegistroQuery;
+use Models\Map\RegistroProcedimentoTableMap;
 use Propel\Runtime\Propel;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\ActiveQuery\ModelCriteria;
@@ -18,23 +21,22 @@ use Propel\Runtime\Exception\LogicException;
 use Propel\Runtime\Exception\PropelException;
 use Propel\Runtime\Map\TableMap;
 use Propel\Runtime\Parser\AbstractParser;
-use Propel\Runtime\Util\PropelDateTime;
 
 /**
- * Base class that represents a row from the 'registros' table.
+ * Base class that represents a row from the 'registro_procedimento' table.
  *
  *
  *
- * @package    propel.generator.Api.Models.Base
+ * @package    propel.generator.Models.Base
  */
-abstract class Registros implements ActiveRecordInterface
+abstract class RegistroProcedimento implements ActiveRecordInterface
 {
     /**
      * TableMap class name
      *
      * @var string
      */
-    public const TABLE_MAP = '\\Api\\Models\\Map\\RegistrosTableMap';
+    public const TABLE_MAP = '\\Models\\Map\\RegistroProcedimentoTableMap';
 
 
     /**
@@ -64,39 +66,28 @@ abstract class Registros implements ActiveRecordInterface
     protected $virtualColumns = [];
 
     /**
-     * The value for the id field.
+     * The value for the registro_id field.
      *
      * @var        int
      */
-    protected $id;
+    protected $registro_id;
 
     /**
-     * The value for the paciente field.
+     * The value for the procedimento_id field.
      *
-     * @var        string
+     * @var        int
      */
-    protected $paciente;
+    protected $procedimento_id;
 
     /**
-     * The value for the procedimentos field.
-     *
-     * @var        string
+     * @var        ChildRegistro
      */
-    protected $procedimentos;
+    protected $aRegistro;
 
     /**
-     * The value for the data field.
-     *
-     * @var        DateTime
+     * @var        ChildProcedimento
      */
-    protected $data;
-
-    /**
-     * The value for the turno field.
-     *
-     * @var        string|null
-     */
-    protected $turno;
+    protected $aProcedimento;
 
     /**
      * Flag to prevent endless save loop, if this object is referenced
@@ -107,7 +98,7 @@ abstract class Registros implements ActiveRecordInterface
     protected $alreadyInSave = false;
 
     /**
-     * Initializes internal state of Api\Models\Base\Registros object.
+     * Initializes internal state of Models\Base\RegistroProcedimento object.
      */
     public function __construct()
     {
@@ -200,9 +191,9 @@ abstract class Registros implements ActiveRecordInterface
     }
 
     /**
-     * Compares this with another <code>Registros</code> instance.  If
-     * <code>obj</code> is an instance of <code>Registros</code>, delegates to
-     * <code>equals(Registros)</code>.  Otherwise, returns <code>false</code>.
+     * Compares this with another <code>RegistroProcedimento</code> instance.  If
+     * <code>obj</code> is an instance of <code>RegistroProcedimento</code>, delegates to
+     * <code>equals(RegistroProcedimento)</code>.  Otherwise, returns <code>false</code>.
      *
      * @param mixed $obj The object to compare to.
      * @return bool Whether equal to the object specified.
@@ -333,162 +324,68 @@ abstract class Registros implements ActiveRecordInterface
     }
 
     /**
-     * Get the [id] column value.
+     * Get the [registro_id] column value.
      *
      * @return int
      */
-    public function getId()
+    public function getRegistroId()
     {
-        return $this->id;
+        return $this->registro_id;
     }
 
     /**
-     * Get the [paciente] column value.
+     * Get the [procedimento_id] column value.
      *
-     * @return string
+     * @return int
      */
-    public function getPaciente()
+    public function getProcedimentoId()
     {
-        return $this->paciente;
+        return $this->procedimento_id;
     }
 
     /**
-     * Get the [procedimentos] column value.
-     *
-     * @return string
-     */
-    public function getProcedimentos()
-    {
-        return $this->procedimentos;
-    }
-
-    /**
-     * Get the [optionally formatted] temporal [data] column value.
-     *
-     *
-     * @param string|null $format The date/time format string (either date()-style or strftime()-style).
-     *   If format is NULL, then the raw DateTime object will be returned.
-     *
-     * @return string|DateTime Formatted date/time value as string or DateTime object (if format is NULL), and 0 if column value is 0000-00-00.
-     *
-     * @throws \Propel\Runtime\Exception\PropelException - if unable to parse/validate the date/time value.
-     *
-     * @psalm-return ($format is null ? DateTime : string)
-     */
-    public function getData($format = null)
-    {
-        if ($format === null) {
-            return $this->data;
-        } else {
-            return $this->data instanceof \DateTimeInterface ? $this->data->format($format) : null;
-        }
-    }
-
-    /**
-     * Get the [turno] column value.
-     *
-     * @return string|null
-     */
-    public function getTurno()
-    {
-        return $this->turno;
-    }
-
-    /**
-     * Set the value of [id] column.
+     * Set the value of [registro_id] column.
      *
      * @param int $v New value
      * @return $this The current object (for fluent API support)
      */
-    public function setId($v)
+    public function setRegistroId($v)
     {
         if ($v !== null) {
             $v = (int) $v;
         }
 
-        if ($this->id !== $v) {
-            $this->id = $v;
-            $this->modifiedColumns[RegistrosTableMap::COL_ID] = true;
+        if ($this->registro_id !== $v) {
+            $this->registro_id = $v;
+            $this->modifiedColumns[RegistroProcedimentoTableMap::COL_REGISTRO_ID] = true;
+        }
+
+        if ($this->aRegistro !== null && $this->aRegistro->getId() !== $v) {
+            $this->aRegistro = null;
         }
 
         return $this;
     }
 
     /**
-     * Set the value of [paciente] column.
+     * Set the value of [procedimento_id] column.
      *
-     * @param string $v New value
+     * @param int $v New value
      * @return $this The current object (for fluent API support)
      */
-    public function setPaciente($v)
+    public function setProcedimentoId($v)
     {
         if ($v !== null) {
-            $v = (string) $v;
+            $v = (int) $v;
         }
 
-        if ($this->paciente !== $v) {
-            $this->paciente = $v;
-            $this->modifiedColumns[RegistrosTableMap::COL_PACIENTE] = true;
+        if ($this->procedimento_id !== $v) {
+            $this->procedimento_id = $v;
+            $this->modifiedColumns[RegistroProcedimentoTableMap::COL_PROCEDIMENTO_ID] = true;
         }
 
-        return $this;
-    }
-
-    /**
-     * Set the value of [procedimentos] column.
-     *
-     * @param string $v New value
-     * @return $this The current object (for fluent API support)
-     */
-    public function setProcedimentos($v)
-    {
-        if ($v !== null) {
-            $v = (string) $v;
-        }
-
-        if ($this->procedimentos !== $v) {
-            $this->procedimentos = $v;
-            $this->modifiedColumns[RegistrosTableMap::COL_PROCEDIMENTOS] = true;
-        }
-
-        return $this;
-    }
-
-    /**
-     * Sets the value of [data] column to a normalized version of the date/time value specified.
-     *
-     * @param string|integer|\DateTimeInterface $v string, integer (timestamp), or \DateTimeInterface value.
-     *               Empty strings are treated as NULL.
-     * @return $this The current object (for fluent API support)
-     */
-    public function setData($v)
-    {
-        $dt = PropelDateTime::newInstance($v, null, 'DateTime');
-        if ($this->data !== null || $dt !== null) {
-            if ($this->data === null || $dt === null || $dt->format("Y-m-d") !== $this->data->format("Y-m-d")) {
-                $this->data = $dt === null ? null : clone $dt;
-                $this->modifiedColumns[RegistrosTableMap::COL_DATA] = true;
-            }
-        } // if either are not null
-
-        return $this;
-    }
-
-    /**
-     * Set the value of [turno] column.
-     *
-     * @param string|null $v New value
-     * @return $this The current object (for fluent API support)
-     */
-    public function setTurno($v)
-    {
-        if ($v !== null) {
-            $v = (string) $v;
-        }
-
-        if ($this->turno !== $v) {
-            $this->turno = $v;
-            $this->modifiedColumns[RegistrosTableMap::COL_TURNO] = true;
+        if ($this->aProcedimento !== null && $this->aProcedimento->getId() !== $v) {
+            $this->aProcedimento = null;
         }
 
         return $this;
@@ -530,23 +427,11 @@ abstract class Registros implements ActiveRecordInterface
     {
         try {
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 0 + $startcol : RegistrosTableMap::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->id = (null !== $col) ? (int) $col : null;
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 0 + $startcol : RegistroProcedimentoTableMap::translateFieldName('RegistroId', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->registro_id = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : RegistrosTableMap::translateFieldName('Paciente', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->paciente = (null !== $col) ? (string) $col : null;
-
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : RegistrosTableMap::translateFieldName('Procedimentos', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->procedimentos = (null !== $col) ? (string) $col : null;
-
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : RegistrosTableMap::translateFieldName('Data', TableMap::TYPE_PHPNAME, $indexType)];
-            if ($col === '0000-00-00') {
-                $col = null;
-            }
-            $this->data = (null !== $col) ? PropelDateTime::newInstance($col, null, 'DateTime') : null;
-
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : RegistrosTableMap::translateFieldName('Turno', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->turno = (null !== $col) ? (string) $col : null;
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : RegistroProcedimentoTableMap::translateFieldName('ProcedimentoId', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->procedimento_id = (null !== $col) ? (int) $col : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -555,10 +440,10 @@ abstract class Registros implements ActiveRecordInterface
                 $this->ensureConsistency();
             }
 
-            return $startcol + 5; // 5 = RegistrosTableMap::NUM_HYDRATE_COLUMNS.
+            return $startcol + 2; // 2 = RegistroProcedimentoTableMap::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
-            throw new PropelException(sprintf('Error populating %s object', '\\Api\\Models\\Registros'), 0, $e);
+            throw new PropelException(sprintf('Error populating %s object', '\\Models\\RegistroProcedimento'), 0, $e);
         }
     }
 
@@ -578,6 +463,12 @@ abstract class Registros implements ActiveRecordInterface
      */
     public function ensureConsistency(): void
     {
+        if ($this->aRegistro !== null && $this->registro_id !== $this->aRegistro->getId()) {
+            $this->aRegistro = null;
+        }
+        if ($this->aProcedimento !== null && $this->procedimento_id !== $this->aProcedimento->getId()) {
+            $this->aProcedimento = null;
+        }
     }
 
     /**
@@ -601,13 +492,13 @@ abstract class Registros implements ActiveRecordInterface
         }
 
         if ($con === null) {
-            $con = Propel::getServiceContainer()->getReadConnection(RegistrosTableMap::DATABASE_NAME);
+            $con = Propel::getServiceContainer()->getReadConnection(RegistroProcedimentoTableMap::DATABASE_NAME);
         }
 
         // We don't need to alter the object instance pool; we're just modifying this instance
         // already in the pool.
 
-        $dataFetcher = ChildRegistrosQuery::create(null, $this->buildPkeyCriteria())->setFormatter(ModelCriteria::FORMAT_STATEMENT)->find($con);
+        $dataFetcher = ChildRegistroProcedimentoQuery::create(null, $this->buildPkeyCriteria())->setFormatter(ModelCriteria::FORMAT_STATEMENT)->find($con);
         $row = $dataFetcher->fetch();
         $dataFetcher->close();
         if (!$row) {
@@ -617,6 +508,8 @@ abstract class Registros implements ActiveRecordInterface
 
         if ($deep) {  // also de-associate any related objects?
 
+            $this->aRegistro = null;
+            $this->aProcedimento = null;
         } // if (deep)
     }
 
@@ -626,8 +519,8 @@ abstract class Registros implements ActiveRecordInterface
      * @param ConnectionInterface $con
      * @return void
      * @throws \Propel\Runtime\Exception\PropelException
-     * @see Registros::setDeleted()
-     * @see Registros::isDeleted()
+     * @see RegistroProcedimento::setDeleted()
+     * @see RegistroProcedimento::isDeleted()
      */
     public function delete(?ConnectionInterface $con = null): void
     {
@@ -636,11 +529,11 @@ abstract class Registros implements ActiveRecordInterface
         }
 
         if ($con === null) {
-            $con = Propel::getServiceContainer()->getWriteConnection(RegistrosTableMap::DATABASE_NAME);
+            $con = Propel::getServiceContainer()->getWriteConnection(RegistroProcedimentoTableMap::DATABASE_NAME);
         }
 
         $con->transaction(function () use ($con) {
-            $deleteQuery = ChildRegistrosQuery::create()
+            $deleteQuery = ChildRegistroProcedimentoQuery::create()
                 ->filterByPrimaryKey($this->getPrimaryKey());
             $ret = $this->preDelete($con);
             if ($ret) {
@@ -675,7 +568,7 @@ abstract class Registros implements ActiveRecordInterface
         }
 
         if ($con === null) {
-            $con = Propel::getServiceContainer()->getWriteConnection(RegistrosTableMap::DATABASE_NAME);
+            $con = Propel::getServiceContainer()->getWriteConnection(RegistroProcedimentoTableMap::DATABASE_NAME);
         }
 
         return $con->transaction(function () use ($con) {
@@ -694,7 +587,7 @@ abstract class Registros implements ActiveRecordInterface
                     $this->postUpdate($con);
                 }
                 $this->postSave($con);
-                RegistrosTableMap::addInstanceToPool($this);
+                RegistroProcedimentoTableMap::addInstanceToPool($this);
             } else {
                 $affectedRows = 0;
             }
@@ -719,6 +612,25 @@ abstract class Registros implements ActiveRecordInterface
         $affectedRows = 0; // initialize var to track total num of affected rows
         if (!$this->alreadyInSave) {
             $this->alreadyInSave = true;
+
+            // We call the save method on the following object(s) if they
+            // were passed to this object by their corresponding set
+            // method.  This object relates to these object(s) by a
+            // foreign key reference.
+
+            if ($this->aRegistro !== null) {
+                if ($this->aRegistro->isModified() || $this->aRegistro->isNew()) {
+                    $affectedRows += $this->aRegistro->save($con);
+                }
+                $this->setRegistro($this->aRegistro);
+            }
+
+            if ($this->aProcedimento !== null) {
+                if ($this->aProcedimento->isModified() || $this->aProcedimento->isNew()) {
+                    $affectedRows += $this->aProcedimento->save($con);
+                }
+                $this->setProcedimento($this->aProcedimento);
+            }
 
             if ($this->isNew() || $this->isModified()) {
                 // persist changes
@@ -751,30 +663,17 @@ abstract class Registros implements ActiveRecordInterface
         $modifiedColumns = [];
         $index = 0;
 
-        $this->modifiedColumns[RegistrosTableMap::COL_ID] = true;
-        if (null !== $this->id) {
-            throw new PropelException('Cannot insert a value for auto-increment primary key (' . RegistrosTableMap::COL_ID . ')');
-        }
 
          // check the columns in natural order for more readable SQL queries
-        if ($this->isColumnModified(RegistrosTableMap::COL_ID)) {
-            $modifiedColumns[':p' . $index++]  = 'id';
+        if ($this->isColumnModified(RegistroProcedimentoTableMap::COL_REGISTRO_ID)) {
+            $modifiedColumns[':p' . $index++]  = 'registro_id';
         }
-        if ($this->isColumnModified(RegistrosTableMap::COL_PACIENTE)) {
-            $modifiedColumns[':p' . $index++]  = 'paciente';
-        }
-        if ($this->isColumnModified(RegistrosTableMap::COL_PROCEDIMENTOS)) {
-            $modifiedColumns[':p' . $index++]  = 'procedimentos';
-        }
-        if ($this->isColumnModified(RegistrosTableMap::COL_DATA)) {
-            $modifiedColumns[':p' . $index++]  = 'data';
-        }
-        if ($this->isColumnModified(RegistrosTableMap::COL_TURNO)) {
-            $modifiedColumns[':p' . $index++]  = 'turno';
+        if ($this->isColumnModified(RegistroProcedimentoTableMap::COL_PROCEDIMENTO_ID)) {
+            $modifiedColumns[':p' . $index++]  = 'procedimento_id';
         }
 
         $sql = sprintf(
-            'INSERT INTO registros (%s) VALUES (%s)',
+            'INSERT INTO registro_procedimento (%s) VALUES (%s)',
             implode(', ', $modifiedColumns),
             implode(', ', array_keys($modifiedColumns))
         );
@@ -783,20 +682,11 @@ abstract class Registros implements ActiveRecordInterface
             $stmt = $con->prepare($sql);
             foreach ($modifiedColumns as $identifier => $columnName) {
                 switch ($columnName) {
-                    case 'id':
-                        $stmt->bindValue($identifier, $this->id, PDO::PARAM_INT);
+                    case 'registro_id':
+                        $stmt->bindValue($identifier, $this->registro_id, PDO::PARAM_INT);
                         break;
-                    case 'paciente':
-                        $stmt->bindValue($identifier, $this->paciente, PDO::PARAM_STR);
-                        break;
-                    case 'procedimentos':
-                        $stmt->bindValue($identifier, $this->procedimentos, PDO::PARAM_STR);
-                        break;
-                    case 'data':
-                        $stmt->bindValue($identifier, $this->data ? $this->data->format("Y-m-d") : null, PDO::PARAM_STR);
-                        break;
-                    case 'turno':
-                        $stmt->bindValue($identifier, $this->turno, PDO::PARAM_STR);
+                    case 'procedimento_id':
+                        $stmt->bindValue($identifier, $this->procedimento_id, PDO::PARAM_INT);
                         break;
                 }
             }
@@ -805,13 +695,6 @@ abstract class Registros implements ActiveRecordInterface
             Propel::log($e->getMessage(), Propel::LOG_ERR);
             throw new PropelException(sprintf('Unable to execute INSERT statement [%s]', $sql), 0, $e);
         }
-
-        try {
-            $pk = $con->lastInsertId();
-        } catch (Exception $e) {
-            throw new PropelException('Unable to get autoincrement id.', 0, $e);
-        }
-        $this->setId($pk);
 
         $this->setNew(false);
     }
@@ -844,7 +727,7 @@ abstract class Registros implements ActiveRecordInterface
      */
     public function getByName(string $name, string $type = TableMap::TYPE_PHPNAME)
     {
-        $pos = RegistrosTableMap::translateFieldName($name, $type, TableMap::TYPE_NUM);
+        $pos = RegistroProcedimentoTableMap::translateFieldName($name, $type, TableMap::TYPE_NUM);
         $field = $this->getByPosition($pos);
 
         return $field;
@@ -861,19 +744,10 @@ abstract class Registros implements ActiveRecordInterface
     {
         switch ($pos) {
             case 0:
-                return $this->getId();
+                return $this->getRegistroId();
 
             case 1:
-                return $this->getPaciente();
-
-            case 2:
-                return $this->getProcedimentos();
-
-            case 3:
-                return $this->getData();
-
-            case 4:
-                return $this->getTurno();
+                return $this->getProcedimentoId();
 
             default:
                 return null;
@@ -891,32 +765,58 @@ abstract class Registros implements ActiveRecordInterface
      *                    Defaults to TableMap::TYPE_PHPNAME.
      * @param bool $includeLazyLoadColumns (optional) Whether to include lazy loaded columns. Defaults to TRUE.
      * @param array $alreadyDumpedObjects List of objects to skip to avoid recursion
+     * @param bool $includeForeignObjects (optional) Whether to include hydrated related objects. Default to FALSE.
      *
      * @return array An associative array containing the field names (as keys) and field values
      */
-    public function toArray(string $keyType = TableMap::TYPE_PHPNAME, bool $includeLazyLoadColumns = true, array $alreadyDumpedObjects = []): array
+    public function toArray(string $keyType = TableMap::TYPE_PHPNAME, bool $includeLazyLoadColumns = true, array $alreadyDumpedObjects = [], bool $includeForeignObjects = false): array
     {
-        if (isset($alreadyDumpedObjects['Registros'][$this->hashCode()])) {
+        if (isset($alreadyDumpedObjects['RegistroProcedimento'][$this->hashCode()])) {
             return ['*RECURSION*'];
         }
-        $alreadyDumpedObjects['Registros'][$this->hashCode()] = true;
-        $keys = RegistrosTableMap::getFieldNames($keyType);
+        $alreadyDumpedObjects['RegistroProcedimento'][$this->hashCode()] = true;
+        $keys = RegistroProcedimentoTableMap::getFieldNames($keyType);
         $result = [
-            $keys[0] => $this->getId(),
-            $keys[1] => $this->getPaciente(),
-            $keys[2] => $this->getProcedimentos(),
-            $keys[3] => $this->getData(),
-            $keys[4] => $this->getTurno(),
+            $keys[0] => $this->getRegistroId(),
+            $keys[1] => $this->getProcedimentoId(),
         ];
-        if ($result[$keys[3]] instanceof \DateTimeInterface) {
-            $result[$keys[3]] = $result[$keys[3]]->format('Y-m-d');
-        }
-
         $virtualColumns = $this->virtualColumns;
         foreach ($virtualColumns as $key => $virtualColumn) {
             $result[$key] = $virtualColumn;
         }
 
+        if ($includeForeignObjects) {
+            if (null !== $this->aRegistro) {
+
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'registro';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'registros';
+                        break;
+                    default:
+                        $key = 'Registro';
+                }
+
+                $result[$key] = $this->aRegistro->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+            }
+            if (null !== $this->aProcedimento) {
+
+                switch ($keyType) {
+                    case TableMap::TYPE_CAMELNAME:
+                        $key = 'procedimento';
+                        break;
+                    case TableMap::TYPE_FIELDNAME:
+                        $key = 'procedimentos';
+                        break;
+                    default:
+                        $key = 'Procedimento';
+                }
+
+                $result[$key] = $this->aProcedimento->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+            }
+        }
 
         return $result;
     }
@@ -934,7 +834,7 @@ abstract class Registros implements ActiveRecordInterface
      */
     public function setByName(string $name, $value, string $type = TableMap::TYPE_PHPNAME)
     {
-        $pos = RegistrosTableMap::translateFieldName($name, $type, TableMap::TYPE_NUM);
+        $pos = RegistroProcedimentoTableMap::translateFieldName($name, $type, TableMap::TYPE_NUM);
 
         $this->setByPosition($pos, $value);
 
@@ -953,19 +853,10 @@ abstract class Registros implements ActiveRecordInterface
     {
         switch ($pos) {
             case 0:
-                $this->setId($value);
+                $this->setRegistroId($value);
                 break;
             case 1:
-                $this->setPaciente($value);
-                break;
-            case 2:
-                $this->setProcedimentos($value);
-                break;
-            case 3:
-                $this->setData($value);
-                break;
-            case 4:
-                $this->setTurno($value);
+                $this->setProcedimentoId($value);
                 break;
         } // switch()
 
@@ -991,22 +882,13 @@ abstract class Registros implements ActiveRecordInterface
      */
     public function fromArray(array $arr, string $keyType = TableMap::TYPE_PHPNAME)
     {
-        $keys = RegistrosTableMap::getFieldNames($keyType);
+        $keys = RegistroProcedimentoTableMap::getFieldNames($keyType);
 
         if (array_key_exists($keys[0], $arr)) {
-            $this->setId($arr[$keys[0]]);
+            $this->setRegistroId($arr[$keys[0]]);
         }
         if (array_key_exists($keys[1], $arr)) {
-            $this->setPaciente($arr[$keys[1]]);
-        }
-        if (array_key_exists($keys[2], $arr)) {
-            $this->setProcedimentos($arr[$keys[2]]);
-        }
-        if (array_key_exists($keys[3], $arr)) {
-            $this->setData($arr[$keys[3]]);
-        }
-        if (array_key_exists($keys[4], $arr)) {
-            $this->setTurno($arr[$keys[4]]);
+            $this->setProcedimentoId($arr[$keys[1]]);
         }
 
         return $this;
@@ -1049,22 +931,13 @@ abstract class Registros implements ActiveRecordInterface
      */
     public function buildCriteria(): Criteria
     {
-        $criteria = new Criteria(RegistrosTableMap::DATABASE_NAME);
+        $criteria = new Criteria(RegistroProcedimentoTableMap::DATABASE_NAME);
 
-        if ($this->isColumnModified(RegistrosTableMap::COL_ID)) {
-            $criteria->add(RegistrosTableMap::COL_ID, $this->id);
+        if ($this->isColumnModified(RegistroProcedimentoTableMap::COL_REGISTRO_ID)) {
+            $criteria->add(RegistroProcedimentoTableMap::COL_REGISTRO_ID, $this->registro_id);
         }
-        if ($this->isColumnModified(RegistrosTableMap::COL_PACIENTE)) {
-            $criteria->add(RegistrosTableMap::COL_PACIENTE, $this->paciente);
-        }
-        if ($this->isColumnModified(RegistrosTableMap::COL_PROCEDIMENTOS)) {
-            $criteria->add(RegistrosTableMap::COL_PROCEDIMENTOS, $this->procedimentos);
-        }
-        if ($this->isColumnModified(RegistrosTableMap::COL_DATA)) {
-            $criteria->add(RegistrosTableMap::COL_DATA, $this->data);
-        }
-        if ($this->isColumnModified(RegistrosTableMap::COL_TURNO)) {
-            $criteria->add(RegistrosTableMap::COL_TURNO, $this->turno);
+        if ($this->isColumnModified(RegistroProcedimentoTableMap::COL_PROCEDIMENTO_ID)) {
+            $criteria->add(RegistroProcedimentoTableMap::COL_PROCEDIMENTO_ID, $this->procedimento_id);
         }
 
         return $criteria;
@@ -1082,8 +955,9 @@ abstract class Registros implements ActiveRecordInterface
      */
     public function buildPkeyCriteria(): Criteria
     {
-        $criteria = ChildRegistrosQuery::create();
-        $criteria->add(RegistrosTableMap::COL_ID, $this->id);
+        $criteria = ChildRegistroProcedimentoQuery::create();
+        $criteria->add(RegistroProcedimentoTableMap::COL_REGISTRO_ID, $this->registro_id);
+        $criteria->add(RegistroProcedimentoTableMap::COL_PROCEDIMENTO_ID, $this->procedimento_id);
 
         return $criteria;
     }
@@ -1096,10 +970,25 @@ abstract class Registros implements ActiveRecordInterface
      */
     public function hashCode()
     {
-        $validPk = null !== $this->getId();
+        $validPk = null !== $this->getRegistroId() &&
+            null !== $this->getProcedimentoId();
 
-        $validPrimaryKeyFKs = 0;
+        $validPrimaryKeyFKs = 2;
         $primaryKeyFKs = [];
+
+        //relation registro_procedimento_fk_7e89c0 to table registros
+        if ($this->aRegistro && $hash = spl_object_hash($this->aRegistro)) {
+            $primaryKeyFKs[] = $hash;
+        } else {
+            $validPrimaryKeyFKs = false;
+        }
+
+        //relation registro_procedimento_fk_a77fc3 to table procedimentos
+        if ($this->aProcedimento && $hash = spl_object_hash($this->aProcedimento)) {
+            $primaryKeyFKs[] = $hash;
+        } else {
+            $validPrimaryKeyFKs = false;
+        }
 
         if ($validPk) {
             return crc32(json_encode($this->getPrimaryKey(), JSON_UNESCAPED_UNICODE));
@@ -1111,23 +1000,29 @@ abstract class Registros implements ActiveRecordInterface
     }
 
     /**
-     * Returns the primary key for this object (row).
-     * @return int
+     * Returns the composite primary key for this object.
+     * The array elements will be in same order as specified in XML.
+     * @return array
      */
     public function getPrimaryKey()
     {
-        return $this->getId();
+        $pks = [];
+        $pks[0] = $this->getRegistroId();
+        $pks[1] = $this->getProcedimentoId();
+
+        return $pks;
     }
 
     /**
-     * Generic method to set the primary key (id column).
+     * Set the [composite] primary key.
      *
-     * @param int|null $key Primary key.
+     * @param array $keys The elements of the composite key (order must match the order in XML file).
      * @return void
      */
-    public function setPrimaryKey(?int $key = null): void
+    public function setPrimaryKey(array $keys): void
     {
-        $this->setId($key);
+        $this->setRegistroId($keys[0]);
+        $this->setProcedimentoId($keys[1]);
     }
 
     /**
@@ -1137,7 +1032,7 @@ abstract class Registros implements ActiveRecordInterface
      */
     public function isPrimaryKeyNull(): bool
     {
-        return null === $this->getId();
+        return (null === $this->getRegistroId()) && (null === $this->getProcedimentoId());
     }
 
     /**
@@ -1146,7 +1041,7 @@ abstract class Registros implements ActiveRecordInterface
      * If desired, this method can also make copies of all associated (fkey referrers)
      * objects.
      *
-     * @param object $copyObj An object of \Api\Models\Registros (or compatible) type.
+     * @param object $copyObj An object of \Models\RegistroProcedimento (or compatible) type.
      * @param bool $deepCopy Whether to also copy all rows that refer (by fkey) to the current row.
      * @param bool $makeNew Whether to reset autoincrement PKs and make the object new.
      * @throws \Propel\Runtime\Exception\PropelException
@@ -1154,13 +1049,10 @@ abstract class Registros implements ActiveRecordInterface
      */
     public function copyInto(object $copyObj, bool $deepCopy = false, bool $makeNew = true): void
     {
-        $copyObj->setPaciente($this->getPaciente());
-        $copyObj->setProcedimentos($this->getProcedimentos());
-        $copyObj->setData($this->getData());
-        $copyObj->setTurno($this->getTurno());
+        $copyObj->setRegistroId($this->getRegistroId());
+        $copyObj->setProcedimentoId($this->getProcedimentoId());
         if ($makeNew) {
             $copyObj->setNew(true);
-            $copyObj->setId(NULL); // this is a auto-increment column, so set to default value
         }
     }
 
@@ -1173,7 +1065,7 @@ abstract class Registros implements ActiveRecordInterface
      * objects.
      *
      * @param bool $deepCopy Whether to also copy all rows that refer (by fkey) to the current row.
-     * @return \Api\Models\Registros Clone of current object.
+     * @return \Models\RegistroProcedimento Clone of current object.
      * @throws \Propel\Runtime\Exception\PropelException
      */
     public function copy(bool $deepCopy = false)
@@ -1187,6 +1079,108 @@ abstract class Registros implements ActiveRecordInterface
     }
 
     /**
+     * Declares an association between this object and a ChildRegistro object.
+     *
+     * @param ChildRegistro $v
+     * @return $this The current object (for fluent API support)
+     * @throws \Propel\Runtime\Exception\PropelException
+     */
+    public function setRegistro(ChildRegistro $v = null)
+    {
+        if ($v === null) {
+            $this->setRegistroId(NULL);
+        } else {
+            $this->setRegistroId($v->getId());
+        }
+
+        $this->aRegistro = $v;
+
+        // Add binding for other direction of this n:n relationship.
+        // If this object has already been added to the ChildRegistro object, it will not be re-added.
+        if ($v !== null) {
+            $v->addRegistroProcedimento($this);
+        }
+
+
+        return $this;
+    }
+
+
+    /**
+     * Get the associated ChildRegistro object
+     *
+     * @param ConnectionInterface $con Optional Connection object.
+     * @return ChildRegistro The associated ChildRegistro object.
+     * @throws \Propel\Runtime\Exception\PropelException
+     */
+    public function getRegistro(?ConnectionInterface $con = null)
+    {
+        if ($this->aRegistro === null && ($this->registro_id != 0)) {
+            $this->aRegistro = ChildRegistroQuery::create()->findPk($this->registro_id, $con);
+            /* The following can be used additionally to
+                guarantee the related object contains a reference
+                to this object.  This level of coupling may, however, be
+                undesirable since it could result in an only partially populated collection
+                in the referenced object.
+                $this->aRegistro->addRegistroProcedimentos($this);
+             */
+        }
+
+        return $this->aRegistro;
+    }
+
+    /**
+     * Declares an association between this object and a ChildProcedimento object.
+     *
+     * @param ChildProcedimento $v
+     * @return $this The current object (for fluent API support)
+     * @throws \Propel\Runtime\Exception\PropelException
+     */
+    public function setProcedimento(ChildProcedimento $v = null)
+    {
+        if ($v === null) {
+            $this->setProcedimentoId(NULL);
+        } else {
+            $this->setProcedimentoId($v->getId());
+        }
+
+        $this->aProcedimento = $v;
+
+        // Add binding for other direction of this n:n relationship.
+        // If this object has already been added to the ChildProcedimento object, it will not be re-added.
+        if ($v !== null) {
+            $v->addRegistroProcedimento($this);
+        }
+
+
+        return $this;
+    }
+
+
+    /**
+     * Get the associated ChildProcedimento object
+     *
+     * @param ConnectionInterface $con Optional Connection object.
+     * @return ChildProcedimento The associated ChildProcedimento object.
+     * @throws \Propel\Runtime\Exception\PropelException
+     */
+    public function getProcedimento(?ConnectionInterface $con = null)
+    {
+        if ($this->aProcedimento === null && ($this->procedimento_id != 0)) {
+            $this->aProcedimento = ChildProcedimentoQuery::create()->findPk($this->procedimento_id, $con);
+            /* The following can be used additionally to
+                guarantee the related object contains a reference
+                to this object.  This level of coupling may, however, be
+                undesirable since it could result in an only partially populated collection
+                in the referenced object.
+                $this->aProcedimento->addRegistroProcedimentos($this);
+             */
+        }
+
+        return $this->aProcedimento;
+    }
+
+    /**
      * Clears the current object, sets all attributes to their default values and removes
      * outgoing references as well as back-references (from other objects to this one. Results probably in a database
      * change of those foreign objects when you call `save` there).
@@ -1195,11 +1189,14 @@ abstract class Registros implements ActiveRecordInterface
      */
     public function clear()
     {
-        $this->id = null;
-        $this->paciente = null;
-        $this->procedimentos = null;
-        $this->data = null;
-        $this->turno = null;
+        if (null !== $this->aRegistro) {
+            $this->aRegistro->removeRegistroProcedimento($this);
+        }
+        if (null !== $this->aProcedimento) {
+            $this->aProcedimento->removeRegistroProcedimento($this);
+        }
+        $this->registro_id = null;
+        $this->procedimento_id = null;
         $this->alreadyInSave = false;
         $this->clearAllReferences();
         $this->resetModified();
@@ -1223,6 +1220,8 @@ abstract class Registros implements ActiveRecordInterface
         if ($deep) {
         } // if ($deep)
 
+        $this->aRegistro = null;
+        $this->aProcedimento = null;
         return $this;
     }
 
@@ -1233,7 +1232,7 @@ abstract class Registros implements ActiveRecordInterface
      */
     public function __toString()
     {
-        return (string) $this->exportTo(RegistrosTableMap::DEFAULT_STRING_FORMAT);
+        return (string) $this->exportTo(RegistroProcedimentoTableMap::DEFAULT_STRING_FORMAT);
     }
 
     /**

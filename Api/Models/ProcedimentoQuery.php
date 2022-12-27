@@ -1,8 +1,8 @@
 <?php
 
-namespace Api\Models;
+namespace Models;
 
-use Api\Models\Base\ProcedimentosQuery as BaseProcedimentosQuery;
+use Models\Base\ProcedimentoQuery as BaseProcedimentoQuery;
 
 /**
  * Skeleton subclass for performing query and update operations on the 'procedimentos' table.
@@ -13,7 +13,7 @@ use Api\Models\Base\ProcedimentosQuery as BaseProcedimentosQuery;
  * application requirements.  This class will only be generated as
  * long as it does not already exist in the output directory.
  */
-class ProcedimentosQuery extends BaseProcedimentosQuery
+class ProcedimentoQuery extends BaseProcedimentoQuery
 {
 
 }

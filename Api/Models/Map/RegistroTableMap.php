@@ -1,9 +1,9 @@
 <?php
 
-namespace Api\Models\Map;
+namespace Models\Map;
 
-use Api\Models\Registros;
-use Api\Models\RegistrosQuery;
+use Models\Registro;
+use Models\RegistroQuery;
 use Propel\Runtime\Propel;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\ActiveQuery\InstancePoolTrait;
@@ -25,7 +25,7 @@ use Propel\Runtime\Map\TableMapTrait;
  * ORDER BY clause to know whether it needs to apply SQL to make the ORDER BY case-insensitive
  * (i.e. if it's a text column type).
  */
-class RegistrosTableMap extends TableMap
+class RegistroTableMap extends TableMap
 {
     use InstancePoolTrait;
     use TableMapTrait;
@@ -33,7 +33,7 @@ class RegistrosTableMap extends TableMap
     /**
      * The (dot-path) name of this class
      */
-    public const CLASS_NAME = 'Api.Models.Map.RegistrosTableMap';
+    public const CLASS_NAME = 'Models.Map.RegistroTableMap';
 
     /**
      * The default database name for this class
@@ -48,17 +48,17 @@ class RegistrosTableMap extends TableMap
     /**
      * The related Propel class for this table
      */
-    public const OM_CLASS = '\\Api\\Models\\Registros';
+    public const OM_CLASS = '\\Models\\Registro';
 
     /**
      * A class that can be returned by this tableMap
      */
-    public const CLASS_DEFAULT = 'Api.Models.Registros';
+    public const CLASS_DEFAULT = 'Models.Registro';
 
     /**
      * The total number of columns
      */
-    public const NUM_COLUMNS = 5;
+    public const NUM_COLUMNS = 10;
 
     /**
      * The number of lazy-loaded columns
@@ -68,7 +68,7 @@ class RegistrosTableMap extends TableMap
     /**
      * The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS)
      */
-    public const NUM_HYDRATE_COLUMNS = 5;
+    public const NUM_HYDRATE_COLUMNS = 10;
 
     /**
      * the column name for the id field
@@ -84,6 +84,31 @@ class RegistrosTableMap extends TableMap
      * the column name for the procedimentos field
      */
     public const COL_PROCEDIMENTOS = 'registros.procedimentos';
+
+    /**
+     * the column name for the fisioterapeuta_id field
+     */
+    public const COL_FISIOTERAPEUTA_ID = 'registros.fisioterapeuta_id';
+
+    /**
+     * the column name for the paciente_id field
+     */
+    public const COL_PACIENTE_ID = 'registros.paciente_id';
+
+    /**
+     * the column name for the tipo_atendimento field
+     */
+    public const COL_TIPO_ATENDIMENTO = 'registros.tipo_atendimento';
+
+    /**
+     * the column name for the comparecimento field
+     */
+    public const COL_COMPARECIMENTO = 'registros.comparecimento';
+
+    /**
+     * the column name for the tipo_falta field
+     */
+    public const COL_TIPO_FALTA = 'registros.tipo_falta';
 
     /**
      * the column name for the data field
@@ -109,11 +134,11 @@ class RegistrosTableMap extends TableMap
      * @var array<string, mixed>
      */
     protected static $fieldNames = [
-        self::TYPE_PHPNAME       => ['Id', 'Paciente', 'Procedimentos', 'Data', 'Turno', ],
-        self::TYPE_CAMELNAME     => ['id', 'paciente', 'procedimentos', 'data', 'turno', ],
-        self::TYPE_COLNAME       => [RegistrosTableMap::COL_ID, RegistrosTableMap::COL_PACIENTE, RegistrosTableMap::COL_PROCEDIMENTOS, RegistrosTableMap::COL_DATA, RegistrosTableMap::COL_TURNO, ],
-        self::TYPE_FIELDNAME     => ['id', 'paciente', 'procedimentos', 'data', 'turno', ],
-        self::TYPE_NUM           => [0, 1, 2, 3, 4, ]
+        self::TYPE_PHPNAME       => ['Id', 'PacienteDeprecated', 'Procedimentos', 'FisioterapeutaId', 'PacienteId', 'TipoAtendimento', 'Comparecimento', 'TipoFalta', 'Data', 'Turno', ],
+        self::TYPE_CAMELNAME     => ['id', 'pacienteDeprecated', 'procedimentos', 'fisioterapeutaId', 'pacienteId', 'tipoAtendimento', 'comparecimento', 'tipoFalta', 'data', 'turno', ],
+        self::TYPE_COLNAME       => [RegistroTableMap::COL_ID, RegistroTableMap::COL_PACIENTE, RegistroTableMap::COL_PROCEDIMENTOS, RegistroTableMap::COL_FISIOTERAPEUTA_ID, RegistroTableMap::COL_PACIENTE_ID, RegistroTableMap::COL_TIPO_ATENDIMENTO, RegistroTableMap::COL_COMPARECIMENTO, RegistroTableMap::COL_TIPO_FALTA, RegistroTableMap::COL_DATA, RegistroTableMap::COL_TURNO, ],
+        self::TYPE_FIELDNAME     => ['id', 'paciente', 'procedimentos', 'fisioterapeuta_id', 'paciente_id', 'tipo_atendimento', 'comparecimento', 'tipo_falta', 'data', 'turno', ],
+        self::TYPE_NUM           => [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, ]
     ];
 
     /**
@@ -125,11 +150,11 @@ class RegistrosTableMap extends TableMap
      * @var array<string, mixed>
      */
     protected static $fieldKeys = [
-        self::TYPE_PHPNAME       => ['Id' => 0, 'Paciente' => 1, 'Procedimentos' => 2, 'Data' => 3, 'Turno' => 4, ],
-        self::TYPE_CAMELNAME     => ['id' => 0, 'paciente' => 1, 'procedimentos' => 2, 'data' => 3, 'turno' => 4, ],
-        self::TYPE_COLNAME       => [RegistrosTableMap::COL_ID => 0, RegistrosTableMap::COL_PACIENTE => 1, RegistrosTableMap::COL_PROCEDIMENTOS => 2, RegistrosTableMap::COL_DATA => 3, RegistrosTableMap::COL_TURNO => 4, ],
-        self::TYPE_FIELDNAME     => ['id' => 0, 'paciente' => 1, 'procedimentos' => 2, 'data' => 3, 'turno' => 4, ],
-        self::TYPE_NUM           => [0, 1, 2, 3, 4, ]
+        self::TYPE_PHPNAME       => ['Id' => 0, 'PacienteDeprecated' => 1, 'Procedimentos' => 2, 'FisioterapeutaId' => 3, 'PacienteId' => 4, 'TipoAtendimento' => 5, 'Comparecimento' => 6, 'TipoFalta' => 7, 'Data' => 8, 'Turno' => 9, ],
+        self::TYPE_CAMELNAME     => ['id' => 0, 'pacienteDeprecated' => 1, 'procedimentos' => 2, 'fisioterapeutaId' => 3, 'pacienteId' => 4, 'tipoAtendimento' => 5, 'comparecimento' => 6, 'tipoFalta' => 7, 'data' => 8, 'turno' => 9, ],
+        self::TYPE_COLNAME       => [RegistroTableMap::COL_ID => 0, RegistroTableMap::COL_PACIENTE => 1, RegistroTableMap::COL_PROCEDIMENTOS => 2, RegistroTableMap::COL_FISIOTERAPEUTA_ID => 3, RegistroTableMap::COL_PACIENTE_ID => 4, RegistroTableMap::COL_TIPO_ATENDIMENTO => 5, RegistroTableMap::COL_COMPARECIMENTO => 6, RegistroTableMap::COL_TIPO_FALTA => 7, RegistroTableMap::COL_DATA => 8, RegistroTableMap::COL_TURNO => 9, ],
+        self::TYPE_FIELDNAME     => ['id' => 0, 'paciente' => 1, 'procedimentos' => 2, 'fisioterapeuta_id' => 3, 'paciente_id' => 4, 'tipo_atendimento' => 5, 'comparecimento' => 6, 'tipo_falta' => 7, 'data' => 8, 'turno' => 9, ],
+        self::TYPE_NUM           => [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, ]
     ];
 
     /**
@@ -139,35 +164,80 @@ class RegistrosTableMap extends TableMap
      */
     protected $normalizedColumnNameMap = [
         'Id' => 'ID',
-        'Registros.Id' => 'ID',
+        'Registro.Id' => 'ID',
         'id' => 'ID',
-        'registros.id' => 'ID',
-        'RegistrosTableMap::COL_ID' => 'ID',
+        'registro.id' => 'ID',
+        'RegistroTableMap::COL_ID' => 'ID',
         'COL_ID' => 'ID',
-        'Paciente' => 'PACIENTE',
-        'Registros.Paciente' => 'PACIENTE',
+        'registros.id' => 'ID',
+        'PacienteDeprecated' => 'PACIENTE',
+        'Registro.PacienteDeprecated' => 'PACIENTE',
+        'pacienteDeprecated' => 'PACIENTE',
+        'registro.pacienteDeprecated' => 'PACIENTE',
+        'RegistroTableMap::COL_PACIENTE' => 'PACIENTE',
+        'COL_PACIENTE' => 'PACIENTE',
         'paciente' => 'PACIENTE',
         'registros.paciente' => 'PACIENTE',
-        'RegistrosTableMap::COL_PACIENTE' => 'PACIENTE',
-        'COL_PACIENTE' => 'PACIENTE',
         'Procedimentos' => 'PROCEDIMENTOS',
-        'Registros.Procedimentos' => 'PROCEDIMENTOS',
+        'Registro.Procedimentos' => 'PROCEDIMENTOS',
         'procedimentos' => 'PROCEDIMENTOS',
-        'registros.procedimentos' => 'PROCEDIMENTOS',
-        'RegistrosTableMap::COL_PROCEDIMENTOS' => 'PROCEDIMENTOS',
+        'registro.procedimentos' => 'PROCEDIMENTOS',
+        'RegistroTableMap::COL_PROCEDIMENTOS' => 'PROCEDIMENTOS',
         'COL_PROCEDIMENTOS' => 'PROCEDIMENTOS',
+        'registros.procedimentos' => 'PROCEDIMENTOS',
+        'FisioterapeutaId' => 'FISIOTERAPEUTA_ID',
+        'Registro.FisioterapeutaId' => 'FISIOTERAPEUTA_ID',
+        'fisioterapeutaId' => 'FISIOTERAPEUTA_ID',
+        'registro.fisioterapeutaId' => 'FISIOTERAPEUTA_ID',
+        'RegistroTableMap::COL_FISIOTERAPEUTA_ID' => 'FISIOTERAPEUTA_ID',
+        'COL_FISIOTERAPEUTA_ID' => 'FISIOTERAPEUTA_ID',
+        'fisioterapeuta_id' => 'FISIOTERAPEUTA_ID',
+        'registros.fisioterapeuta_id' => 'FISIOTERAPEUTA_ID',
+        'PacienteId' => 'PACIENTE_ID',
+        'Registro.PacienteId' => 'PACIENTE_ID',
+        'pacienteId' => 'PACIENTE_ID',
+        'registro.pacienteId' => 'PACIENTE_ID',
+        'RegistroTableMap::COL_PACIENTE_ID' => 'PACIENTE_ID',
+        'COL_PACIENTE_ID' => 'PACIENTE_ID',
+        'paciente_id' => 'PACIENTE_ID',
+        'registros.paciente_id' => 'PACIENTE_ID',
+        'TipoAtendimento' => 'TIPO_ATENDIMENTO',
+        'Registro.TipoAtendimento' => 'TIPO_ATENDIMENTO',
+        'tipoAtendimento' => 'TIPO_ATENDIMENTO',
+        'registro.tipoAtendimento' => 'TIPO_ATENDIMENTO',
+        'RegistroTableMap::COL_TIPO_ATENDIMENTO' => 'TIPO_ATENDIMENTO',
+        'COL_TIPO_ATENDIMENTO' => 'TIPO_ATENDIMENTO',
+        'tipo_atendimento' => 'TIPO_ATENDIMENTO',
+        'registros.tipo_atendimento' => 'TIPO_ATENDIMENTO',
+        'Comparecimento' => 'COMPARECIMENTO',
+        'Registro.Comparecimento' => 'COMPARECIMENTO',
+        'comparecimento' => 'COMPARECIMENTO',
+        'registro.comparecimento' => 'COMPARECIMENTO',
+        'RegistroTableMap::COL_COMPARECIMENTO' => 'COMPARECIMENTO',
+        'COL_COMPARECIMENTO' => 'COMPARECIMENTO',
+        'registros.comparecimento' => 'COMPARECIMENTO',
+        'TipoFalta' => 'TIPO_FALTA',
+        'Registro.TipoFalta' => 'TIPO_FALTA',
+        'tipoFalta' => 'TIPO_FALTA',
+        'registro.tipoFalta' => 'TIPO_FALTA',
+        'RegistroTableMap::COL_TIPO_FALTA' => 'TIPO_FALTA',
+        'COL_TIPO_FALTA' => 'TIPO_FALTA',
+        'tipo_falta' => 'TIPO_FALTA',
+        'registros.tipo_falta' => 'TIPO_FALTA',
         'Data' => 'DATA',
-        'Registros.Data' => 'DATA',
+        'Registro.Data' => 'DATA',
         'data' => 'DATA',
-        'registros.data' => 'DATA',
-        'RegistrosTableMap::COL_DATA' => 'DATA',
+        'registro.data' => 'DATA',
+        'RegistroTableMap::COL_DATA' => 'DATA',
         'COL_DATA' => 'DATA',
+        'registros.data' => 'DATA',
         'Turno' => 'TURNO',
-        'Registros.Turno' => 'TURNO',
+        'Registro.Turno' => 'TURNO',
         'turno' => 'TURNO',
-        'registros.turno' => 'TURNO',
-        'RegistrosTableMap::COL_TURNO' => 'TURNO',
+        'registro.turno' => 'TURNO',
+        'RegistroTableMap::COL_TURNO' => 'TURNO',
         'COL_TURNO' => 'TURNO',
+        'registros.turno' => 'TURNO',
     ];
 
     /**
@@ -181,16 +251,21 @@ class RegistrosTableMap extends TableMap
     {
         // attributes
         $this->setName('registros');
-        $this->setPhpName('Registros');
+        $this->setPhpName('Registro');
         $this->setIdentifierQuoting(false);
-        $this->setClassName('\\Api\\Models\\Registros');
-        $this->setPackage('Api.Models');
+        $this->setClassName('\\Models\\Registro');
+        $this->setPackage('Models');
         $this->setUseIdGenerator(true);
         // columns
         $this->addPrimaryKey('id', 'Id', 'INTEGER', true, null, null);
-        $this->addColumn('paciente', 'Paciente', 'VARCHAR', true, 150, null);
-        $this->addColumn('procedimentos', 'Procedimentos', 'LONGVARCHAR', true, null, null);
-        $this->addColumn('data', 'Data', 'DATE', true, null, null);
+        $this->addColumn('paciente', 'PacienteDeprecated', 'VARCHAR', false, 150, null);
+        $this->addColumn('procedimentos', 'Procedimentos', 'LONGVARCHAR', false, null, null);
+        $this->addForeignKey('fisioterapeuta_id', 'FisioterapeutaId', 'INTEGER', 'fisioterapeutas', 'id', false, null, null);
+        $this->addForeignKey('paciente_id', 'PacienteId', 'INTEGER', 'pacientes', 'id', false, null, null);
+        $this->addColumn('tipo_atendimento', 'TipoAtendimento', 'VARCHAR', false, 21, null);
+        $this->addColumn('comparecimento', 'Comparecimento', 'VARCHAR', false, 3, null);
+        $this->addColumn('tipo_falta', 'TipoFalta', 'VARCHAR', false, 40, null);
+        $this->addColumn('data', 'Data', 'DATE', false, null, null);
         $this->addColumn('turno', 'Turno', 'VARCHAR', false, 5, null);
     }
 
@@ -201,6 +276,28 @@ class RegistrosTableMap extends TableMap
      */
     public function buildRelations(): void
     {
+        $this->addRelation('Fisioterapeuta', '\\Models\\Fisioterapeuta', RelationMap::MANY_TO_ONE, array (
+  0 =>
+  array (
+    0 => ':fisioterapeuta_id',
+    1 => ':id',
+  ),
+), null, null, null, false);
+        $this->addRelation('Paciente', '\\Models\\Paciente', RelationMap::MANY_TO_ONE, array (
+  0 =>
+  array (
+    0 => ':paciente_id',
+    1 => ':id',
+  ),
+), null, null, null, false);
+        $this->addRelation('RegistroProcedimento', '\\Models\\RegistroProcedimento', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':registro_id',
+    1 => ':id',
+  ),
+), null, null, 'RegistroProcedimentos', false);
+        $this->addRelation('Procedimento', '\\Models\\Procedimento', RelationMap::MANY_TO_MANY, array(), null, null, 'Procedimentos');
     }
 
     /**
@@ -260,7 +357,7 @@ class RegistrosTableMap extends TableMap
      */
     public static function getOMClass(bool $withPrefix = true): string
     {
-        return $withPrefix ? RegistrosTableMap::CLASS_DEFAULT : RegistrosTableMap::OM_CLASS;
+        return $withPrefix ? RegistroTableMap::CLASS_DEFAULT : RegistroTableMap::OM_CLASS;
     }
 
     /**
@@ -274,22 +371,22 @@ class RegistrosTableMap extends TableMap
      *
      * @throws \Propel\Runtime\Exception\PropelException Any exceptions caught during processing will be
      *                         rethrown wrapped into a PropelException.
-     * @return array (Registros object, last column rank)
+     * @return array (Registro object, last column rank)
      */
     public static function populateObject(array $row, int $offset = 0, string $indexType = TableMap::TYPE_NUM): array
     {
-        $key = RegistrosTableMap::getPrimaryKeyHashFromRow($row, $offset, $indexType);
-        if (null !== ($obj = RegistrosTableMap::getInstanceFromPool($key))) {
+        $key = RegistroTableMap::getPrimaryKeyHashFromRow($row, $offset, $indexType);
+        if (null !== ($obj = RegistroTableMap::getInstanceFromPool($key))) {
             // We no longer rehydrate the object, since this can cause data loss.
             // See http://www.propelorm.org/ticket/509
             // $obj->hydrate($row, $offset, true); // rehydrate
-            $col = $offset + RegistrosTableMap::NUM_HYDRATE_COLUMNS;
+            $col = $offset + RegistroTableMap::NUM_HYDRATE_COLUMNS;
         } else {
-            $cls = RegistrosTableMap::OM_CLASS;
-            /** @var Registros $obj */
+            $cls = RegistroTableMap::OM_CLASS;
+            /** @var Registro $obj */
             $obj = new $cls();
             $col = $obj->hydrate($row, $offset, false, $indexType);
-            RegistrosTableMap::addInstanceToPool($obj, $key);
+            RegistroTableMap::addInstanceToPool($obj, $key);
         }
 
         return array($obj, $col);
@@ -312,18 +409,18 @@ class RegistrosTableMap extends TableMap
         $cls = static::getOMClass(false);
         // populate the object(s)
         while ($row = $dataFetcher->fetch()) {
-            $key = RegistrosTableMap::getPrimaryKeyHashFromRow($row, 0, $dataFetcher->getIndexType());
-            if (null !== ($obj = RegistrosTableMap::getInstanceFromPool($key))) {
+            $key = RegistroTableMap::getPrimaryKeyHashFromRow($row, 0, $dataFetcher->getIndexType());
+            if (null !== ($obj = RegistroTableMap::getInstanceFromPool($key))) {
                 // We no longer rehydrate the object, since this can cause data loss.
                 // See http://www.propelorm.org/ticket/509
                 // $obj->hydrate($row, 0, true); // rehydrate
                 $results[] = $obj;
             } else {
-                /** @var Registros $obj */
+                /** @var Registro $obj */
                 $obj = new $cls();
                 $obj->hydrate($row);
                 $results[] = $obj;
-                RegistrosTableMap::addInstanceToPool($obj, $key);
+                RegistroTableMap::addInstanceToPool($obj, $key);
             } // if key exists
         }
 
@@ -345,15 +442,25 @@ class RegistrosTableMap extends TableMap
     public static function addSelectColumns(Criteria $criteria, ?string $alias = null): void
     {
         if (null === $alias) {
-            $criteria->addSelectColumn(RegistrosTableMap::COL_ID);
-            $criteria->addSelectColumn(RegistrosTableMap::COL_PACIENTE);
-            $criteria->addSelectColumn(RegistrosTableMap::COL_PROCEDIMENTOS);
-            $criteria->addSelectColumn(RegistrosTableMap::COL_DATA);
-            $criteria->addSelectColumn(RegistrosTableMap::COL_TURNO);
+            $criteria->addSelectColumn(RegistroTableMap::COL_ID);
+            $criteria->addSelectColumn(RegistroTableMap::COL_PACIENTE);
+            $criteria->addSelectColumn(RegistroTableMap::COL_PROCEDIMENTOS);
+            $criteria->addSelectColumn(RegistroTableMap::COL_FISIOTERAPEUTA_ID);
+            $criteria->addSelectColumn(RegistroTableMap::COL_PACIENTE_ID);
+            $criteria->addSelectColumn(RegistroTableMap::COL_TIPO_ATENDIMENTO);
+            $criteria->addSelectColumn(RegistroTableMap::COL_COMPARECIMENTO);
+            $criteria->addSelectColumn(RegistroTableMap::COL_TIPO_FALTA);
+            $criteria->addSelectColumn(RegistroTableMap::COL_DATA);
+            $criteria->addSelectColumn(RegistroTableMap::COL_TURNO);
         } else {
             $criteria->addSelectColumn($alias . '.id');
             $criteria->addSelectColumn($alias . '.paciente');
             $criteria->addSelectColumn($alias . '.procedimentos');
+            $criteria->addSelectColumn($alias . '.fisioterapeuta_id');
+            $criteria->addSelectColumn($alias . '.paciente_id');
+            $criteria->addSelectColumn($alias . '.tipo_atendimento');
+            $criteria->addSelectColumn($alias . '.comparecimento');
+            $criteria->addSelectColumn($alias . '.tipo_falta');
             $criteria->addSelectColumn($alias . '.data');
             $criteria->addSelectColumn($alias . '.turno');
         }
@@ -374,15 +481,25 @@ class RegistrosTableMap extends TableMap
     public static function removeSelectColumns(Criteria $criteria, ?string $alias = null): void
     {
         if (null === $alias) {
-            $criteria->removeSelectColumn(RegistrosTableMap::COL_ID);
-            $criteria->removeSelectColumn(RegistrosTableMap::COL_PACIENTE);
-            $criteria->removeSelectColumn(RegistrosTableMap::COL_PROCEDIMENTOS);
-            $criteria->removeSelectColumn(RegistrosTableMap::COL_DATA);
-            $criteria->removeSelectColumn(RegistrosTableMap::COL_TURNO);
+            $criteria->removeSelectColumn(RegistroTableMap::COL_ID);
+            $criteria->removeSelectColumn(RegistroTableMap::COL_PACIENTE);
+            $criteria->removeSelectColumn(RegistroTableMap::COL_PROCEDIMENTOS);
+            $criteria->removeSelectColumn(RegistroTableMap::COL_FISIOTERAPEUTA_ID);
+            $criteria->removeSelectColumn(RegistroTableMap::COL_PACIENTE_ID);
+            $criteria->removeSelectColumn(RegistroTableMap::COL_TIPO_ATENDIMENTO);
+            $criteria->removeSelectColumn(RegistroTableMap::COL_COMPARECIMENTO);
+            $criteria->removeSelectColumn(RegistroTableMap::COL_TIPO_FALTA);
+            $criteria->removeSelectColumn(RegistroTableMap::COL_DATA);
+            $criteria->removeSelectColumn(RegistroTableMap::COL_TURNO);
         } else {
             $criteria->removeSelectColumn($alias . '.id');
             $criteria->removeSelectColumn($alias . '.paciente');
             $criteria->removeSelectColumn($alias . '.procedimentos');
+            $criteria->removeSelectColumn($alias . '.fisioterapeuta_id');
+            $criteria->removeSelectColumn($alias . '.paciente_id');
+            $criteria->removeSelectColumn($alias . '.tipo_atendimento');
+            $criteria->removeSelectColumn($alias . '.comparecimento');
+            $criteria->removeSelectColumn($alias . '.tipo_falta');
             $criteria->removeSelectColumn($alias . '.data');
             $criteria->removeSelectColumn($alias . '.turno');
         }
@@ -397,13 +514,13 @@ class RegistrosTableMap extends TableMap
      */
     public static function getTableMap(): TableMap
     {
-        return Propel::getServiceContainer()->getDatabaseMap(RegistrosTableMap::DATABASE_NAME)->getTable(RegistrosTableMap::TABLE_NAME);
+        return Propel::getServiceContainer()->getDatabaseMap(RegistroTableMap::DATABASE_NAME)->getTable(RegistroTableMap::TABLE_NAME);
     }
 
     /**
-     * Performs a DELETE on the database, given a Registros or Criteria object OR a primary key value.
+     * Performs a DELETE on the database, given a Registro or Criteria object OR a primary key value.
      *
-     * @param mixed $values Criteria or Registros object or primary key or array of primary keys
+     * @param mixed $values Criteria or Registro object or primary key or array of primary keys
      *              which is used to create the DELETE statement
      * @param ConnectionInterface $con the connection to use
      * @return int The number of affected rows (if supported by underlying database driver).  This includes CASCADE-related rows
@@ -414,27 +531,27 @@ class RegistrosTableMap extends TableMap
      public static function doDelete($values, ?ConnectionInterface $con = null): int
      {
         if (null === $con) {
-            $con = Propel::getServiceContainer()->getWriteConnection(RegistrosTableMap::DATABASE_NAME);
+            $con = Propel::getServiceContainer()->getWriteConnection(RegistroTableMap::DATABASE_NAME);
         }
 
         if ($values instanceof Criteria) {
             // rename for clarity
             $criteria = $values;
-        } elseif ($values instanceof \Api\Models\Registros) { // it's a model object
+        } elseif ($values instanceof \Models\Registro) { // it's a model object
             // create criteria based on pk values
             $criteria = $values->buildPkeyCriteria();
         } else { // it's a primary key, or an array of pks
-            $criteria = new Criteria(RegistrosTableMap::DATABASE_NAME);
-            $criteria->add(RegistrosTableMap::COL_ID, (array) $values, Criteria::IN);
+            $criteria = new Criteria(RegistroTableMap::DATABASE_NAME);
+            $criteria->add(RegistroTableMap::COL_ID, (array) $values, Criteria::IN);
         }
 
-        $query = RegistrosQuery::create()->mergeWith($criteria);
+        $query = RegistroQuery::create()->mergeWith($criteria);
 
         if ($values instanceof Criteria) {
-            RegistrosTableMap::clearInstancePool();
+            RegistroTableMap::clearInstancePool();
         } elseif (!is_object($values)) { // it's a primary key, or an array of pks
             foreach ((array) $values as $singleval) {
-                RegistrosTableMap::removeInstanceFromPool($singleval);
+                RegistroTableMap::removeInstanceFromPool($singleval);
             }
         }
 
@@ -449,13 +566,13 @@ class RegistrosTableMap extends TableMap
      */
     public static function doDeleteAll(?ConnectionInterface $con = null): int
     {
-        return RegistrosQuery::create()->doDeleteAll($con);
+        return RegistroQuery::create()->doDeleteAll($con);
     }
 
     /**
-     * Performs an INSERT on the database, given a Registros or Criteria object.
+     * Performs an INSERT on the database, given a Registro or Criteria object.
      *
-     * @param mixed $criteria Criteria or Registros object containing data that is used to create the INSERT statement.
+     * @param mixed $criteria Criteria or Registro object containing data that is used to create the INSERT statement.
      * @param ConnectionInterface $con the ConnectionInterface connection to use
      * @return mixed The new primary key.
      * @throws \Propel\Runtime\Exception\PropelException Any exceptions caught during processing will be
@@ -464,22 +581,22 @@ class RegistrosTableMap extends TableMap
     public static function doInsert($criteria, ?ConnectionInterface $con = null)
     {
         if (null === $con) {
-            $con = Propel::getServiceContainer()->getWriteConnection(RegistrosTableMap::DATABASE_NAME);
+            $con = Propel::getServiceContainer()->getWriteConnection(RegistroTableMap::DATABASE_NAME);
         }
 
         if ($criteria instanceof Criteria) {
             $criteria = clone $criteria; // rename for clarity
         } else {
-            $criteria = $criteria->buildCriteria(); // build Criteria from Registros object
+            $criteria = $criteria->buildCriteria(); // build Criteria from Registro object
         }
 
-        if ($criteria->containsKey(RegistrosTableMap::COL_ID) && $criteria->keyContainsValue(RegistrosTableMap::COL_ID) ) {
-            throw new PropelException('Cannot insert a value for auto-increment primary key ('.RegistrosTableMap::COL_ID.')');
+        if ($criteria->containsKey(RegistroTableMap::COL_ID) && $criteria->keyContainsValue(RegistroTableMap::COL_ID) ) {
+            throw new PropelException('Cannot insert a value for auto-increment primary key ('.RegistroTableMap::COL_ID.')');
         }
 
 
         // Set the correct dbName
-        $query = RegistrosQuery::create()->mergeWith($criteria);
+        $query = RegistroQuery::create()->mergeWith($criteria);
 
         // use transaction because $criteria could contain info
         // for more than one table (I guess, conceivably)

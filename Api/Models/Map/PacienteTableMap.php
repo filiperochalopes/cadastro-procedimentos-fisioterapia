@@ -1,9 +1,9 @@
 <?php
 
-namespace Api\Models\Map;
+namespace Models\Map;
 
-use Api\Models\Pacientes;
-use Api\Models\PacientesQuery;
+use Models\Paciente;
+use Models\PacienteQuery;
 use Propel\Runtime\Propel;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\ActiveQuery\InstancePoolTrait;
@@ -25,7 +25,7 @@ use Propel\Runtime\Map\TableMapTrait;
  * ORDER BY clause to know whether it needs to apply SQL to make the ORDER BY case-insensitive
  * (i.e. if it's a text column type).
  */
-class PacientesTableMap extends TableMap
+class PacienteTableMap extends TableMap
 {
     use InstancePoolTrait;
     use TableMapTrait;
@@ -33,7 +33,7 @@ class PacientesTableMap extends TableMap
     /**
      * The (dot-path) name of this class
      */
-    public const CLASS_NAME = 'Api.Models.Map.PacientesTableMap';
+    public const CLASS_NAME = 'Models.Map.PacienteTableMap';
 
     /**
      * The default database name for this class
@@ -48,12 +48,12 @@ class PacientesTableMap extends TableMap
     /**
      * The related Propel class for this table
      */
-    public const OM_CLASS = '\\Api\\Models\\Pacientes';
+    public const OM_CLASS = '\\Models\\Paciente';
 
     /**
      * A class that can be returned by this tableMap
      */
-    public const CLASS_DEFAULT = 'Api.Models.Pacientes';
+    public const CLASS_DEFAULT = 'Models.Paciente';
 
     /**
      * The total number of columns
@@ -81,9 +81,9 @@ class PacientesTableMap extends TableMap
     public const COL_NOME = 'pacientes.nome';
 
     /**
-     * the column name for the situacao_adm field
+     * the column name for the situacao_administ field
      */
-    public const COL_SITUACAO_ADM = 'pacientes.situacao_adm';
+    public const COL_SITUACAO_ADMINIST = 'pacientes.situacao_administ';
 
     /**
      * the column name for the posto_graduacao field
@@ -111,9 +111,9 @@ class PacientesTableMap extends TableMap
     public const COL_ORIGEM = 'pacientes.origem';
 
     /**
-     * the column name for the corpoquadro field
+     * the column name for the corpo_quadro field
      */
-    public const COL_CORPOQUADRO = 'pacientes.corpoquadro';
+    public const COL_CORPO_QUADRO = 'pacientes.corpo_quadro';
 
     /**
      * the column name for the atleta field
@@ -121,9 +121,9 @@ class PacientesTableMap extends TableMap
     public const COL_ATLETA = 'pacientes.atleta';
 
     /**
-     * the column name for the modalidade field
+     * the column name for the atleta_modalidade field
      */
-    public const COL_MODALIDADE = 'pacientes.modalidade';
+    public const COL_ATLETA_MODALIDADE = 'pacientes.atleta_modalidade';
 
     /**
      * the column name for the outra_modalidade field
@@ -144,10 +144,10 @@ class PacientesTableMap extends TableMap
      * @var array<string, mixed>
      */
     protected static $fieldNames = [
-        self::TYPE_PHPNAME       => ['Id', 'Nome', 'SituacaoAdm', 'PostoGraduacao', 'NipPaciente', 'NipTitular', 'CpfTitular', 'Origem', 'Corpoquadro', 'Atleta', 'Modalidade', 'OutraModalidade', ],
-        self::TYPE_CAMELNAME     => ['id', 'nome', 'situacaoAdm', 'postoGraduacao', 'nipPaciente', 'nipTitular', 'cpfTitular', 'origem', 'corpoquadro', 'atleta', 'modalidade', 'outraModalidade', ],
-        self::TYPE_COLNAME       => [PacientesTableMap::COL_ID, PacientesTableMap::COL_NOME, PacientesTableMap::COL_SITUACAO_ADM, PacientesTableMap::COL_POSTO_GRADUACAO, PacientesTableMap::COL_NIP_PACIENTE, PacientesTableMap::COL_NIP_TITULAR, PacientesTableMap::COL_CPF_TITULAR, PacientesTableMap::COL_ORIGEM, PacientesTableMap::COL_CORPOQUADRO, PacientesTableMap::COL_ATLETA, PacientesTableMap::COL_MODALIDADE, PacientesTableMap::COL_OUTRA_MODALIDADE, ],
-        self::TYPE_FIELDNAME     => ['id', 'nome', 'situacao_adm', 'posto_graduacao', 'nip_paciente', 'nip_titular', 'cpf_titular', 'origem', 'corpoquadro', 'atleta', 'modalidade', 'outra_modalidade', ],
+        self::TYPE_PHPNAME       => ['Id', 'Nome', 'SituacaoAdmistrativa', 'PostoGraduacao', 'Nip', 'NipTitular', 'CpfTitular', 'Origem', 'CorpoQuadro', 'Atleta', 'Modalidade', 'OutraModalidade', ],
+        self::TYPE_CAMELNAME     => ['id', 'nome', 'situacaoAdmistrativa', 'postoGraduacao', 'nip', 'nipTitular', 'cpfTitular', 'origem', 'corpoQuadro', 'atleta', 'modalidade', 'outraModalidade', ],
+        self::TYPE_COLNAME       => [PacienteTableMap::COL_ID, PacienteTableMap::COL_NOME, PacienteTableMap::COL_SITUACAO_ADMINIST, PacienteTableMap::COL_POSTO_GRADUACAO, PacienteTableMap::COL_NIP_PACIENTE, PacienteTableMap::COL_NIP_TITULAR, PacienteTableMap::COL_CPF_TITULAR, PacienteTableMap::COL_ORIGEM, PacienteTableMap::COL_CORPO_QUADRO, PacienteTableMap::COL_ATLETA, PacienteTableMap::COL_ATLETA_MODALIDADE, PacienteTableMap::COL_OUTRA_MODALIDADE, ],
+        self::TYPE_FIELDNAME     => ['id', 'nome', 'situacao_administ', 'posto_graduacao', 'nip_paciente', 'nip_titular', 'cpf_titular', 'origem', 'corpo_quadro', 'atleta', 'atleta_modalidade', 'outra_modalidade', ],
         self::TYPE_NUM           => [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, ]
     ];
 
@@ -160,10 +160,10 @@ class PacientesTableMap extends TableMap
      * @var array<string, mixed>
      */
     protected static $fieldKeys = [
-        self::TYPE_PHPNAME       => ['Id' => 0, 'Nome' => 1, 'SituacaoAdm' => 2, 'PostoGraduacao' => 3, 'NipPaciente' => 4, 'NipTitular' => 5, 'CpfTitular' => 6, 'Origem' => 7, 'Corpoquadro' => 8, 'Atleta' => 9, 'Modalidade' => 10, 'OutraModalidade' => 11, ],
-        self::TYPE_CAMELNAME     => ['id' => 0, 'nome' => 1, 'situacaoAdm' => 2, 'postoGraduacao' => 3, 'nipPaciente' => 4, 'nipTitular' => 5, 'cpfTitular' => 6, 'origem' => 7, 'corpoquadro' => 8, 'atleta' => 9, 'modalidade' => 10, 'outraModalidade' => 11, ],
-        self::TYPE_COLNAME       => [PacientesTableMap::COL_ID => 0, PacientesTableMap::COL_NOME => 1, PacientesTableMap::COL_SITUACAO_ADM => 2, PacientesTableMap::COL_POSTO_GRADUACAO => 3, PacientesTableMap::COL_NIP_PACIENTE => 4, PacientesTableMap::COL_NIP_TITULAR => 5, PacientesTableMap::COL_CPF_TITULAR => 6, PacientesTableMap::COL_ORIGEM => 7, PacientesTableMap::COL_CORPOQUADRO => 8, PacientesTableMap::COL_ATLETA => 9, PacientesTableMap::COL_MODALIDADE => 10, PacientesTableMap::COL_OUTRA_MODALIDADE => 11, ],
-        self::TYPE_FIELDNAME     => ['id' => 0, 'nome' => 1, 'situacao_adm' => 2, 'posto_graduacao' => 3, 'nip_paciente' => 4, 'nip_titular' => 5, 'cpf_titular' => 6, 'origem' => 7, 'corpoquadro' => 8, 'atleta' => 9, 'modalidade' => 10, 'outra_modalidade' => 11, ],
+        self::TYPE_PHPNAME       => ['Id' => 0, 'Nome' => 1, 'SituacaoAdmistrativa' => 2, 'PostoGraduacao' => 3, 'Nip' => 4, 'NipTitular' => 5, 'CpfTitular' => 6, 'Origem' => 7, 'CorpoQuadro' => 8, 'Atleta' => 9, 'Modalidade' => 10, 'OutraModalidade' => 11, ],
+        self::TYPE_CAMELNAME     => ['id' => 0, 'nome' => 1, 'situacaoAdmistrativa' => 2, 'postoGraduacao' => 3, 'nip' => 4, 'nipTitular' => 5, 'cpfTitular' => 6, 'origem' => 7, 'corpoQuadro' => 8, 'atleta' => 9, 'modalidade' => 10, 'outraModalidade' => 11, ],
+        self::TYPE_COLNAME       => [PacienteTableMap::COL_ID => 0, PacienteTableMap::COL_NOME => 1, PacienteTableMap::COL_SITUACAO_ADMINIST => 2, PacienteTableMap::COL_POSTO_GRADUACAO => 3, PacienteTableMap::COL_NIP_PACIENTE => 4, PacienteTableMap::COL_NIP_TITULAR => 5, PacienteTableMap::COL_CPF_TITULAR => 6, PacienteTableMap::COL_ORIGEM => 7, PacienteTableMap::COL_CORPO_QUADRO => 8, PacienteTableMap::COL_ATLETA => 9, PacienteTableMap::COL_ATLETA_MODALIDADE => 10, PacienteTableMap::COL_OUTRA_MODALIDADE => 11, ],
+        self::TYPE_FIELDNAME     => ['id' => 0, 'nome' => 1, 'situacao_administ' => 2, 'posto_graduacao' => 3, 'nip_paciente' => 4, 'nip_titular' => 5, 'cpf_titular' => 6, 'origem' => 7, 'corpo_quadro' => 8, 'atleta' => 9, 'atleta_modalidade' => 10, 'outra_modalidade' => 11, ],
         self::TYPE_NUM           => [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, ]
     ];
 
@@ -174,86 +174,94 @@ class PacientesTableMap extends TableMap
      */
     protected $normalizedColumnNameMap = [
         'Id' => 'ID',
-        'Pacientes.Id' => 'ID',
+        'Paciente.Id' => 'ID',
         'id' => 'ID',
-        'pacientes.id' => 'ID',
-        'PacientesTableMap::COL_ID' => 'ID',
+        'paciente.id' => 'ID',
+        'PacienteTableMap::COL_ID' => 'ID',
         'COL_ID' => 'ID',
+        'pacientes.id' => 'ID',
         'Nome' => 'NOME',
-        'Pacientes.Nome' => 'NOME',
+        'Paciente.Nome' => 'NOME',
         'nome' => 'NOME',
-        'pacientes.nome' => 'NOME',
-        'PacientesTableMap::COL_NOME' => 'NOME',
+        'paciente.nome' => 'NOME',
+        'PacienteTableMap::COL_NOME' => 'NOME',
         'COL_NOME' => 'NOME',
-        'SituacaoAdm' => 'SITUACAO_ADM',
-        'Pacientes.SituacaoAdm' => 'SITUACAO_ADM',
-        'situacaoAdm' => 'SITUACAO_ADM',
-        'pacientes.situacaoAdm' => 'SITUACAO_ADM',
-        'PacientesTableMap::COL_SITUACAO_ADM' => 'SITUACAO_ADM',
-        'COL_SITUACAO_ADM' => 'SITUACAO_ADM',
-        'situacao_adm' => 'SITUACAO_ADM',
-        'pacientes.situacao_adm' => 'SITUACAO_ADM',
+        'pacientes.nome' => 'NOME',
+        'SituacaoAdmistrativa' => 'SITUACAO_ADMINIST',
+        'Paciente.SituacaoAdmistrativa' => 'SITUACAO_ADMINIST',
+        'situacaoAdmistrativa' => 'SITUACAO_ADMINIST',
+        'paciente.situacaoAdmistrativa' => 'SITUACAO_ADMINIST',
+        'PacienteTableMap::COL_SITUACAO_ADMINIST' => 'SITUACAO_ADMINIST',
+        'COL_SITUACAO_ADMINIST' => 'SITUACAO_ADMINIST',
+        'situacao_administ' => 'SITUACAO_ADMINIST',
+        'pacientes.situacao_administ' => 'SITUACAO_ADMINIST',
         'PostoGraduacao' => 'POSTO_GRADUACAO',
-        'Pacientes.PostoGraduacao' => 'POSTO_GRADUACAO',
+        'Paciente.PostoGraduacao' => 'POSTO_GRADUACAO',
         'postoGraduacao' => 'POSTO_GRADUACAO',
-        'pacientes.postoGraduacao' => 'POSTO_GRADUACAO',
-        'PacientesTableMap::COL_POSTO_GRADUACAO' => 'POSTO_GRADUACAO',
+        'paciente.postoGraduacao' => 'POSTO_GRADUACAO',
+        'PacienteTableMap::COL_POSTO_GRADUACAO' => 'POSTO_GRADUACAO',
         'COL_POSTO_GRADUACAO' => 'POSTO_GRADUACAO',
         'posto_graduacao' => 'POSTO_GRADUACAO',
         'pacientes.posto_graduacao' => 'POSTO_GRADUACAO',
-        'NipPaciente' => 'NIP_PACIENTE',
-        'Pacientes.NipPaciente' => 'NIP_PACIENTE',
-        'nipPaciente' => 'NIP_PACIENTE',
-        'pacientes.nipPaciente' => 'NIP_PACIENTE',
-        'PacientesTableMap::COL_NIP_PACIENTE' => 'NIP_PACIENTE',
+        'Nip' => 'NIP_PACIENTE',
+        'Paciente.Nip' => 'NIP_PACIENTE',
+        'nip' => 'NIP_PACIENTE',
+        'paciente.nip' => 'NIP_PACIENTE',
+        'PacienteTableMap::COL_NIP_PACIENTE' => 'NIP_PACIENTE',
         'COL_NIP_PACIENTE' => 'NIP_PACIENTE',
         'nip_paciente' => 'NIP_PACIENTE',
         'pacientes.nip_paciente' => 'NIP_PACIENTE',
         'NipTitular' => 'NIP_TITULAR',
-        'Pacientes.NipTitular' => 'NIP_TITULAR',
+        'Paciente.NipTitular' => 'NIP_TITULAR',
         'nipTitular' => 'NIP_TITULAR',
-        'pacientes.nipTitular' => 'NIP_TITULAR',
-        'PacientesTableMap::COL_NIP_TITULAR' => 'NIP_TITULAR',
+        'paciente.nipTitular' => 'NIP_TITULAR',
+        'PacienteTableMap::COL_NIP_TITULAR' => 'NIP_TITULAR',
         'COL_NIP_TITULAR' => 'NIP_TITULAR',
         'nip_titular' => 'NIP_TITULAR',
         'pacientes.nip_titular' => 'NIP_TITULAR',
         'CpfTitular' => 'CPF_TITULAR',
-        'Pacientes.CpfTitular' => 'CPF_TITULAR',
+        'Paciente.CpfTitular' => 'CPF_TITULAR',
         'cpfTitular' => 'CPF_TITULAR',
-        'pacientes.cpfTitular' => 'CPF_TITULAR',
-        'PacientesTableMap::COL_CPF_TITULAR' => 'CPF_TITULAR',
+        'paciente.cpfTitular' => 'CPF_TITULAR',
+        'PacienteTableMap::COL_CPF_TITULAR' => 'CPF_TITULAR',
         'COL_CPF_TITULAR' => 'CPF_TITULAR',
         'cpf_titular' => 'CPF_TITULAR',
         'pacientes.cpf_titular' => 'CPF_TITULAR',
         'Origem' => 'ORIGEM',
-        'Pacientes.Origem' => 'ORIGEM',
+        'Paciente.Origem' => 'ORIGEM',
         'origem' => 'ORIGEM',
-        'pacientes.origem' => 'ORIGEM',
-        'PacientesTableMap::COL_ORIGEM' => 'ORIGEM',
+        'paciente.origem' => 'ORIGEM',
+        'PacienteTableMap::COL_ORIGEM' => 'ORIGEM',
         'COL_ORIGEM' => 'ORIGEM',
-        'Corpoquadro' => 'CORPOQUADRO',
-        'Pacientes.Corpoquadro' => 'CORPOQUADRO',
-        'corpoquadro' => 'CORPOQUADRO',
-        'pacientes.corpoquadro' => 'CORPOQUADRO',
-        'PacientesTableMap::COL_CORPOQUADRO' => 'CORPOQUADRO',
-        'COL_CORPOQUADRO' => 'CORPOQUADRO',
+        'pacientes.origem' => 'ORIGEM',
+        'CorpoQuadro' => 'CORPO_QUADRO',
+        'Paciente.CorpoQuadro' => 'CORPO_QUADRO',
+        'corpoQuadro' => 'CORPO_QUADRO',
+        'paciente.corpoQuadro' => 'CORPO_QUADRO',
+        'PacienteTableMap::COL_CORPO_QUADRO' => 'CORPO_QUADRO',
+        'COL_CORPO_QUADRO' => 'CORPO_QUADRO',
+        'corpo_quadro' => 'CORPO_QUADRO',
+        'pacientes.corpo_quadro' => 'CORPO_QUADRO',
         'Atleta' => 'ATLETA',
-        'Pacientes.Atleta' => 'ATLETA',
+        'Paciente.Atleta' => 'ATLETA',
         'atleta' => 'ATLETA',
-        'pacientes.atleta' => 'ATLETA',
-        'PacientesTableMap::COL_ATLETA' => 'ATLETA',
+        'paciente.atleta' => 'ATLETA',
+        'PacienteTableMap::COL_ATLETA' => 'ATLETA',
         'COL_ATLETA' => 'ATLETA',
-        'Modalidade' => 'MODALIDADE',
-        'Pacientes.Modalidade' => 'MODALIDADE',
-        'modalidade' => 'MODALIDADE',
-        'pacientes.modalidade' => 'MODALIDADE',
-        'PacientesTableMap::COL_MODALIDADE' => 'MODALIDADE',
-        'COL_MODALIDADE' => 'MODALIDADE',
+        'pacientes.atleta' => 'ATLETA',
+        'Modalidade' => 'ATLETA_MODALIDADE',
+        'Paciente.Modalidade' => 'ATLETA_MODALIDADE',
+        'modalidade' => 'ATLETA_MODALIDADE',
+        'paciente.modalidade' => 'ATLETA_MODALIDADE',
+        'PacienteTableMap::COL_ATLETA_MODALIDADE' => 'ATLETA_MODALIDADE',
+        'COL_ATLETA_MODALIDADE' => 'ATLETA_MODALIDADE',
+        'atleta_modalidade' => 'ATLETA_MODALIDADE',
+        'pacientes.atleta_modalidade' => 'ATLETA_MODALIDADE',
         'OutraModalidade' => 'OUTRA_MODALIDADE',
-        'Pacientes.OutraModalidade' => 'OUTRA_MODALIDADE',
+        'Paciente.OutraModalidade' => 'OUTRA_MODALIDADE',
         'outraModalidade' => 'OUTRA_MODALIDADE',
-        'pacientes.outraModalidade' => 'OUTRA_MODALIDADE',
-        'PacientesTableMap::COL_OUTRA_MODALIDADE' => 'OUTRA_MODALIDADE',
+        'paciente.outraModalidade' => 'OUTRA_MODALIDADE',
+        'PacienteTableMap::COL_OUTRA_MODALIDADE' => 'OUTRA_MODALIDADE',
         'COL_OUTRA_MODALIDADE' => 'OUTRA_MODALIDADE',
         'outra_modalidade' => 'OUTRA_MODALIDADE',
         'pacientes.outra_modalidade' => 'OUTRA_MODALIDADE',
@@ -270,24 +278,24 @@ class PacientesTableMap extends TableMap
     {
         // attributes
         $this->setName('pacientes');
-        $this->setPhpName('Pacientes');
+        $this->setPhpName('Paciente');
         $this->setIdentifierQuoting(false);
-        $this->setClassName('\\Api\\Models\\Pacientes');
-        $this->setPackage('Api.Models');
+        $this->setClassName('\\Models\\Paciente');
+        $this->setPackage('Models');
         $this->setUseIdGenerator(true);
         // columns
         $this->addPrimaryKey('id', 'Id', 'INTEGER', true, null, null);
         $this->addColumn('nome', 'Nome', 'VARCHAR', true, 150, null);
-        $this->addColumn('situacao_adm', 'SituacaoAdm', 'VARCHAR', true, 30, null);
-        $this->addColumn('posto_graduacao', 'PostoGraduacao', 'VARCHAR', true, 10, null);
-        $this->addColumn('nip_paciente', 'NipPaciente', 'INTEGER', true, 8, null);
-        $this->addColumn('nip_titular', 'NipTitular', 'INTEGER', true, 8, null);
-        $this->addColumn('cpf_titular', 'CpfTitular', 'BIGINT', true, 11, null);
-        $this->addColumn('origem', 'Origem', 'VARCHAR', true, 20, null);
-        $this->addColumn('corpoquadro', 'Corpoquadro', 'VARCHAR', true, 5, null);
-        $this->addColumn('atleta', 'Atleta', 'VARCHAR', true, 3, null);
-        $this->addColumn('modalidade', 'Modalidade', 'VARCHAR', true, 50, null);
-        $this->addColumn('outra_modalidade', 'OutraModalidade', 'VARCHAR', true, 50, null);
+        $this->addColumn('situacao_administ', 'SituacaoAdmistrativa', 'VARCHAR', false, 30, null);
+        $this->addColumn('posto_graduacao', 'PostoGraduacao', 'VARCHAR', false, 10, null);
+        $this->addColumn('nip_paciente', 'Nip', 'VARCHAR', false, 8, null);
+        $this->addColumn('nip_titular', 'NipTitular', 'VARCHAR', false, 8, null);
+        $this->addColumn('cpf_titular', 'CpfTitular', 'VARCHAR', false, 11, null);
+        $this->addColumn('origem', 'Origem', 'VARCHAR', false, 20, null);
+        $this->addColumn('corpo_quadro', 'CorpoQuadro', 'VARCHAR', false, 5, null);
+        $this->addColumn('atleta', 'Atleta', 'BOOLEAN', false, 1, null);
+        $this->addColumn('atleta_modalidade', 'Modalidade', 'VARCHAR', false, 50, null);
+        $this->addColumn('outra_modalidade', 'OutraModalidade', 'VARCHAR', false, 50, null);
     }
 
     /**
@@ -297,6 +305,13 @@ class PacientesTableMap extends TableMap
      */
     public function buildRelations(): void
     {
+        $this->addRelation('Registro', '\\Models\\Registro', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':paciente_id',
+    1 => ':id',
+  ),
+), null, null, 'Registros', false);
     }
 
     /**
@@ -356,7 +371,7 @@ class PacientesTableMap extends TableMap
      */
     public static function getOMClass(bool $withPrefix = true): string
     {
-        return $withPrefix ? PacientesTableMap::CLASS_DEFAULT : PacientesTableMap::OM_CLASS;
+        return $withPrefix ? PacienteTableMap::CLASS_DEFAULT : PacienteTableMap::OM_CLASS;
     }
 
     /**
@@ -370,22 +385,22 @@ class PacientesTableMap extends TableMap
      *
      * @throws \Propel\Runtime\Exception\PropelException Any exceptions caught during processing will be
      *                         rethrown wrapped into a PropelException.
-     * @return array (Pacientes object, last column rank)
+     * @return array (Paciente object, last column rank)
      */
     public static function populateObject(array $row, int $offset = 0, string $indexType = TableMap::TYPE_NUM): array
     {
-        $key = PacientesTableMap::getPrimaryKeyHashFromRow($row, $offset, $indexType);
-        if (null !== ($obj = PacientesTableMap::getInstanceFromPool($key))) {
+        $key = PacienteTableMap::getPrimaryKeyHashFromRow($row, $offset, $indexType);
+        if (null !== ($obj = PacienteTableMap::getInstanceFromPool($key))) {
             // We no longer rehydrate the object, since this can cause data loss.
             // See http://www.propelorm.org/ticket/509
             // $obj->hydrate($row, $offset, true); // rehydrate
-            $col = $offset + PacientesTableMap::NUM_HYDRATE_COLUMNS;
+            $col = $offset + PacienteTableMap::NUM_HYDRATE_COLUMNS;
         } else {
-            $cls = PacientesTableMap::OM_CLASS;
-            /** @var Pacientes $obj */
+            $cls = PacienteTableMap::OM_CLASS;
+            /** @var Paciente $obj */
             $obj = new $cls();
             $col = $obj->hydrate($row, $offset, false, $indexType);
-            PacientesTableMap::addInstanceToPool($obj, $key);
+            PacienteTableMap::addInstanceToPool($obj, $key);
         }
 
         return array($obj, $col);
@@ -408,18 +423,18 @@ class PacientesTableMap extends TableMap
         $cls = static::getOMClass(false);
         // populate the object(s)
         while ($row = $dataFetcher->fetch()) {
-            $key = PacientesTableMap::getPrimaryKeyHashFromRow($row, 0, $dataFetcher->getIndexType());
-            if (null !== ($obj = PacientesTableMap::getInstanceFromPool($key))) {
+            $key = PacienteTableMap::getPrimaryKeyHashFromRow($row, 0, $dataFetcher->getIndexType());
+            if (null !== ($obj = PacienteTableMap::getInstanceFromPool($key))) {
                 // We no longer rehydrate the object, since this can cause data loss.
                 // See http://www.propelorm.org/ticket/509
                 // $obj->hydrate($row, 0, true); // rehydrate
                 $results[] = $obj;
             } else {
-                /** @var Pacientes $obj */
+                /** @var Paciente $obj */
                 $obj = new $cls();
                 $obj->hydrate($row);
                 $results[] = $obj;
-                PacientesTableMap::addInstanceToPool($obj, $key);
+                PacienteTableMap::addInstanceToPool($obj, $key);
             } // if key exists
         }
 
@@ -441,30 +456,30 @@ class PacientesTableMap extends TableMap
     public static function addSelectColumns(Criteria $criteria, ?string $alias = null): void
     {
         if (null === $alias) {
-            $criteria->addSelectColumn(PacientesTableMap::COL_ID);
-            $criteria->addSelectColumn(PacientesTableMap::COL_NOME);
-            $criteria->addSelectColumn(PacientesTableMap::COL_SITUACAO_ADM);
-            $criteria->addSelectColumn(PacientesTableMap::COL_POSTO_GRADUACAO);
-            $criteria->addSelectColumn(PacientesTableMap::COL_NIP_PACIENTE);
-            $criteria->addSelectColumn(PacientesTableMap::COL_NIP_TITULAR);
-            $criteria->addSelectColumn(PacientesTableMap::COL_CPF_TITULAR);
-            $criteria->addSelectColumn(PacientesTableMap::COL_ORIGEM);
-            $criteria->addSelectColumn(PacientesTableMap::COL_CORPOQUADRO);
-            $criteria->addSelectColumn(PacientesTableMap::COL_ATLETA);
-            $criteria->addSelectColumn(PacientesTableMap::COL_MODALIDADE);
-            $criteria->addSelectColumn(PacientesTableMap::COL_OUTRA_MODALIDADE);
+            $criteria->addSelectColumn(PacienteTableMap::COL_ID);
+            $criteria->addSelectColumn(PacienteTableMap::COL_NOME);
+            $criteria->addSelectColumn(PacienteTableMap::COL_SITUACAO_ADMINIST);
+            $criteria->addSelectColumn(PacienteTableMap::COL_POSTO_GRADUACAO);
+            $criteria->addSelectColumn(PacienteTableMap::COL_NIP_PACIENTE);
+            $criteria->addSelectColumn(PacienteTableMap::COL_NIP_TITULAR);
+            $criteria->addSelectColumn(PacienteTableMap::COL_CPF_TITULAR);
+            $criteria->addSelectColumn(PacienteTableMap::COL_ORIGEM);
+            $criteria->addSelectColumn(PacienteTableMap::COL_CORPO_QUADRO);
+            $criteria->addSelectColumn(PacienteTableMap::COL_ATLETA);
+            $criteria->addSelectColumn(PacienteTableMap::COL_ATLETA_MODALIDADE);
+            $criteria->addSelectColumn(PacienteTableMap::COL_OUTRA_MODALIDADE);
         } else {
             $criteria->addSelectColumn($alias . '.id');
             $criteria->addSelectColumn($alias . '.nome');
-            $criteria->addSelectColumn($alias . '.situacao_adm');
+            $criteria->addSelectColumn($alias . '.situacao_administ');
             $criteria->addSelectColumn($alias . '.posto_graduacao');
             $criteria->addSelectColumn($alias . '.nip_paciente');
             $criteria->addSelectColumn($alias . '.nip_titular');
             $criteria->addSelectColumn($alias . '.cpf_titular');
             $criteria->addSelectColumn($alias . '.origem');
-            $criteria->addSelectColumn($alias . '.corpoquadro');
+            $criteria->addSelectColumn($alias . '.corpo_quadro');
             $criteria->addSelectColumn($alias . '.atleta');
-            $criteria->addSelectColumn($alias . '.modalidade');
+            $criteria->addSelectColumn($alias . '.atleta_modalidade');
             $criteria->addSelectColumn($alias . '.outra_modalidade');
         }
     }
@@ -484,30 +499,30 @@ class PacientesTableMap extends TableMap
     public static function removeSelectColumns(Criteria $criteria, ?string $alias = null): void
     {
         if (null === $alias) {
-            $criteria->removeSelectColumn(PacientesTableMap::COL_ID);
-            $criteria->removeSelectColumn(PacientesTableMap::COL_NOME);
-            $criteria->removeSelectColumn(PacientesTableMap::COL_SITUACAO_ADM);
-            $criteria->removeSelectColumn(PacientesTableMap::COL_POSTO_GRADUACAO);
-            $criteria->removeSelectColumn(PacientesTableMap::COL_NIP_PACIENTE);
-            $criteria->removeSelectColumn(PacientesTableMap::COL_NIP_TITULAR);
-            $criteria->removeSelectColumn(PacientesTableMap::COL_CPF_TITULAR);
-            $criteria->removeSelectColumn(PacientesTableMap::COL_ORIGEM);
-            $criteria->removeSelectColumn(PacientesTableMap::COL_CORPOQUADRO);
-            $criteria->removeSelectColumn(PacientesTableMap::COL_ATLETA);
-            $criteria->removeSelectColumn(PacientesTableMap::COL_MODALIDADE);
-            $criteria->removeSelectColumn(PacientesTableMap::COL_OUTRA_MODALIDADE);
+            $criteria->removeSelectColumn(PacienteTableMap::COL_ID);
+            $criteria->removeSelectColumn(PacienteTableMap::COL_NOME);
+            $criteria->removeSelectColumn(PacienteTableMap::COL_SITUACAO_ADMINIST);
+            $criteria->removeSelectColumn(PacienteTableMap::COL_POSTO_GRADUACAO);
+            $criteria->removeSelectColumn(PacienteTableMap::COL_NIP_PACIENTE);
+            $criteria->removeSelectColumn(PacienteTableMap::COL_NIP_TITULAR);
+            $criteria->removeSelectColumn(PacienteTableMap::COL_CPF_TITULAR);
+            $criteria->removeSelectColumn(PacienteTableMap::COL_ORIGEM);
+            $criteria->removeSelectColumn(PacienteTableMap::COL_CORPO_QUADRO);
+            $criteria->removeSelectColumn(PacienteTableMap::COL_ATLETA);
+            $criteria->removeSelectColumn(PacienteTableMap::COL_ATLETA_MODALIDADE);
+            $criteria->removeSelectColumn(PacienteTableMap::COL_OUTRA_MODALIDADE);
         } else {
             $criteria->removeSelectColumn($alias . '.id');
             $criteria->removeSelectColumn($alias . '.nome');
-            $criteria->removeSelectColumn($alias . '.situacao_adm');
+            $criteria->removeSelectColumn($alias . '.situacao_administ');
             $criteria->removeSelectColumn($alias . '.posto_graduacao');
             $criteria->removeSelectColumn($alias . '.nip_paciente');
             $criteria->removeSelectColumn($alias . '.nip_titular');
             $criteria->removeSelectColumn($alias . '.cpf_titular');
             $criteria->removeSelectColumn($alias . '.origem');
-            $criteria->removeSelectColumn($alias . '.corpoquadro');
+            $criteria->removeSelectColumn($alias . '.corpo_quadro');
             $criteria->removeSelectColumn($alias . '.atleta');
-            $criteria->removeSelectColumn($alias . '.modalidade');
+            $criteria->removeSelectColumn($alias . '.atleta_modalidade');
             $criteria->removeSelectColumn($alias . '.outra_modalidade');
         }
     }
@@ -521,13 +536,13 @@ class PacientesTableMap extends TableMap
      */
     public static function getTableMap(): TableMap
     {
-        return Propel::getServiceContainer()->getDatabaseMap(PacientesTableMap::DATABASE_NAME)->getTable(PacientesTableMap::TABLE_NAME);
+        return Propel::getServiceContainer()->getDatabaseMap(PacienteTableMap::DATABASE_NAME)->getTable(PacienteTableMap::TABLE_NAME);
     }
 
     /**
-     * Performs a DELETE on the database, given a Pacientes or Criteria object OR a primary key value.
+     * Performs a DELETE on the database, given a Paciente or Criteria object OR a primary key value.
      *
-     * @param mixed $values Criteria or Pacientes object or primary key or array of primary keys
+     * @param mixed $values Criteria or Paciente object or primary key or array of primary keys
      *              which is used to create the DELETE statement
      * @param ConnectionInterface $con the connection to use
      * @return int The number of affected rows (if supported by underlying database driver).  This includes CASCADE-related rows
@@ -538,27 +553,27 @@ class PacientesTableMap extends TableMap
      public static function doDelete($values, ?ConnectionInterface $con = null): int
      {
         if (null === $con) {
-            $con = Propel::getServiceContainer()->getWriteConnection(PacientesTableMap::DATABASE_NAME);
+            $con = Propel::getServiceContainer()->getWriteConnection(PacienteTableMap::DATABASE_NAME);
         }
 
         if ($values instanceof Criteria) {
             // rename for clarity
             $criteria = $values;
-        } elseif ($values instanceof \Api\Models\Pacientes) { // it's a model object
+        } elseif ($values instanceof \Models\Paciente) { // it's a model object
             // create criteria based on pk values
             $criteria = $values->buildPkeyCriteria();
         } else { // it's a primary key, or an array of pks
-            $criteria = new Criteria(PacientesTableMap::DATABASE_NAME);
-            $criteria->add(PacientesTableMap::COL_ID, (array) $values, Criteria::IN);
+            $criteria = new Criteria(PacienteTableMap::DATABASE_NAME);
+            $criteria->add(PacienteTableMap::COL_ID, (array) $values, Criteria::IN);
         }
 
-        $query = PacientesQuery::create()->mergeWith($criteria);
+        $query = PacienteQuery::create()->mergeWith($criteria);
 
         if ($values instanceof Criteria) {
-            PacientesTableMap::clearInstancePool();
+            PacienteTableMap::clearInstancePool();
         } elseif (!is_object($values)) { // it's a primary key, or an array of pks
             foreach ((array) $values as $singleval) {
-                PacientesTableMap::removeInstanceFromPool($singleval);
+                PacienteTableMap::removeInstanceFromPool($singleval);
             }
         }
 
@@ -573,13 +588,13 @@ class PacientesTableMap extends TableMap
      */
     public static function doDeleteAll(?ConnectionInterface $con = null): int
     {
-        return PacientesQuery::create()->doDeleteAll($con);
+        return PacienteQuery::create()->doDeleteAll($con);
     }
 
     /**
-     * Performs an INSERT on the database, given a Pacientes or Criteria object.
+     * Performs an INSERT on the database, given a Paciente or Criteria object.
      *
-     * @param mixed $criteria Criteria or Pacientes object containing data that is used to create the INSERT statement.
+     * @param mixed $criteria Criteria or Paciente object containing data that is used to create the INSERT statement.
      * @param ConnectionInterface $con the ConnectionInterface connection to use
      * @return mixed The new primary key.
      * @throws \Propel\Runtime\Exception\PropelException Any exceptions caught during processing will be
@@ -588,22 +603,22 @@ class PacientesTableMap extends TableMap
     public static function doInsert($criteria, ?ConnectionInterface $con = null)
     {
         if (null === $con) {
-            $con = Propel::getServiceContainer()->getWriteConnection(PacientesTableMap::DATABASE_NAME);
+            $con = Propel::getServiceContainer()->getWriteConnection(PacienteTableMap::DATABASE_NAME);
         }
 
         if ($criteria instanceof Criteria) {
             $criteria = clone $criteria; // rename for clarity
         } else {
-            $criteria = $criteria->buildCriteria(); // build Criteria from Pacientes object
+            $criteria = $criteria->buildCriteria(); // build Criteria from Paciente object
         }
 
-        if ($criteria->containsKey(PacientesTableMap::COL_ID) && $criteria->keyContainsValue(PacientesTableMap::COL_ID) ) {
-            throw new PropelException('Cannot insert a value for auto-increment primary key ('.PacientesTableMap::COL_ID.')');
+        if ($criteria->containsKey(PacienteTableMap::COL_ID) && $criteria->keyContainsValue(PacienteTableMap::COL_ID) ) {
+            throw new PropelException('Cannot insert a value for auto-increment primary key ('.PacienteTableMap::COL_ID.')');
         }
 
 
         // Set the correct dbName
-        $query = PacientesQuery::create()->mergeWith($criteria);
+        $query = PacienteQuery::create()->mergeWith($criteria);
 
         // use transaction because $criteria could contain info
         // for more than one table (I guess, conceivably)

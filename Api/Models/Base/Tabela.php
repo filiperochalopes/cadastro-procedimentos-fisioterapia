@@ -1,11 +1,12 @@
 <?php
 
-namespace Api\Models\Base;
+namespace Models\Base;
 
+use \DateTime;
 use \Exception;
 use \PDO;
-use Api\Models\TabelaQuery as ChildTabelaQuery;
-use Api\Models\Map\TabelaTableMap;
+use Models\TabelaQuery as ChildTabelaQuery;
+use Models\Map\TabelaTableMap;
 use Propel\Runtime\Propel;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\ActiveQuery\ModelCriteria;
@@ -17,13 +18,14 @@ use Propel\Runtime\Exception\LogicException;
 use Propel\Runtime\Exception\PropelException;
 use Propel\Runtime\Map\TableMap;
 use Propel\Runtime\Parser\AbstractParser;
+use Propel\Runtime\Util\PropelDateTime;
 
 /**
  * Base class that represents a row from the 'tabela' table.
  *
  *
  *
- * @package    propel.generator.Api.Models.Base
+ * @package    propel.generator.Models.Base
  */
 abstract class Tabela implements ActiveRecordInterface
 {
@@ -32,7 +34,7 @@ abstract class Tabela implements ActiveRecordInterface
      *
      * @var string
      */
-    public const TABLE_MAP = '\\Api\\Models\\Map\\TabelaTableMap';
+    public const TABLE_MAP = '\\Models\\Map\\TabelaTableMap';
 
 
     /**
@@ -71,7 +73,7 @@ abstract class Tabela implements ActiveRecordInterface
     /**
      * The value for the data field.
      *
-     * @var        string|null
+     * @var        DateTime|null
      */
     protected $data;
 
@@ -183,7 +185,7 @@ abstract class Tabela implements ActiveRecordInterface
     /**
      * The value for the tipo_falta field.
      *
-     * @var        string
+     * @var        string|null
      */
     protected $tipo_falta;
 
@@ -343,7 +345,7 @@ abstract class Tabela implements ActiveRecordInterface
     protected $alreadyInSave = false;
 
     /**
-     * Initializes internal state of Api\Models\Base\Tabela object.
+     * Initializes internal state of Models\Base\Tabela object.
      */
     public function __construct()
     {
@@ -579,13 +581,25 @@ abstract class Tabela implements ActiveRecordInterface
     }
 
     /**
-     * Get the [data] column value.
+     * Get the [optionally formatted] temporal [data] column value.
      *
-     * @return string|null
+     *
+     * @param string|null $format The date/time format string (either date()-style or strftime()-style).
+     *   If format is NULL, then the raw DateTime object will be returned.
+     *
+     * @return string|DateTime|null Formatted date/time value as string or DateTime object (if format is NULL), NULL if column is NULL, and 0 if column value is 0000-00-00.
+     *
+     * @throws \Propel\Runtime\Exception\PropelException - if unable to parse/validate the date/time value.
+     *
+     * @psalm-return ($format is null ? DateTime|null : string|null)
      */
-    public function getData()
+    public function getData($format = null)
     {
-        return $this->data;
+        if ($format === null) {
+            return $this->data;
+        } else {
+            return $this->data instanceof \DateTimeInterface ? $this->data->format($format) : null;
+        }
     }
 
     /**
@@ -741,7 +755,7 @@ abstract class Tabela implements ActiveRecordInterface
     /**
      * Get the [tipo_falta] column value.
      *
-     * @return string
+     * @return string|null
      */
     public function getTipoFalta()
     {
@@ -979,21 +993,21 @@ abstract class Tabela implements ActiveRecordInterface
     }
 
     /**
-     * Set the value of [data] column.
+     * Sets the value of [data] column to a normalized version of the date/time value specified.
      *
-     * @param string|null $v New value
+     * @param string|integer|\DateTimeInterface|null $v string, integer (timestamp), or \DateTimeInterface value.
+     *               Empty strings are treated as NULL.
      * @return $this The current object (for fluent API support)
      */
     public function setData($v)
     {
-        if ($v !== null) {
-            $v = (string) $v;
-        }
-
-        if ($this->data !== $v) {
-            $this->data = $v;
-            $this->modifiedColumns[TabelaTableMap::COL_DATA] = true;
-        }
+        $dt = PropelDateTime::newInstance($v, null, 'DateTime');
+        if ($this->data !== null || $dt !== null) {
+            if ($this->data === null || $dt === null || $dt->format("Y-m-d") !== $this->data->format("Y-m-d")) {
+                $this->data = $dt === null ? null : clone $dt;
+                $this->modifiedColumns[TabelaTableMap::COL_DATA] = true;
+            }
+        } // if either are not null
 
         return $this;
     }
@@ -1301,7 +1315,7 @@ abstract class Tabela implements ActiveRecordInterface
     /**
      * Set the value of [tipo_falta] column.
      *
-     * @param string $v New value
+     * @param string|null $v New value
      * @return $this The current object (for fluent API support)
      */
     public function setTipoFalta($v)
@@ -1778,7 +1792,10 @@ abstract class Tabela implements ActiveRecordInterface
             $this->id = (null !== $col) ? (int) $col : null;
 
             $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : TabelaTableMap::translateFieldName('Data', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->data = (null !== $col) ? (string) $col : null;
+            if ($col === '0000-00-00') {
+                $col = null;
+            }
+            $this->data = (null !== $col) ? PropelDateTime::newInstance($col, null, 'DateTime') : null;
 
             $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : TabelaTableMap::translateFieldName('Turno', TableMap::TYPE_PHPNAME, $indexType)];
             $this->turno = (null !== $col) ? (string) $col : null;
@@ -1901,7 +1918,7 @@ abstract class Tabela implements ActiveRecordInterface
             return $startcol + 39; // 39 = TabelaTableMap::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
-            throw new PropelException(sprintf('Error populating %s object', '\\Api\\Models\\Tabela'), 0, $e);
+            throw new PropelException(sprintf('Error populating %s object', '\\Models\\Tabela'), 0, $e);
         }
     }
 
@@ -2232,7 +2249,7 @@ abstract class Tabela implements ActiveRecordInterface
                         $stmt->bindValue($identifier, $this->id, PDO::PARAM_INT);
                         break;
                     case 'data':
-                        $stmt->bindValue($identifier, $this->data, PDO::PARAM_STR);
+                        $stmt->bindValue($identifier, $this->data ? $this->data->format("Y-m-d") : null, PDO::PARAM_STR);
                         break;
                     case 'turno':
                         $stmt->bindValue($identifier, $this->turno, PDO::PARAM_STR);
@@ -2591,6 +2608,10 @@ abstract class Tabela implements ActiveRecordInterface
             $keys[37] => $this->getProcedimento20(),
             $keys[38] => $this->getTotalProcedimentos(),
         ];
+        if ($result[$keys[1]] instanceof \DateTimeInterface) {
+            $result[$keys[1]] = $result[$keys[1]]->format('Y-m-d');
+        }
+
         $virtualColumns = $this->virtualColumns;
         foreach ($virtualColumns as $key => $virtualColumn) {
             $result[$key] = $virtualColumn;
@@ -3131,7 +3152,7 @@ abstract class Tabela implements ActiveRecordInterface
      * If desired, this method can also make copies of all associated (fkey referrers)
      * objects.
      *
-     * @param object $copyObj An object of \Api\Models\Tabela (or compatible) type.
+     * @param object $copyObj An object of \Models\Tabela (or compatible) type.
      * @param bool $deepCopy Whether to also copy all rows that refer (by fkey) to the current row.
      * @param bool $makeNew Whether to reset autoincrement PKs and make the object new.
      * @throws \Propel\Runtime\Exception\PropelException
@@ -3192,7 +3213,7 @@ abstract class Tabela implements ActiveRecordInterface
      * objects.
      *
      * @param bool $deepCopy Whether to also copy all rows that refer (by fkey) to the current row.
-     * @return \Api\Models\Tabela Clone of current object.
+     * @return \Models\Tabela Clone of current object.
      * @throws \Propel\Runtime\Exception\PropelException
      */
     public function copy(bool $deepCopy = false)

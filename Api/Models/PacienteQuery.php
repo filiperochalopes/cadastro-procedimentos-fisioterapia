@@ -1,8 +1,8 @@
 <?php
 
-namespace Api\Models;
+namespace Models;
 
-use Api\Models\Base\PacientesQuery as BasePacientesQuery;
+use Models\Base\PacienteQuery as BasePacienteQuery;
 
 /**
  * Skeleton subclass for performing query and update operations on the 'pacientes' table.
@@ -13,7 +13,7 @@ use Api\Models\Base\PacientesQuery as BasePacientesQuery;
  * application requirements.  This class will only be generated as
  * long as it does not already exist in the output directory.
  */
-class PacientesQuery extends BasePacientesQuery
+class PacienteQuery extends BasePacienteQuery
 {
 
 }

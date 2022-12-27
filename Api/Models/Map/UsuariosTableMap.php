@@ -1,9 +1,9 @@
 <?php
 
-namespace Api\Models\Map;
+namespace Models\Map;
 
-use Api\Models\Usuarios;
-use Api\Models\UsuariosQuery;
+use Models\Usuarios;
+use Models\UsuariosQuery;
 use Propel\Runtime\Propel;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\ActiveQuery\InstancePoolTrait;
@@ -33,7 +33,7 @@ class UsuariosTableMap extends TableMap
     /**
      * The (dot-path) name of this class
      */
-    public const CLASS_NAME = 'Api.Models.Map.UsuariosTableMap';
+    public const CLASS_NAME = 'Models.Map.UsuariosTableMap';
 
     /**
      * The default database name for this class
@@ -48,12 +48,12 @@ class UsuariosTableMap extends TableMap
     /**
      * The related Propel class for this table
      */
-    public const OM_CLASS = '\\Api\\Models\\Usuarios';
+    public const OM_CLASS = '\\Models\\Usuarios';
 
     /**
      * A class that can be returned by this tableMap
      */
-    public const CLASS_DEFAULT = 'Api.Models.Usuarios';
+    public const CLASS_DEFAULT = 'Models.Usuarios';
 
     /**
      * The total number of columns
@@ -161,8 +161,8 @@ class UsuariosTableMap extends TableMap
         $this->setName('usuarios');
         $this->setPhpName('Usuarios');
         $this->setIdentifierQuoting(false);
-        $this->setClassName('\\Api\\Models\\Usuarios');
-        $this->setPackage('Api.Models');
+        $this->setClassName('\\Models\\Usuarios');
+        $this->setPackage('Models');
         $this->setUseIdGenerator(true);
         // columns
         $this->addPrimaryKey('id', 'Id', 'INTEGER', true, null, null);
@@ -388,7 +388,7 @@ class UsuariosTableMap extends TableMap
         if ($values instanceof Criteria) {
             // rename for clarity
             $criteria = $values;
-        } elseif ($values instanceof \Api\Models\Usuarios) { // it's a model object
+        } elseif ($values instanceof \Models\Usuarios) { // it's a model object
             // create criteria based on pk values
             $criteria = $values->buildPkeyCriteria();
         } else { // it's a primary key, or an array of pks

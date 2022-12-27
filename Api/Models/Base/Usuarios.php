@@ -1,11 +1,11 @@
 <?php
 
-namespace Api\Models\Base;
+namespace Models\Base;
 
 use \Exception;
 use \PDO;
-use Api\Models\UsuariosQuery as ChildUsuariosQuery;
-use Api\Models\Map\UsuariosTableMap;
+use Models\UsuariosQuery as ChildUsuariosQuery;
+use Models\Map\UsuariosTableMap;
 use Propel\Runtime\Propel;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\ActiveQuery\ModelCriteria;
@@ -23,7 +23,7 @@ use Propel\Runtime\Parser\AbstractParser;
  *
  *
  *
- * @package    propel.generator.Api.Models.Base
+ * @package    propel.generator.Models.Base
  */
 abstract class Usuarios implements ActiveRecordInterface
 {
@@ -32,7 +32,7 @@ abstract class Usuarios implements ActiveRecordInterface
      *
      * @var string
      */
-    public const TABLE_MAP = '\\Api\\Models\\Map\\UsuariosTableMap';
+    public const TABLE_MAP = '\\Models\\Map\\UsuariosTableMap';
 
 
     /**
@@ -91,7 +91,7 @@ abstract class Usuarios implements ActiveRecordInterface
     protected $alreadyInSave = false;
 
     /**
-     * Initializes internal state of Api\Models\Base\Usuarios object.
+     * Initializes internal state of Models\Base\Usuarios object.
      */
     public function __construct()
     {
@@ -461,7 +461,7 @@ abstract class Usuarios implements ActiveRecordInterface
             return $startcol + 3; // 3 = UsuariosTableMap::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
-            throw new PropelException(sprintf('Error populating %s object', '\\Api\\Models\\Usuarios'), 0, $e);
+            throw new PropelException(sprintf('Error populating %s object', '\\Models\\Usuarios'), 0, $e);
         }
     }
 
@@ -1007,7 +1007,7 @@ abstract class Usuarios implements ActiveRecordInterface
      * If desired, this method can also make copies of all associated (fkey referrers)
      * objects.
      *
-     * @param object $copyObj An object of \Api\Models\Usuarios (or compatible) type.
+     * @param object $copyObj An object of \Models\Usuarios (or compatible) type.
      * @param bool $deepCopy Whether to also copy all rows that refer (by fkey) to the current row.
      * @param bool $makeNew Whether to reset autoincrement PKs and make the object new.
      * @throws \Propel\Runtime\Exception\PropelException
@@ -1032,7 +1032,7 @@ abstract class Usuarios implements ActiveRecordInterface
      * objects.
      *
      * @param bool $deepCopy Whether to also copy all rows that refer (by fkey) to the current row.
-     * @return \Api\Models\Usuarios Clone of current object.
+     * @return \Models\Usuarios Clone of current object.
      * @throws \Propel\Runtime\Exception\PropelException
      */
     public function copy(bool $deepCopy = false)

@@ -1,11 +1,11 @@
 <?php
 
-namespace Api\Models;
+namespace Models;
 
-use Api\Models\Base\Fisioterapeutas as BaseFisioterapeutas;
+use Models\Base\Paciente as BasePaciente;
 
 /**
- * Skeleton subclass for representing a row from the 'fisioterapeutas' table.
+ * Skeleton subclass for representing a row from the 'pacientes' table.
  *
  *
  *
@@ -13,7 +13,7 @@ use Api\Models\Base\Fisioterapeutas as BaseFisioterapeutas;
  * application requirements.  This class will only be generated as
  * long as it does not already exist in the output directory.
  */
-class Fisioterapeutas extends BaseFisioterapeutas
+class Paciente extends BasePaciente
 {
 
 }

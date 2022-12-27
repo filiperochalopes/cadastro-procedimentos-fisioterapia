@@ -1,9 +1,9 @@
 <?php
 
-namespace Api\Models\Map;
+namespace Models\Map;
 
-use Api\Models\Fisioterapeutas;
-use Api\Models\FisioterapeutasQuery;
+use Models\Procedimento;
+use Models\ProcedimentoQuery;
 use Propel\Runtime\Propel;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\ActiveQuery\InstancePoolTrait;
@@ -16,7 +16,7 @@ use Propel\Runtime\Map\TableMapTrait;
 
 
 /**
- * This class defines the structure of the 'fisioterapeutas' table.
+ * This class defines the structure of the 'procedimentos' table.
  *
  *
  *
@@ -25,7 +25,7 @@ use Propel\Runtime\Map\TableMapTrait;
  * ORDER BY clause to know whether it needs to apply SQL to make the ORDER BY case-insensitive
  * (i.e. if it's a text column type).
  */
-class FisioterapeutasTableMap extends TableMap
+class ProcedimentoTableMap extends TableMap
 {
     use InstancePoolTrait;
     use TableMapTrait;
@@ -33,7 +33,7 @@ class FisioterapeutasTableMap extends TableMap
     /**
      * The (dot-path) name of this class
      */
-    public const CLASS_NAME = 'Api.Models.Map.FisioterapeutasTableMap';
+    public const CLASS_NAME = 'Models.Map.ProcedimentoTableMap';
 
     /**
      * The default database name for this class
@@ -43,17 +43,17 @@ class FisioterapeutasTableMap extends TableMap
     /**
      * The table name for this class
      */
-    public const TABLE_NAME = 'fisioterapeutas';
+    public const TABLE_NAME = 'procedimentos';
 
     /**
      * The related Propel class for this table
      */
-    public const OM_CLASS = '\\Api\\Models\\Fisioterapeutas';
+    public const OM_CLASS = '\\Models\\Procedimento';
 
     /**
      * A class that can be returned by this tableMap
      */
-    public const CLASS_DEFAULT = 'Api.Models.Fisioterapeutas';
+    public const CLASS_DEFAULT = 'Models.Procedimento';
 
     /**
      * The total number of columns
@@ -73,12 +73,12 @@ class FisioterapeutasTableMap extends TableMap
     /**
      * the column name for the id field
      */
-    public const COL_ID = 'fisioterapeutas.id';
+    public const COL_ID = 'procedimentos.id';
 
     /**
-     * the column name for the fisioterapeuta field
+     * the column name for the nome field
      */
-    public const COL_FISIOTERAPEUTA = 'fisioterapeutas.fisioterapeuta';
+    public const COL_NOME = 'procedimentos.nome';
 
     /**
      * The default string format for model objects of the related table
@@ -94,10 +94,10 @@ class FisioterapeutasTableMap extends TableMap
      * @var array<string, mixed>
      */
     protected static $fieldNames = [
-        self::TYPE_PHPNAME       => ['Id', 'Fisioterapeuta', ],
-        self::TYPE_CAMELNAME     => ['id', 'fisioterapeuta', ],
-        self::TYPE_COLNAME       => [FisioterapeutasTableMap::COL_ID, FisioterapeutasTableMap::COL_FISIOTERAPEUTA, ],
-        self::TYPE_FIELDNAME     => ['id', 'fisioterapeuta', ],
+        self::TYPE_PHPNAME       => ['Id', 'Nome', ],
+        self::TYPE_CAMELNAME     => ['id', 'nome', ],
+        self::TYPE_COLNAME       => [ProcedimentoTableMap::COL_ID, ProcedimentoTableMap::COL_NOME, ],
+        self::TYPE_FIELDNAME     => ['id', 'nome', ],
         self::TYPE_NUM           => [0, 1, ]
     ];
 
@@ -110,10 +110,10 @@ class FisioterapeutasTableMap extends TableMap
      * @var array<string, mixed>
      */
     protected static $fieldKeys = [
-        self::TYPE_PHPNAME       => ['Id' => 0, 'Fisioterapeuta' => 1, ],
-        self::TYPE_CAMELNAME     => ['id' => 0, 'fisioterapeuta' => 1, ],
-        self::TYPE_COLNAME       => [FisioterapeutasTableMap::COL_ID => 0, FisioterapeutasTableMap::COL_FISIOTERAPEUTA => 1, ],
-        self::TYPE_FIELDNAME     => ['id' => 0, 'fisioterapeuta' => 1, ],
+        self::TYPE_PHPNAME       => ['Id' => 0, 'Nome' => 1, ],
+        self::TYPE_CAMELNAME     => ['id' => 0, 'nome' => 1, ],
+        self::TYPE_COLNAME       => [ProcedimentoTableMap::COL_ID => 0, ProcedimentoTableMap::COL_NOME => 1, ],
+        self::TYPE_FIELDNAME     => ['id' => 0, 'nome' => 1, ],
         self::TYPE_NUM           => [0, 1, ]
     ];
 
@@ -124,17 +124,19 @@ class FisioterapeutasTableMap extends TableMap
      */
     protected $normalizedColumnNameMap = [
         'Id' => 'ID',
-        'Fisioterapeutas.Id' => 'ID',
+        'Procedimento.Id' => 'ID',
         'id' => 'ID',
-        'fisioterapeutas.id' => 'ID',
-        'FisioterapeutasTableMap::COL_ID' => 'ID',
+        'procedimento.id' => 'ID',
+        'ProcedimentoTableMap::COL_ID' => 'ID',
         'COL_ID' => 'ID',
-        'Fisioterapeuta' => 'FISIOTERAPEUTA',
-        'Fisioterapeutas.Fisioterapeuta' => 'FISIOTERAPEUTA',
-        'fisioterapeuta' => 'FISIOTERAPEUTA',
-        'fisioterapeutas.fisioterapeuta' => 'FISIOTERAPEUTA',
-        'FisioterapeutasTableMap::COL_FISIOTERAPEUTA' => 'FISIOTERAPEUTA',
-        'COL_FISIOTERAPEUTA' => 'FISIOTERAPEUTA',
+        'procedimentos.id' => 'ID',
+        'Nome' => 'NOME',
+        'Procedimento.Nome' => 'NOME',
+        'nome' => 'NOME',
+        'procedimento.nome' => 'NOME',
+        'ProcedimentoTableMap::COL_NOME' => 'NOME',
+        'COL_NOME' => 'NOME',
+        'procedimentos.nome' => 'NOME',
     ];
 
     /**
@@ -147,15 +149,15 @@ class FisioterapeutasTableMap extends TableMap
     public function initialize(): void
     {
         // attributes
-        $this->setName('fisioterapeutas');
-        $this->setPhpName('Fisioterapeutas');
+        $this->setName('procedimentos');
+        $this->setPhpName('Procedimento');
         $this->setIdentifierQuoting(false);
-        $this->setClassName('\\Api\\Models\\Fisioterapeutas');
-        $this->setPackage('Api.Models');
+        $this->setClassName('\\Models\\Procedimento');
+        $this->setPackage('Models');
         $this->setUseIdGenerator(true);
         // columns
         $this->addPrimaryKey('id', 'Id', 'INTEGER', true, null, null);
-        $this->addColumn('fisioterapeuta', 'Fisioterapeuta', 'VARCHAR', true, 150, null);
+        $this->addColumn('nome', 'Nome', 'VARCHAR', true, 100, null);
     }
 
     /**
@@ -165,6 +167,14 @@ class FisioterapeutasTableMap extends TableMap
      */
     public function buildRelations(): void
     {
+        $this->addRelation('RegistroProcedimento', '\\Models\\RegistroProcedimento', RelationMap::ONE_TO_MANY, array (
+  0 =>
+  array (
+    0 => ':procedimento_id',
+    1 => ':id',
+  ),
+), null, null, 'RegistroProcedimentos', false);
+        $this->addRelation('Registro', '\\Models\\Registro', RelationMap::MANY_TO_MANY, array(), null, null, 'Registros');
     }
 
     /**
@@ -224,7 +234,7 @@ class FisioterapeutasTableMap extends TableMap
      */
     public static function getOMClass(bool $withPrefix = true): string
     {
-        return $withPrefix ? FisioterapeutasTableMap::CLASS_DEFAULT : FisioterapeutasTableMap::OM_CLASS;
+        return $withPrefix ? ProcedimentoTableMap::CLASS_DEFAULT : ProcedimentoTableMap::OM_CLASS;
     }
 
     /**
@@ -238,22 +248,22 @@ class FisioterapeutasTableMap extends TableMap
      *
      * @throws \Propel\Runtime\Exception\PropelException Any exceptions caught during processing will be
      *                         rethrown wrapped into a PropelException.
-     * @return array (Fisioterapeutas object, last column rank)
+     * @return array (Procedimento object, last column rank)
      */
     public static function populateObject(array $row, int $offset = 0, string $indexType = TableMap::TYPE_NUM): array
     {
-        $key = FisioterapeutasTableMap::getPrimaryKeyHashFromRow($row, $offset, $indexType);
-        if (null !== ($obj = FisioterapeutasTableMap::getInstanceFromPool($key))) {
+        $key = ProcedimentoTableMap::getPrimaryKeyHashFromRow($row, $offset, $indexType);
+        if (null !== ($obj = ProcedimentoTableMap::getInstanceFromPool($key))) {
             // We no longer rehydrate the object, since this can cause data loss.
             // See http://www.propelorm.org/ticket/509
             // $obj->hydrate($row, $offset, true); // rehydrate
-            $col = $offset + FisioterapeutasTableMap::NUM_HYDRATE_COLUMNS;
+            $col = $offset + ProcedimentoTableMap::NUM_HYDRATE_COLUMNS;
         } else {
-            $cls = FisioterapeutasTableMap::OM_CLASS;
-            /** @var Fisioterapeutas $obj */
+            $cls = ProcedimentoTableMap::OM_CLASS;
+            /** @var Procedimento $obj */
             $obj = new $cls();
             $col = $obj->hydrate($row, $offset, false, $indexType);
-            FisioterapeutasTableMap::addInstanceToPool($obj, $key);
+            ProcedimentoTableMap::addInstanceToPool($obj, $key);
         }
 
         return array($obj, $col);
@@ -276,18 +286,18 @@ class FisioterapeutasTableMap extends TableMap
         $cls = static::getOMClass(false);
         // populate the object(s)
         while ($row = $dataFetcher->fetch()) {
-            $key = FisioterapeutasTableMap::getPrimaryKeyHashFromRow($row, 0, $dataFetcher->getIndexType());
-            if (null !== ($obj = FisioterapeutasTableMap::getInstanceFromPool($key))) {
+            $key = ProcedimentoTableMap::getPrimaryKeyHashFromRow($row, 0, $dataFetcher->getIndexType());
+            if (null !== ($obj = ProcedimentoTableMap::getInstanceFromPool($key))) {
                 // We no longer rehydrate the object, since this can cause data loss.
                 // See http://www.propelorm.org/ticket/509
                 // $obj->hydrate($row, 0, true); // rehydrate
                 $results[] = $obj;
             } else {
-                /** @var Fisioterapeutas $obj */
+                /** @var Procedimento $obj */
                 $obj = new $cls();
                 $obj->hydrate($row);
                 $results[] = $obj;
-                FisioterapeutasTableMap::addInstanceToPool($obj, $key);
+                ProcedimentoTableMap::addInstanceToPool($obj, $key);
             } // if key exists
         }
 
@@ -309,11 +319,11 @@ class FisioterapeutasTableMap extends TableMap
     public static function addSelectColumns(Criteria $criteria, ?string $alias = null): void
     {
         if (null === $alias) {
-            $criteria->addSelectColumn(FisioterapeutasTableMap::COL_ID);
-            $criteria->addSelectColumn(FisioterapeutasTableMap::COL_FISIOTERAPEUTA);
+            $criteria->addSelectColumn(ProcedimentoTableMap::COL_ID);
+            $criteria->addSelectColumn(ProcedimentoTableMap::COL_NOME);
         } else {
             $criteria->addSelectColumn($alias . '.id');
-            $criteria->addSelectColumn($alias . '.fisioterapeuta');
+            $criteria->addSelectColumn($alias . '.nome');
         }
     }
 
@@ -332,11 +342,11 @@ class FisioterapeutasTableMap extends TableMap
     public static function removeSelectColumns(Criteria $criteria, ?string $alias = null): void
     {
         if (null === $alias) {
-            $criteria->removeSelectColumn(FisioterapeutasTableMap::COL_ID);
-            $criteria->removeSelectColumn(FisioterapeutasTableMap::COL_FISIOTERAPEUTA);
+            $criteria->removeSelectColumn(ProcedimentoTableMap::COL_ID);
+            $criteria->removeSelectColumn(ProcedimentoTableMap::COL_NOME);
         } else {
             $criteria->removeSelectColumn($alias . '.id');
-            $criteria->removeSelectColumn($alias . '.fisioterapeuta');
+            $criteria->removeSelectColumn($alias . '.nome');
         }
     }
 
@@ -349,13 +359,13 @@ class FisioterapeutasTableMap extends TableMap
      */
     public static function getTableMap(): TableMap
     {
-        return Propel::getServiceContainer()->getDatabaseMap(FisioterapeutasTableMap::DATABASE_NAME)->getTable(FisioterapeutasTableMap::TABLE_NAME);
+        return Propel::getServiceContainer()->getDatabaseMap(ProcedimentoTableMap::DATABASE_NAME)->getTable(ProcedimentoTableMap::TABLE_NAME);
     }
 
     /**
-     * Performs a DELETE on the database, given a Fisioterapeutas or Criteria object OR a primary key value.
+     * Performs a DELETE on the database, given a Procedimento or Criteria object OR a primary key value.
      *
-     * @param mixed $values Criteria or Fisioterapeutas object or primary key or array of primary keys
+     * @param mixed $values Criteria or Procedimento object or primary key or array of primary keys
      *              which is used to create the DELETE statement
      * @param ConnectionInterface $con the connection to use
      * @return int The number of affected rows (if supported by underlying database driver).  This includes CASCADE-related rows
@@ -366,27 +376,27 @@ class FisioterapeutasTableMap extends TableMap
      public static function doDelete($values, ?ConnectionInterface $con = null): int
      {
         if (null === $con) {
-            $con = Propel::getServiceContainer()->getWriteConnection(FisioterapeutasTableMap::DATABASE_NAME);
+            $con = Propel::getServiceContainer()->getWriteConnection(ProcedimentoTableMap::DATABASE_NAME);
         }
 
         if ($values instanceof Criteria) {
             // rename for clarity
             $criteria = $values;
-        } elseif ($values instanceof \Api\Models\Fisioterapeutas) { // it's a model object
+        } elseif ($values instanceof \Models\Procedimento) { // it's a model object
             // create criteria based on pk values
             $criteria = $values->buildPkeyCriteria();
         } else { // it's a primary key, or an array of pks
-            $criteria = new Criteria(FisioterapeutasTableMap::DATABASE_NAME);
-            $criteria->add(FisioterapeutasTableMap::COL_ID, (array) $values, Criteria::IN);
+            $criteria = new Criteria(ProcedimentoTableMap::DATABASE_NAME);
+            $criteria->add(ProcedimentoTableMap::COL_ID, (array) $values, Criteria::IN);
         }
 
-        $query = FisioterapeutasQuery::create()->mergeWith($criteria);
+        $query = ProcedimentoQuery::create()->mergeWith($criteria);
 
         if ($values instanceof Criteria) {
-            FisioterapeutasTableMap::clearInstancePool();
+            ProcedimentoTableMap::clearInstancePool();
         } elseif (!is_object($values)) { // it's a primary key, or an array of pks
             foreach ((array) $values as $singleval) {
-                FisioterapeutasTableMap::removeInstanceFromPool($singleval);
+                ProcedimentoTableMap::removeInstanceFromPool($singleval);
             }
         }
 
@@ -394,20 +404,20 @@ class FisioterapeutasTableMap extends TableMap
     }
 
     /**
-     * Deletes all rows from the fisioterapeutas table.
+     * Deletes all rows from the procedimentos table.
      *
      * @param ConnectionInterface $con the connection to use
      * @return int The number of affected rows (if supported by underlying database driver).
      */
     public static function doDeleteAll(?ConnectionInterface $con = null): int
     {
-        return FisioterapeutasQuery::create()->doDeleteAll($con);
+        return ProcedimentoQuery::create()->doDeleteAll($con);
     }
 
     /**
-     * Performs an INSERT on the database, given a Fisioterapeutas or Criteria object.
+     * Performs an INSERT on the database, given a Procedimento or Criteria object.
      *
-     * @param mixed $criteria Criteria or Fisioterapeutas object containing data that is used to create the INSERT statement.
+     * @param mixed $criteria Criteria or Procedimento object containing data that is used to create the INSERT statement.
      * @param ConnectionInterface $con the ConnectionInterface connection to use
      * @return mixed The new primary key.
      * @throws \Propel\Runtime\Exception\PropelException Any exceptions caught during processing will be
@@ -416,22 +426,22 @@ class FisioterapeutasTableMap extends TableMap
     public static function doInsert($criteria, ?ConnectionInterface $con = null)
     {
         if (null === $con) {
-            $con = Propel::getServiceContainer()->getWriteConnection(FisioterapeutasTableMap::DATABASE_NAME);
+            $con = Propel::getServiceContainer()->getWriteConnection(ProcedimentoTableMap::DATABASE_NAME);
         }
 
         if ($criteria instanceof Criteria) {
             $criteria = clone $criteria; // rename for clarity
         } else {
-            $criteria = $criteria->buildCriteria(); // build Criteria from Fisioterapeutas object
+            $criteria = $criteria->buildCriteria(); // build Criteria from Procedimento object
         }
 
-        if ($criteria->containsKey(FisioterapeutasTableMap::COL_ID) && $criteria->keyContainsValue(FisioterapeutasTableMap::COL_ID) ) {
-            throw new PropelException('Cannot insert a value for auto-increment primary key ('.FisioterapeutasTableMap::COL_ID.')');
+        if ($criteria->containsKey(ProcedimentoTableMap::COL_ID) && $criteria->keyContainsValue(ProcedimentoTableMap::COL_ID) ) {
+            throw new PropelException('Cannot insert a value for auto-increment primary key ('.ProcedimentoTableMap::COL_ID.')');
         }
 
 
         // Set the correct dbName
-        $query = FisioterapeutasQuery::create()->mergeWith($criteria);
+        $query = ProcedimentoQuery::create()->mergeWith($criteria);
 
         // use transaction because $criteria could contain info
         // for more than one table (I guess, conceivably)

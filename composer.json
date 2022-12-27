@@ -4,5 +4,16 @@
         "opis/database": "^3.6",
         "slim/slim": "4.*",
         "slim/psr7": "^1.6"
-    }
+    },
+    "autoload": {
+        "psr-4": {
+            "Api\\": "Api"
+        }
+    },
+    "authors": [{
+        "name": "Filipe Lopes",
+        "email": "contato@filipelopes.me",
+        "homepage": "https://filipelopes.me",
+        "role": "Developer"
+    }]
 }
