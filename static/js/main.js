@@ -45,7 +45,7 @@ $(document).ready(function () {
 
   json_condicionais = {};
 
-  $.getJSON("js/condicionais.json", function (data) {
+  $.getJSON("static/js/condicionais.json", function (data) {
     json_condicionais = data;
   });
 
@@ -391,12 +391,10 @@ $(document).ready(function () {
       url: url,
       data: form.serialize(),
       success: function (data) {
-        // Ajax call completed successfully
-        alert("Form Submited Successfully");
+        window.location.replace("/");
       },
       error: function (data) {
-        // Some error in ajax call
-        alert("some Error");
+        window.location.replace(data.getResponseHeader('Location'));
       },
     });
   });

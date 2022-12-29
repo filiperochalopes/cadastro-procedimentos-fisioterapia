@@ -1,12 +1,12 @@
 <?php
 
 use Api\Models\UsuariosQuery;
+use Psr\Http\Message\ResponseInterface as Response;
+use Psr\Http\Message\ServerRequestInterface as Request;
 
 require_once __DIR__ . '/../../../config/env.php';
 
 $app->post($baseUrlV1 . '/login', function (Request $request, Response $response, array $args) {
-
-    session_start();
 
     $usuario = $_POST["usuario"];
     $senhamd5 = md5($_POST["senha"]);
@@ -20,19 +20,21 @@ $app->post($baseUrlV1 . '/login', function (Request $request, Response $response
             $_SESSION["id_usuario"] = $usuario->getId();
             $_SESSION["usuario"] = $usuario->getUsuario();
 
-            $response
-                ->withHeader('Location', '/')
-                ->withStatus(302);
+            $response->getBody()->write(json_encode([
+                "msg" => "Sessão criada. Login Realizado com sucesso!"
+            ]));
+
+            return $response
+                ->withHeader('Content-Type', 'application/json')
+                ->withStatus(200);
         } else {
-            $response
-                ->withHeader('Location', '/login?erro=Senha incorreta, por favor insira corretamente')
-                ->withStatus(302);
+            return $response
+                ->withHeader('Location', '/login?erro=' . urlencode('Senha incorreta, por favor insira corretamente'))
+                ->withStatus(401);
         }
     } else {
-        $response
-            ->withHeader('Location', '/login?erro=Usuário não cadastrado')
-            ->withStatus(302);
+        return $response
+            ->withHeader('Location', '/login?erro=' . urlencode('Usuário não cadastrado'))
+            ->withStatus(401);
     }
-
-    return $response;
 });
