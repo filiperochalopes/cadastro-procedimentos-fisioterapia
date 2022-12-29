@@ -624,7 +624,7 @@ class TabelaTableMap extends TableMap
         $this->setUseIdGenerator(true);
         // columns
         $this->addPrimaryKey('id', 'Id', 'INTEGER', true, null, null);
-        $this->addColumn('data', 'Data', 'DATE', false, null, null);
+        $this->addColumn('data', 'Data', 'VARCHAR', false, 10, null);
         $this->addColumn('turno', 'Turno', 'VARCHAR', true, 5, null);
         $this->addColumn('fisioterapeuta', 'Fisioterapeuta', 'VARCHAR', false, 100, null);
         $this->addColumn('nome_paciente', 'NomePaciente', 'VARCHAR', false, 43, null);
@@ -640,7 +640,7 @@ class TabelaTableMap extends TableMap
         $this->addColumn('modalidade', 'Modalidade', 'VARCHAR', false, 20, null);
         $this->addColumn('outra_modalidade', 'OutraModalidade', 'VARCHAR', false, 10, null);
         $this->addColumn('comparecimento', 'Comparecimento', 'VARCHAR', false, 3, null);
-        $this->addColumn('tipo_falta', 'TipoFalta', 'VARCHAR', false, 40, null);
+        $this->addColumn('tipo_falta', 'TipoFalta', 'VARCHAR', true, 40, null);
         $this->addColumn('procedimento_1', 'Procedimento1', 'VARCHAR', false, 50, null);
         $this->addColumn('procedimento_2', 'Procedimento2', 'VARCHAR', false, 50, null);
         $this->addColumn('procedimento_3', 'Procedimento3', 'VARCHAR', false, 50, null);

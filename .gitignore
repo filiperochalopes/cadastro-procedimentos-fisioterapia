@@ -3,3 +3,4 @@ note.txt
 .env
 static/db/*.sql
 data
+twigcache

@@ -16,6 +16,11 @@ RUN pecl install xdebug \
 
 COPY . .
 
+ENV PHP_MEMORY_LIMIT=-1
+
+RUN mkdir -p /var/www/html/twigcache
+RUN chown -R www-data:www-data /var/www/html/twigcache/
+
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 COPY composer.json composer.json
 

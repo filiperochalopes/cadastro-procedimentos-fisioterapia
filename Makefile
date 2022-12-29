@@ -14,7 +14,7 @@ db-restore:
 db-terminal:
 	docker exec -it fisiocefan_db sh -c 'mysql -p'
 db-reset:
-	docker compose down --remove-orphans --volumes
+	docker compose rm -s -v -f db
 	sudo rm -rf data
-	docker compose up -d
+	docker compose up -d db
 	docker compose logs -f

@@ -514,37 +514,20 @@ abstract class TabelaQuery extends ModelCriteria
      *
      * Example usage:
      * <code>
-     * $query->filterByData('2011-03-14'); // WHERE data = '2011-03-14'
-     * $query->filterByData('now'); // WHERE data = '2011-03-14'
-     * $query->filterByData(array('max' => 'yesterday')); // WHERE data > '2011-03-13'
+     * $query->filterByData('fooValue');   // WHERE data = 'fooValue'
+     * $query->filterByData('%fooValue%', Criteria::LIKE); // WHERE data LIKE '%fooValue%'
+     * $query->filterByData(['foo', 'bar']); // WHERE data IN ('foo', 'bar')
      * </code>
      *
-     * @param mixed $data The value to use as filter.
-     *              Values can be integers (unix timestamps), DateTime objects, or strings.
-     *              Empty strings are treated as NULL.
-     *              Use scalar values for equality.
-     *              Use array values for in_array() equivalent.
-     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+     * @param string|string[] $data The value to use as filter.
      * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return $this The current query, for fluid interface
      */
     public function filterByData($data = null, ?string $comparison = null)
     {
-        if (is_array($data)) {
-            $useMinMax = false;
-            if (isset($data['min'])) {
-                $this->addUsingAlias(TabelaTableMap::COL_DATA, $data['min'], Criteria::GREATER_EQUAL);
-                $useMinMax = true;
-            }
-            if (isset($data['max'])) {
-                $this->addUsingAlias(TabelaTableMap::COL_DATA, $data['max'], Criteria::LESS_EQUAL);
-                $useMinMax = true;
-            }
-            if ($useMinMax) {
-                return $this;
-            }
-            if (null === $comparison) {
+        if (null === $comparison) {
+            if (is_array($data)) {
                 $comparison = Criteria::IN;
             }
         }

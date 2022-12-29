@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        {% include "head.html" %}
+    </head>
+    <body>
+        <div class="page">
+            <main class="login">
+                <h1>LOGIN <span>VOCÊ PRECISA ESTAR LOGADO PARA PODER ACESSAR O
+                        FORMULÁRIO</span></h1>
+                <form id="form_login" method="post" action="/api/v1/login">
+                    <label for="usuario">LOGIN<span>*</span></label>
+                    <input type="text" id="usuario" name="usuario"
+                        autocomplete="off"
+                        required/>
+
+                    <label for="senha">SENHA<span>*</span></label>
+                    <input type="password" id="senha" name="senha"
+                        autocomplete="off"
+                        required/>
+
+                    <span class="red">{{ error }}</span>
+
+                    <button type="submit" id="login_entrar">Entrar</button>
+                </form>
+                {% include "footer.html" %}
+            </main>
+        </div>
+
+    </body>
+</html>

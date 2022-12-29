@@ -2,7 +2,6 @@
 
 namespace Api\Models\Base;
 
-use \DateTime;
 use \Exception;
 use \PDO;
 use Api\Models\TabelaQuery as ChildTabelaQuery;
@@ -18,7 +17,6 @@ use Propel\Runtime\Exception\LogicException;
 use Propel\Runtime\Exception\PropelException;
 use Propel\Runtime\Map\TableMap;
 use Propel\Runtime\Parser\AbstractParser;
-use Propel\Runtime\Util\PropelDateTime;
 
 /**
  * Base class that represents a row from the 'tabela' table.
@@ -73,7 +71,7 @@ abstract class Tabela implements ActiveRecordInterface
     /**
      * The value for the data field.
      *
-     * @var        DateTime|null
+     * @var        string|null
      */
     protected $data;
 
@@ -185,7 +183,7 @@ abstract class Tabela implements ActiveRecordInterface
     /**
      * The value for the tipo_falta field.
      *
-     * @var        string|null
+     * @var        string
      */
     protected $tipo_falta;
 
@@ -581,25 +579,13 @@ abstract class Tabela implements ActiveRecordInterface
     }
 
     /**
-     * Get the [optionally formatted] temporal [data] column value.
+     * Get the [data] column value.
      *
-     *
-     * @param string|null $format The date/time format string (either date()-style or strftime()-style).
-     *   If format is NULL, then the raw DateTime object will be returned.
-     *
-     * @return string|DateTime|null Formatted date/time value as string or DateTime object (if format is NULL), NULL if column is NULL, and 0 if column value is 0000-00-00.
-     *
-     * @throws \Propel\Runtime\Exception\PropelException - if unable to parse/validate the date/time value.
-     *
-     * @psalm-return ($format is null ? DateTime|null : string|null)
+     * @return string|null
      */
-    public function getData($format = null)
+    public function getData()
     {
-        if ($format === null) {
-            return $this->data;
-        } else {
-            return $this->data instanceof \DateTimeInterface ? $this->data->format($format) : null;
-        }
+        return $this->data;
     }
 
     /**
@@ -755,7 +741,7 @@ abstract class Tabela implements ActiveRecordInterface
     /**
      * Get the [tipo_falta] column value.
      *
-     * @return string|null
+     * @return string
      */
     public function getTipoFalta()
     {
@@ -993,21 +979,21 @@ abstract class Tabela implements ActiveRecordInterface
     }
 
     /**
-     * Sets the value of [data] column to a normalized version of the date/time value specified.
+     * Set the value of [data] column.
      *
-     * @param string|integer|\DateTimeInterface|null $v string, integer (timestamp), or \DateTimeInterface value.
-     *               Empty strings are treated as NULL.
+     * @param string|null $v New value
      * @return $this The current object (for fluent API support)
      */
     public function setData($v)
     {
-        $dt = PropelDateTime::newInstance($v, null, 'DateTime');
-        if ($this->data !== null || $dt !== null) {
-            if ($this->data === null || $dt === null || $dt->format("Y-m-d") !== $this->data->format("Y-m-d")) {
-                $this->data = $dt === null ? null : clone $dt;
-                $this->modifiedColumns[TabelaTableMap::COL_DATA] = true;
-            }
-        } // if either are not null
+        if ($v !== null) {
+            $v = (string) $v;
+        }
+
+        if ($this->data !== $v) {
+            $this->data = $v;
+            $this->modifiedColumns[TabelaTableMap::COL_DATA] = true;
+        }
 
         return $this;
     }
@@ -1315,7 +1301,7 @@ abstract class Tabela implements ActiveRecordInterface
     /**
      * Set the value of [tipo_falta] column.
      *
-     * @param string|null $v New value
+     * @param string $v New value
      * @return $this The current object (for fluent API support)
      */
     public function setTipoFalta($v)
@@ -1792,10 +1778,7 @@ abstract class Tabela implements ActiveRecordInterface
             $this->id = (null !== $col) ? (int) $col : null;
 
             $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : TabelaTableMap::translateFieldName('Data', TableMap::TYPE_PHPNAME, $indexType)];
-            if ($col === '0000-00-00') {
-                $col = null;
-            }
-            $this->data = (null !== $col) ? PropelDateTime::newInstance($col, null, 'DateTime') : null;
+            $this->data = (null !== $col) ? (string) $col : null;
 
             $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : TabelaTableMap::translateFieldName('Turno', TableMap::TYPE_PHPNAME, $indexType)];
             $this->turno = (null !== $col) ? (string) $col : null;
@@ -2249,7 +2232,7 @@ abstract class Tabela implements ActiveRecordInterface
                         $stmt->bindValue($identifier, $this->id, PDO::PARAM_INT);
                         break;
                     case 'data':
-                        $stmt->bindValue($identifier, $this->data ? $this->data->format("Y-m-d") : null, PDO::PARAM_STR);
+                        $stmt->bindValue($identifier, $this->data, PDO::PARAM_STR);
                         break;
                     case 'turno':
                         $stmt->bindValue($identifier, $this->turno, PDO::PARAM_STR);
@@ -2608,10 +2591,6 @@ abstract class Tabela implements ActiveRecordInterface
             $keys[37] => $this->getProcedimento20(),
             $keys[38] => $this->getTotalProcedimentos(),
         ];
-        if ($result[$keys[1]] instanceof \DateTimeInterface) {
-            $result[$keys[1]] = $result[$keys[1]]->format('Y-m-d');
-        }
-
         $virtualColumns = $this->virtualColumns;
         foreach ($virtualColumns as $key => $virtualColumn) {
             $result[$key] = $virtualColumn;
