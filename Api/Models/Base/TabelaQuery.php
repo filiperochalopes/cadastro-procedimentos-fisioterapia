@@ -126,7 +126,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildTabela|null findOneByAtleta(string $atleta) Return the first ChildTabela filtered by the atleta column
  * @method     ChildTabela|null findOneByModalidade(string $modalidade) Return the first ChildTabela filtered by the modalidade column
  * @method     ChildTabela|null findOneByOutraModalidade(string $outra_modalidade) Return the first ChildTabela filtered by the outra_modalidade column
- * @method     ChildTabela|null findOneByComparecimento(string $comparecimento) Return the first ChildTabela filtered by the comparecimento column
+ * @method     ChildTabela|null findOneByComparecimento(boolean $comparecimento) Return the first ChildTabela filtered by the comparecimento column
  * @method     ChildTabela|null findOneByTipoFalta(string $tipo_falta) Return the first ChildTabela filtered by the tipo_falta column
  * @method     ChildTabela|null findOneByProcedimento1(string $procedimento_1) Return the first ChildTabela filtered by the procedimento_1 column
  * @method     ChildTabela|null findOneByProcedimento2(string $procedimento_2) Return the first ChildTabela filtered by the procedimento_2 column
@@ -169,7 +169,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildTabela requireOneByAtleta(string $atleta) Return the first ChildTabela filtered by the atleta column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildTabela requireOneByModalidade(string $modalidade) Return the first ChildTabela filtered by the modalidade column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildTabela requireOneByOutraModalidade(string $outra_modalidade) Return the first ChildTabela filtered by the outra_modalidade column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
- * @method     ChildTabela requireOneByComparecimento(string $comparecimento) Return the first ChildTabela filtered by the comparecimento column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildTabela requireOneByComparecimento(boolean $comparecimento) Return the first ChildTabela filtered by the comparecimento column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildTabela requireOneByTipoFalta(string $tipo_falta) Return the first ChildTabela filtered by the tipo_falta column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildTabela requireOneByProcedimento1(string $procedimento_1) Return the first ChildTabela filtered by the procedimento_1 column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildTabela requireOneByProcedimento2(string $procedimento_2) Return the first ChildTabela filtered by the procedimento_2 column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
@@ -227,8 +227,8 @@ use Propel\Runtime\Exception\PropelException;
  * @psalm-method Collection&\Traversable<ChildTabela> findByModalidade(string $modalidade) Return ChildTabela objects filtered by the modalidade column
  * @method     ChildTabela[]|Collection findByOutraModalidade(string $outra_modalidade) Return ChildTabela objects filtered by the outra_modalidade column
  * @psalm-method Collection&\Traversable<ChildTabela> findByOutraModalidade(string $outra_modalidade) Return ChildTabela objects filtered by the outra_modalidade column
- * @method     ChildTabela[]|Collection findByComparecimento(string $comparecimento) Return ChildTabela objects filtered by the comparecimento column
- * @psalm-method Collection&\Traversable<ChildTabela> findByComparecimento(string $comparecimento) Return ChildTabela objects filtered by the comparecimento column
+ * @method     ChildTabela[]|Collection findByComparecimento(boolean $comparecimento) Return ChildTabela objects filtered by the comparecimento column
+ * @psalm-method Collection&\Traversable<ChildTabela> findByComparecimento(boolean $comparecimento) Return ChildTabela objects filtered by the comparecimento column
  * @method     ChildTabela[]|Collection findByTipoFalta(string $tipo_falta) Return ChildTabela objects filtered by the tipo_falta column
  * @psalm-method Collection&\Traversable<ChildTabela> findByTipoFalta(string $tipo_falta) Return ChildTabela objects filtered by the tipo_falta column
  * @method     ChildTabela[]|Collection findByProcedimento1(string $procedimento_1) Return ChildTabela objects filtered by the procedimento_1 column
@@ -934,22 +934,23 @@ abstract class TabelaQuery extends ModelCriteria
      *
      * Example usage:
      * <code>
-     * $query->filterByComparecimento('fooValue');   // WHERE comparecimento = 'fooValue'
-     * $query->filterByComparecimento('%fooValue%', Criteria::LIKE); // WHERE comparecimento LIKE '%fooValue%'
-     * $query->filterByComparecimento(['foo', 'bar']); // WHERE comparecimento IN ('foo', 'bar')
+     * $query->filterByComparecimento(true); // WHERE comparecimento = true
+     * $query->filterByComparecimento('yes'); // WHERE comparecimento = true
      * </code>
      *
-     * @param string|string[] $comparecimento The value to use as filter.
+     * @param bool|string $comparecimento The value to use as filter.
+     *              Non-boolean arguments are converted using the following rules:
+     *                * 1, '1', 'true',  'on',  and 'yes' are converted to boolean true
+     *                * 0, '0', 'false', 'off', and 'no'  are converted to boolean false
+     *              Check on string values is case insensitive (so 'FaLsE' is seen as 'false').
      * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return $this The current query, for fluid interface
      */
     public function filterByComparecimento($comparecimento = null, ?string $comparison = null)
     {
-        if (null === $comparison) {
-            if (is_array($comparecimento)) {
-                $comparison = Criteria::IN;
-            }
+        if (is_string($comparecimento)) {
+            $comparecimento = in_array(strtolower($comparecimento), array('false', 'off', '-', 'no', 'n', '0', '')) ? false : true;
         }
 
         $this->addUsingAlias(TabelaTableMap::COL_COMPARECIMENTO, $comparecimento, $comparison);

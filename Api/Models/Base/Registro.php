@@ -119,7 +119,7 @@ abstract class Registro implements ActiveRecordInterface
     /**
      * The value for the comparecimento field.
      *
-     * @var        string|null
+     * @var        boolean|null
      */
     protected $comparecimento;
 
@@ -445,7 +445,7 @@ abstract class Registro implements ActiveRecordInterface
      *
      * @return string|null
      */
-    public function getProcedimentos()
+    public function getProcedimentosDeprecated()
     {
         return $this->procedimentos;
     }
@@ -483,11 +483,21 @@ abstract class Registro implements ActiveRecordInterface
     /**
      * Get the [comparecimento] column value.
      *
-     * @return string|null
+     * @return boolean|null
      */
     public function getComparecimento()
     {
         return $this->comparecimento;
+    }
+
+    /**
+     * Get the [comparecimento] column value.
+     *
+     * @return boolean|null
+     */
+    public function isComparecimento()
+    {
+        return $this->getComparecimento();
     }
 
     /**
@@ -578,7 +588,7 @@ abstract class Registro implements ActiveRecordInterface
      * @param string|null $v New value
      * @return $this The current object (for fluent API support)
      */
-    public function setProcedimentos($v)
+    public function setProcedimentosDeprecated($v)
     {
         if ($v !== null) {
             $v = (string) $v;
@@ -661,15 +671,23 @@ abstract class Registro implements ActiveRecordInterface
     }
 
     /**
-     * Set the value of [comparecimento] column.
+     * Sets the value of the [comparecimento] column.
+     * Non-boolean arguments are converted using the following rules:
+     *   * 1, '1', 'true',  'on',  and 'yes' are converted to boolean true
+     *   * 0, '0', 'false', 'off', and 'no'  are converted to boolean false
+     * Check on string values is case insensitive (so 'FaLsE' is seen as 'false').
      *
-     * @param string|null $v New value
+     * @param bool|integer|string|null $v The new value
      * @return $this The current object (for fluent API support)
      */
     public function setComparecimento($v)
     {
         if ($v !== null) {
-            $v = (string) $v;
+            if (is_string($v)) {
+                $v = in_array(strtolower($v), array('false', 'off', '-', 'no', 'n', '0', '')) ? false : true;
+            } else {
+                $v = (boolean) $v;
+            }
         }
 
         if ($this->comparecimento !== $v) {
@@ -782,7 +800,7 @@ abstract class Registro implements ActiveRecordInterface
             $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : RegistroTableMap::translateFieldName('PacienteDeprecated', TableMap::TYPE_PHPNAME, $indexType)];
             $this->paciente = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : RegistroTableMap::translateFieldName('Procedimentos', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : RegistroTableMap::translateFieldName('ProcedimentosDeprecated', TableMap::TYPE_PHPNAME, $indexType)];
             $this->procedimentos = (null !== $col) ? (string) $col : null;
 
             $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : RegistroTableMap::translateFieldName('FisioterapeutaId', TableMap::TYPE_PHPNAME, $indexType)];
@@ -795,7 +813,7 @@ abstract class Registro implements ActiveRecordInterface
             $this->tipo_atendimento = (null !== $col) ? (string) $col : null;
 
             $col = $row[TableMap::TYPE_NUM == $indexType ? 6 + $startcol : RegistroTableMap::translateFieldName('Comparecimento', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->comparecimento = (null !== $col) ? (string) $col : null;
+            $this->comparecimento = (null !== $col) ? (boolean) $col : null;
 
             $col = $row[TableMap::TYPE_NUM == $indexType ? 7 + $startcol : RegistroTableMap::translateFieldName('TipoFalta', TableMap::TYPE_PHPNAME, $indexType)];
             $this->tipo_falta = (null !== $col) ? (string) $col : null;
@@ -1154,7 +1172,7 @@ abstract class Registro implements ActiveRecordInterface
                         $stmt->bindValue($identifier, $this->tipo_atendimento, PDO::PARAM_STR);
                         break;
                     case 'comparecimento':
-                        $stmt->bindValue($identifier, $this->comparecimento, PDO::PARAM_STR);
+                        $stmt->bindValue($identifier, (int) $this->comparecimento, PDO::PARAM_INT);
                         break;
                     case 'tipo_falta':
                         $stmt->bindValue($identifier, $this->tipo_falta, PDO::PARAM_STR);
@@ -1234,7 +1252,7 @@ abstract class Registro implements ActiveRecordInterface
                 return $this->getPacienteDeprecated();
 
             case 2:
-                return $this->getProcedimentos();
+                return $this->getProcedimentosDeprecated();
 
             case 3:
                 return $this->getFisioterapeutaId();
@@ -1287,7 +1305,7 @@ abstract class Registro implements ActiveRecordInterface
         $result = [
             $keys[0] => $this->getId(),
             $keys[1] => $this->getPacienteDeprecated(),
-            $keys[2] => $this->getProcedimentos(),
+            $keys[2] => $this->getProcedimentosDeprecated(),
             $keys[3] => $this->getFisioterapeutaId(),
             $keys[4] => $this->getPacienteId(),
             $keys[5] => $this->getTipoAtendimento(),
@@ -1394,7 +1412,7 @@ abstract class Registro implements ActiveRecordInterface
                 $this->setPacienteDeprecated($value);
                 break;
             case 2:
-                $this->setProcedimentos($value);
+                $this->setProcedimentosDeprecated($value);
                 break;
             case 3:
                 $this->setFisioterapeutaId($value);
@@ -1450,7 +1468,7 @@ abstract class Registro implements ActiveRecordInterface
             $this->setPacienteDeprecated($arr[$keys[1]]);
         }
         if (array_key_exists($keys[2], $arr)) {
-            $this->setProcedimentos($arr[$keys[2]]);
+            $this->setProcedimentosDeprecated($arr[$keys[2]]);
         }
         if (array_key_exists($keys[3], $arr)) {
             $this->setFisioterapeutaId($arr[$keys[3]]);
@@ -1635,7 +1653,7 @@ abstract class Registro implements ActiveRecordInterface
     public function copyInto(object $copyObj, bool $deepCopy = false, bool $makeNew = true): void
     {
         $copyObj->setPacienteDeprecated($this->getPacienteDeprecated());
-        $copyObj->setProcedimentos($this->getProcedimentos());
+        $copyObj->setProcedimentosDeprecated($this->getProcedimentosDeprecated());
         $copyObj->setFisioterapeutaId($this->getFisioterapeutaId());
         $copyObj->setPacienteId($this->getPacienteId());
         $copyObj->setTipoAtendimento($this->getTipoAtendimento());

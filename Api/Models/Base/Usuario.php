@@ -4,18 +4,13 @@ namespace Api\Models\Base;
 
 use \Exception;
 use \PDO;
-use Api\Models\Fisioterapeuta as ChildFisioterapeuta;
-use Api\Models\FisioterapeutaQuery as ChildFisioterapeutaQuery;
-use Api\Models\Registro as ChildRegistro;
-use Api\Models\RegistroQuery as ChildRegistroQuery;
-use Api\Models\Map\FisioterapeutaTableMap;
-use Api\Models\Map\RegistroTableMap;
+use Api\Models\UsuarioQuery as ChildUsuarioQuery;
+use Api\Models\Map\UsuarioTableMap;
 use Propel\Runtime\Propel;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\ActiveQuery\ModelCriteria;
 use Propel\Runtime\ActiveRecord\ActiveRecordInterface;
 use Propel\Runtime\Collection\Collection;
-use Propel\Runtime\Collection\ObjectCollection;
 use Propel\Runtime\Connection\ConnectionInterface;
 use Propel\Runtime\Exception\BadMethodCallException;
 use Propel\Runtime\Exception\LogicException;
@@ -24,20 +19,20 @@ use Propel\Runtime\Map\TableMap;
 use Propel\Runtime\Parser\AbstractParser;
 
 /**
- * Base class that represents a row from the 'fisioterapeutas' table.
+ * Base class that represents a row from the 'usuarios' table.
  *
  *
  *
  * @package    propel.generator.Api.Models.Base
  */
-abstract class Fisioterapeuta implements ActiveRecordInterface
+abstract class Usuario implements ActiveRecordInterface
 {
     /**
      * TableMap class name
      *
      * @var string
      */
-    public const TABLE_MAP = '\\Api\\Models\\Map\\FisioterapeutaTableMap';
+    public const TABLE_MAP = '\\Api\\Models\\Map\\UsuarioTableMap';
 
 
     /**
@@ -74,26 +69,18 @@ abstract class Fisioterapeuta implements ActiveRecordInterface
     protected $id;
 
     /**
-     * The value for the nome field.
+     * The value for the usuario field.
      *
      * @var        string
      */
-    protected $nome;
+    protected $usuario;
 
     /**
-     * The value for the disabled field.
+     * The value for the senha field.
      *
-     * Note: this column has a database default value of: false
-     * @var        boolean
+     * @var        string
      */
-    protected $disabled;
-
-    /**
-     * @var        ObjectCollection|ChildRegistro[] Collection to store aggregation of ChildRegistro objects.
-     * @phpstan-var ObjectCollection&\Traversable<ChildRegistro> Collection to store aggregation of ChildRegistro objects.
-     */
-    protected $collRegistros;
-    protected $collRegistrosPartial;
+    protected $senha;
 
     /**
      * Flag to prevent endless save loop, if this object is referenced
@@ -104,30 +91,10 @@ abstract class Fisioterapeuta implements ActiveRecordInterface
     protected $alreadyInSave = false;
 
     /**
-     * An array of objects scheduled for deletion.
-     * @var ObjectCollection|ChildRegistro[]
-     * @phpstan-var ObjectCollection&\Traversable<ChildRegistro>
-     */
-    protected $registrosScheduledForDeletion = null;
-
-    /**
-     * Applies default values to this object.
-     * This method should be called from the object's constructor (or
-     * equivalent initialization method).
-     * @see __construct()
-     */
-    public function applyDefaultValues(): void
-    {
-        $this->disabled = false;
-    }
-
-    /**
-     * Initializes internal state of Api\Models\Base\Fisioterapeuta object.
-     * @see applyDefaults()
+     * Initializes internal state of Api\Models\Base\Usuario object.
      */
     public function __construct()
     {
-        $this->applyDefaultValues();
     }
 
     /**
@@ -217,9 +184,9 @@ abstract class Fisioterapeuta implements ActiveRecordInterface
     }
 
     /**
-     * Compares this with another <code>Fisioterapeuta</code> instance.  If
-     * <code>obj</code> is an instance of <code>Fisioterapeuta</code>, delegates to
-     * <code>equals(Fisioterapeuta)</code>.  Otherwise, returns <code>false</code>.
+     * Compares this with another <code>Usuario</code> instance.  If
+     * <code>obj</code> is an instance of <code>Usuario</code>, delegates to
+     * <code>equals(Usuario)</code>.  Otherwise, returns <code>false</code>.
      *
      * @param mixed $obj The object to compare to.
      * @return bool Whether equal to the object specified.
@@ -360,33 +327,23 @@ abstract class Fisioterapeuta implements ActiveRecordInterface
     }
 
     /**
-     * Get the [nome] column value.
+     * Get the [usuario] column value.
      *
      * @return string
      */
-    public function getNome()
+    public function getUsuario()
     {
-        return $this->nome;
+        return $this->usuario;
     }
 
     /**
-     * Get the [disabled] column value.
+     * Get the [senha] column value.
      *
-     * @return boolean
+     * @return string
      */
-    public function getDesabilitado()
+    public function getSenha()
     {
-        return $this->disabled;
-    }
-
-    /**
-     * Get the [disabled] column value.
-     *
-     * @return boolean
-     */
-    public function isDesabilitado()
-    {
-        return $this->getDesabilitado();
+        return $this->senha;
     }
 
     /**
@@ -403,55 +360,47 @@ abstract class Fisioterapeuta implements ActiveRecordInterface
 
         if ($this->id !== $v) {
             $this->id = $v;
-            $this->modifiedColumns[FisioterapeutaTableMap::COL_ID] = true;
+            $this->modifiedColumns[UsuarioTableMap::COL_ID] = true;
         }
 
         return $this;
     }
 
     /**
-     * Set the value of [nome] column.
+     * Set the value of [usuario] column.
      *
      * @param string $v New value
      * @return $this The current object (for fluent API support)
      */
-    public function setNome($v)
+    public function setUsuario($v)
     {
         if ($v !== null) {
             $v = (string) $v;
         }
 
-        if ($this->nome !== $v) {
-            $this->nome = $v;
-            $this->modifiedColumns[FisioterapeutaTableMap::COL_NOME] = true;
+        if ($this->usuario !== $v) {
+            $this->usuario = $v;
+            $this->modifiedColumns[UsuarioTableMap::COL_USUARIO] = true;
         }
 
         return $this;
     }
 
     /**
-     * Sets the value of the [disabled] column.
-     * Non-boolean arguments are converted using the following rules:
-     *   * 1, '1', 'true',  'on',  and 'yes' are converted to boolean true
-     *   * 0, '0', 'false', 'off', and 'no'  are converted to boolean false
-     * Check on string values is case insensitive (so 'FaLsE' is seen as 'false').
+     * Set the value of [senha] column.
      *
-     * @param bool|integer|string $v The new value
+     * @param string $v New value
      * @return $this The current object (for fluent API support)
      */
-    public function setDesabilitado($v)
+    public function setSenha($v)
     {
         if ($v !== null) {
-            if (is_string($v)) {
-                $v = in_array(strtolower($v), array('false', 'off', '-', 'no', 'n', '0', '')) ? false : true;
-            } else {
-                $v = (boolean) $v;
-            }
+            $v = (string) $v;
         }
 
-        if ($this->disabled !== $v) {
-            $this->disabled = $v;
-            $this->modifiedColumns[FisioterapeutaTableMap::COL_DISABLED] = true;
+        if ($this->senha !== $v) {
+            $this->senha = $v;
+            $this->modifiedColumns[UsuarioTableMap::COL_SENHA] = true;
         }
 
         return $this;
@@ -467,10 +416,6 @@ abstract class Fisioterapeuta implements ActiveRecordInterface
      */
     public function hasOnlyDefaultValues(): bool
     {
-            if ($this->disabled !== false) {
-                return false;
-            }
-
         // otherwise, everything was equal, so return TRUE
         return true;
     }
@@ -497,14 +442,14 @@ abstract class Fisioterapeuta implements ActiveRecordInterface
     {
         try {
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 0 + $startcol : FisioterapeutaTableMap::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 0 + $startcol : UsuarioTableMap::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)];
             $this->id = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : FisioterapeutaTableMap::translateFieldName('Nome', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->nome = (null !== $col) ? (string) $col : null;
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : UsuarioTableMap::translateFieldName('Usuario', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->usuario = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : FisioterapeutaTableMap::translateFieldName('Desabilitado', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->disabled = (null !== $col) ? (boolean) $col : null;
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : UsuarioTableMap::translateFieldName('Senha', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->senha = (null !== $col) ? (string) $col : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -513,10 +458,10 @@ abstract class Fisioterapeuta implements ActiveRecordInterface
                 $this->ensureConsistency();
             }
 
-            return $startcol + 3; // 3 = FisioterapeutaTableMap::NUM_HYDRATE_COLUMNS.
+            return $startcol + 3; // 3 = UsuarioTableMap::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
-            throw new PropelException(sprintf('Error populating %s object', '\\Api\\Models\\Fisioterapeuta'), 0, $e);
+            throw new PropelException(sprintf('Error populating %s object', '\\Api\\Models\\Usuario'), 0, $e);
         }
     }
 
@@ -559,13 +504,13 @@ abstract class Fisioterapeuta implements ActiveRecordInterface
         }
 
         if ($con === null) {
-            $con = Propel::getServiceContainer()->getReadConnection(FisioterapeutaTableMap::DATABASE_NAME);
+            $con = Propel::getServiceContainer()->getReadConnection(UsuarioTableMap::DATABASE_NAME);
         }
 
         // We don't need to alter the object instance pool; we're just modifying this instance
         // already in the pool.
 
-        $dataFetcher = ChildFisioterapeutaQuery::create(null, $this->buildPkeyCriteria())->setFormatter(ModelCriteria::FORMAT_STATEMENT)->find($con);
+        $dataFetcher = ChildUsuarioQuery::create(null, $this->buildPkeyCriteria())->setFormatter(ModelCriteria::FORMAT_STATEMENT)->find($con);
         $row = $dataFetcher->fetch();
         $dataFetcher->close();
         if (!$row) {
@@ -574,8 +519,6 @@ abstract class Fisioterapeuta implements ActiveRecordInterface
         $this->hydrate($row, 0, true, $dataFetcher->getIndexType()); // rehydrate
 
         if ($deep) {  // also de-associate any related objects?
-
-            $this->collRegistros = null;
 
         } // if (deep)
     }
@@ -586,8 +529,8 @@ abstract class Fisioterapeuta implements ActiveRecordInterface
      * @param ConnectionInterface $con
      * @return void
      * @throws \Propel\Runtime\Exception\PropelException
-     * @see Fisioterapeuta::setDeleted()
-     * @see Fisioterapeuta::isDeleted()
+     * @see Usuario::setDeleted()
+     * @see Usuario::isDeleted()
      */
     public function delete(?ConnectionInterface $con = null): void
     {
@@ -596,11 +539,11 @@ abstract class Fisioterapeuta implements ActiveRecordInterface
         }
 
         if ($con === null) {
-            $con = Propel::getServiceContainer()->getWriteConnection(FisioterapeutaTableMap::DATABASE_NAME);
+            $con = Propel::getServiceContainer()->getWriteConnection(UsuarioTableMap::DATABASE_NAME);
         }
 
         $con->transaction(function () use ($con) {
-            $deleteQuery = ChildFisioterapeutaQuery::create()
+            $deleteQuery = ChildUsuarioQuery::create()
                 ->filterByPrimaryKey($this->getPrimaryKey());
             $ret = $this->preDelete($con);
             if ($ret) {
@@ -635,7 +578,7 @@ abstract class Fisioterapeuta implements ActiveRecordInterface
         }
 
         if ($con === null) {
-            $con = Propel::getServiceContainer()->getWriteConnection(FisioterapeutaTableMap::DATABASE_NAME);
+            $con = Propel::getServiceContainer()->getWriteConnection(UsuarioTableMap::DATABASE_NAME);
         }
 
         return $con->transaction(function () use ($con) {
@@ -654,7 +597,7 @@ abstract class Fisioterapeuta implements ActiveRecordInterface
                     $this->postUpdate($con);
                 }
                 $this->postSave($con);
-                FisioterapeutaTableMap::addInstanceToPool($this);
+                UsuarioTableMap::addInstanceToPool($this);
             } else {
                 $affectedRows = 0;
             }
@@ -691,24 +634,6 @@ abstract class Fisioterapeuta implements ActiveRecordInterface
                 $this->resetModified();
             }
 
-            if ($this->registrosScheduledForDeletion !== null) {
-                if (!$this->registrosScheduledForDeletion->isEmpty()) {
-                    foreach ($this->registrosScheduledForDeletion as $registro) {
-                        // need to save related object because we set the relation to null
-                        $registro->save($con);
-                    }
-                    $this->registrosScheduledForDeletion = null;
-                }
-            }
-
-            if ($this->collRegistros !== null) {
-                foreach ($this->collRegistros as $referrerFK) {
-                    if (!$referrerFK->isDeleted() && ($referrerFK->isNew() || $referrerFK->isModified())) {
-                        $affectedRows += $referrerFK->save($con);
-                    }
-                }
-            }
-
             $this->alreadyInSave = false;
 
         }
@@ -729,24 +654,24 @@ abstract class Fisioterapeuta implements ActiveRecordInterface
         $modifiedColumns = [];
         $index = 0;
 
-        $this->modifiedColumns[FisioterapeutaTableMap::COL_ID] = true;
+        $this->modifiedColumns[UsuarioTableMap::COL_ID] = true;
         if (null !== $this->id) {
-            throw new PropelException('Cannot insert a value for auto-increment primary key (' . FisioterapeutaTableMap::COL_ID . ')');
+            throw new PropelException('Cannot insert a value for auto-increment primary key (' . UsuarioTableMap::COL_ID . ')');
         }
 
          // check the columns in natural order for more readable SQL queries
-        if ($this->isColumnModified(FisioterapeutaTableMap::COL_ID)) {
+        if ($this->isColumnModified(UsuarioTableMap::COL_ID)) {
             $modifiedColumns[':p' . $index++]  = 'id';
         }
-        if ($this->isColumnModified(FisioterapeutaTableMap::COL_NOME)) {
-            $modifiedColumns[':p' . $index++]  = 'nome';
+        if ($this->isColumnModified(UsuarioTableMap::COL_USUARIO)) {
+            $modifiedColumns[':p' . $index++]  = 'usuario';
         }
-        if ($this->isColumnModified(FisioterapeutaTableMap::COL_DISABLED)) {
-            $modifiedColumns[':p' . $index++]  = 'disabled';
+        if ($this->isColumnModified(UsuarioTableMap::COL_SENHA)) {
+            $modifiedColumns[':p' . $index++]  = 'senha';
         }
 
         $sql = sprintf(
-            'INSERT INTO fisioterapeutas (%s) VALUES (%s)',
+            'INSERT INTO usuarios (%s) VALUES (%s)',
             implode(', ', $modifiedColumns),
             implode(', ', array_keys($modifiedColumns))
         );
@@ -758,11 +683,11 @@ abstract class Fisioterapeuta implements ActiveRecordInterface
                     case 'id':
                         $stmt->bindValue($identifier, $this->id, PDO::PARAM_INT);
                         break;
-                    case 'nome':
-                        $stmt->bindValue($identifier, $this->nome, PDO::PARAM_STR);
+                    case 'usuario':
+                        $stmt->bindValue($identifier, $this->usuario, PDO::PARAM_STR);
                         break;
-                    case 'disabled':
-                        $stmt->bindValue($identifier, (int) $this->disabled, PDO::PARAM_INT);
+                    case 'senha':
+                        $stmt->bindValue($identifier, $this->senha, PDO::PARAM_STR);
                         break;
                 }
             }
@@ -810,7 +735,7 @@ abstract class Fisioterapeuta implements ActiveRecordInterface
      */
     public function getByName(string $name, string $type = TableMap::TYPE_PHPNAME)
     {
-        $pos = FisioterapeutaTableMap::translateFieldName($name, $type, TableMap::TYPE_NUM);
+        $pos = UsuarioTableMap::translateFieldName($name, $type, TableMap::TYPE_NUM);
         $field = $this->getByPosition($pos);
 
         return $field;
@@ -830,10 +755,10 @@ abstract class Fisioterapeuta implements ActiveRecordInterface
                 return $this->getId();
 
             case 1:
-                return $this->getNome();
+                return $this->getUsuario();
 
             case 2:
-                return $this->getDesabilitado();
+                return $this->getSenha();
 
             default:
                 return null;
@@ -851,44 +776,26 @@ abstract class Fisioterapeuta implements ActiveRecordInterface
      *                    Defaults to TableMap::TYPE_PHPNAME.
      * @param bool $includeLazyLoadColumns (optional) Whether to include lazy loaded columns. Defaults to TRUE.
      * @param array $alreadyDumpedObjects List of objects to skip to avoid recursion
-     * @param bool $includeForeignObjects (optional) Whether to include hydrated related objects. Default to FALSE.
      *
      * @return array An associative array containing the field names (as keys) and field values
      */
-    public function toArray(string $keyType = TableMap::TYPE_PHPNAME, bool $includeLazyLoadColumns = true, array $alreadyDumpedObjects = [], bool $includeForeignObjects = false): array
+    public function toArray(string $keyType = TableMap::TYPE_PHPNAME, bool $includeLazyLoadColumns = true, array $alreadyDumpedObjects = []): array
     {
-        if (isset($alreadyDumpedObjects['Fisioterapeuta'][$this->hashCode()])) {
+        if (isset($alreadyDumpedObjects['Usuario'][$this->hashCode()])) {
             return ['*RECURSION*'];
         }
-        $alreadyDumpedObjects['Fisioterapeuta'][$this->hashCode()] = true;
-        $keys = FisioterapeutaTableMap::getFieldNames($keyType);
+        $alreadyDumpedObjects['Usuario'][$this->hashCode()] = true;
+        $keys = UsuarioTableMap::getFieldNames($keyType);
         $result = [
             $keys[0] => $this->getId(),
-            $keys[1] => $this->getNome(),
-            $keys[2] => $this->getDesabilitado(),
+            $keys[1] => $this->getUsuario(),
+            $keys[2] => $this->getSenha(),
         ];
         $virtualColumns = $this->virtualColumns;
         foreach ($virtualColumns as $key => $virtualColumn) {
             $result[$key] = $virtualColumn;
         }
 
-        if ($includeForeignObjects) {
-            if (null !== $this->collRegistros) {
-
-                switch ($keyType) {
-                    case TableMap::TYPE_CAMELNAME:
-                        $key = 'registros';
-                        break;
-                    case TableMap::TYPE_FIELDNAME:
-                        $key = 'registross';
-                        break;
-                    default:
-                        $key = 'Registros';
-                }
-
-                $result[$key] = $this->collRegistros->toArray(null, false, $keyType, $includeLazyLoadColumns, $alreadyDumpedObjects);
-            }
-        }
 
         return $result;
     }
@@ -906,7 +813,7 @@ abstract class Fisioterapeuta implements ActiveRecordInterface
      */
     public function setByName(string $name, $value, string $type = TableMap::TYPE_PHPNAME)
     {
-        $pos = FisioterapeutaTableMap::translateFieldName($name, $type, TableMap::TYPE_NUM);
+        $pos = UsuarioTableMap::translateFieldName($name, $type, TableMap::TYPE_NUM);
 
         $this->setByPosition($pos, $value);
 
@@ -928,10 +835,10 @@ abstract class Fisioterapeuta implements ActiveRecordInterface
                 $this->setId($value);
                 break;
             case 1:
-                $this->setNome($value);
+                $this->setUsuario($value);
                 break;
             case 2:
-                $this->setDesabilitado($value);
+                $this->setSenha($value);
                 break;
         } // switch()
 
@@ -957,16 +864,16 @@ abstract class Fisioterapeuta implements ActiveRecordInterface
      */
     public function fromArray(array $arr, string $keyType = TableMap::TYPE_PHPNAME)
     {
-        $keys = FisioterapeutaTableMap::getFieldNames($keyType);
+        $keys = UsuarioTableMap::getFieldNames($keyType);
 
         if (array_key_exists($keys[0], $arr)) {
             $this->setId($arr[$keys[0]]);
         }
         if (array_key_exists($keys[1], $arr)) {
-            $this->setNome($arr[$keys[1]]);
+            $this->setUsuario($arr[$keys[1]]);
         }
         if (array_key_exists($keys[2], $arr)) {
-            $this->setDesabilitado($arr[$keys[2]]);
+            $this->setSenha($arr[$keys[2]]);
         }
 
         return $this;
@@ -1009,16 +916,16 @@ abstract class Fisioterapeuta implements ActiveRecordInterface
      */
     public function buildCriteria(): Criteria
     {
-        $criteria = new Criteria(FisioterapeutaTableMap::DATABASE_NAME);
+        $criteria = new Criteria(UsuarioTableMap::DATABASE_NAME);
 
-        if ($this->isColumnModified(FisioterapeutaTableMap::COL_ID)) {
-            $criteria->add(FisioterapeutaTableMap::COL_ID, $this->id);
+        if ($this->isColumnModified(UsuarioTableMap::COL_ID)) {
+            $criteria->add(UsuarioTableMap::COL_ID, $this->id);
         }
-        if ($this->isColumnModified(FisioterapeutaTableMap::COL_NOME)) {
-            $criteria->add(FisioterapeutaTableMap::COL_NOME, $this->nome);
+        if ($this->isColumnModified(UsuarioTableMap::COL_USUARIO)) {
+            $criteria->add(UsuarioTableMap::COL_USUARIO, $this->usuario);
         }
-        if ($this->isColumnModified(FisioterapeutaTableMap::COL_DISABLED)) {
-            $criteria->add(FisioterapeutaTableMap::COL_DISABLED, $this->disabled);
+        if ($this->isColumnModified(UsuarioTableMap::COL_SENHA)) {
+            $criteria->add(UsuarioTableMap::COL_SENHA, $this->senha);
         }
 
         return $criteria;
@@ -1036,8 +943,8 @@ abstract class Fisioterapeuta implements ActiveRecordInterface
      */
     public function buildPkeyCriteria(): Criteria
     {
-        $criteria = ChildFisioterapeutaQuery::create();
-        $criteria->add(FisioterapeutaTableMap::COL_ID, $this->id);
+        $criteria = ChildUsuarioQuery::create();
+        $criteria->add(UsuarioTableMap::COL_ID, $this->id);
 
         return $criteria;
     }
@@ -1100,7 +1007,7 @@ abstract class Fisioterapeuta implements ActiveRecordInterface
      * If desired, this method can also make copies of all associated (fkey referrers)
      * objects.
      *
-     * @param object $copyObj An object of \Api\Models\Fisioterapeuta (or compatible) type.
+     * @param object $copyObj An object of \Api\Models\Usuario (or compatible) type.
      * @param bool $deepCopy Whether to also copy all rows that refer (by fkey) to the current row.
      * @param bool $makeNew Whether to reset autoincrement PKs and make the object new.
      * @throws \Propel\Runtime\Exception\PropelException
@@ -1108,22 +1015,8 @@ abstract class Fisioterapeuta implements ActiveRecordInterface
      */
     public function copyInto(object $copyObj, bool $deepCopy = false, bool $makeNew = true): void
     {
-        $copyObj->setNome($this->getNome());
-        $copyObj->setDesabilitado($this->getDesabilitado());
-
-        if ($deepCopy) {
-            // important: temporarily setNew(false) because this affects the behavior of
-            // the getter/setter methods for fkey referrer objects.
-            $copyObj->setNew(false);
-
-            foreach ($this->getRegistros() as $relObj) {
-                if ($relObj !== $this) {  // ensure that we don't try to copy a reference to ourselves
-                    $copyObj->addRegistro($relObj->copy($deepCopy));
-                }
-            }
-
-        } // if ($deepCopy)
-
+        $copyObj->setUsuario($this->getUsuario());
+        $copyObj->setSenha($this->getSenha());
         if ($makeNew) {
             $copyObj->setNew(true);
             $copyObj->setId(NULL); // this is a auto-increment column, so set to default value
@@ -1139,7 +1032,7 @@ abstract class Fisioterapeuta implements ActiveRecordInterface
      * objects.
      *
      * @param bool $deepCopy Whether to also copy all rows that refer (by fkey) to the current row.
-     * @return \Api\Models\Fisioterapeuta Clone of current object.
+     * @return \Api\Models\Usuario Clone of current object.
      * @throws \Propel\Runtime\Exception\PropelException
      */
     public function copy(bool $deepCopy = false)
@@ -1152,288 +1045,6 @@ abstract class Fisioterapeuta implements ActiveRecordInterface
         return $copyObj;
     }
 
-
-    /**
-     * Initializes a collection based on the name of a relation.
-     * Avoids crafting an 'init[$relationName]s' method name
-     * that wouldn't work when StandardEnglishPluralizer is used.
-     *
-     * @param string $relationName The name of the relation to initialize
-     * @return void
-     */
-    public function initRelation($relationName): void
-    {
-        if ('Registro' === $relationName) {
-            $this->initRegistros();
-            return;
-        }
-    }
-
-    /**
-     * Clears out the collRegistros collection
-     *
-     * This does not modify the database; however, it will remove any associated objects, causing
-     * them to be refetched by subsequent calls to accessor method.
-     *
-     * @return $this
-     * @see addRegistros()
-     */
-    public function clearRegistros()
-    {
-        $this->collRegistros = null; // important to set this to NULL since that means it is uninitialized
-
-        return $this;
-    }
-
-    /**
-     * Reset is the collRegistros collection loaded partially.
-     *
-     * @return void
-     */
-    public function resetPartialRegistros($v = true): void
-    {
-        $this->collRegistrosPartial = $v;
-    }
-
-    /**
-     * Initializes the collRegistros collection.
-     *
-     * By default this just sets the collRegistros collection to an empty array (like clearcollRegistros());
-     * however, you may wish to override this method in your stub class to provide setting appropriate
-     * to your application -- for example, setting the initial array to the values stored in database.
-     *
-     * @param bool $overrideExisting If set to true, the method call initializes
-     *                                        the collection even if it is not empty
-     *
-     * @return void
-     */
-    public function initRegistros(bool $overrideExisting = true): void
-    {
-        if (null !== $this->collRegistros && !$overrideExisting) {
-            return;
-        }
-
-        $collectionClassName = RegistroTableMap::getTableMap()->getCollectionClassName();
-
-        $this->collRegistros = new $collectionClassName;
-        $this->collRegistros->setModel('\Api\Models\Registro');
-    }
-
-    /**
-     * Gets an array of ChildRegistro objects which contain a foreign key that references this object.
-     *
-     * If the $criteria is not null, it is used to always fetch the results from the database.
-     * Otherwise the results are fetched from the database the first time, then cached.
-     * Next time the same method is called without $criteria, the cached collection is returned.
-     * If this ChildFisioterapeuta is new, it will return
-     * an empty collection or the current collection; the criteria is ignored on a new object.
-     *
-     * @param Criteria $criteria optional Criteria object to narrow the query
-     * @param ConnectionInterface $con optional connection object
-     * @return ObjectCollection|ChildRegistro[] List of ChildRegistro objects
-     * @phpstan-return ObjectCollection&\Traversable<ChildRegistro> List of ChildRegistro objects
-     * @throws \Propel\Runtime\Exception\PropelException
-     */
-    public function getRegistros(?Criteria $criteria = null, ?ConnectionInterface $con = null)
-    {
-        $partial = $this->collRegistrosPartial && !$this->isNew();
-        if (null === $this->collRegistros || null !== $criteria || $partial) {
-            if ($this->isNew()) {
-                // return empty collection
-                if (null === $this->collRegistros) {
-                    $this->initRegistros();
-                } else {
-                    $collectionClassName = RegistroTableMap::getTableMap()->getCollectionClassName();
-
-                    $collRegistros = new $collectionClassName;
-                    $collRegistros->setModel('\Api\Models\Registro');
-
-                    return $collRegistros;
-                }
-            } else {
-                $collRegistros = ChildRegistroQuery::create(null, $criteria)
-                    ->filterByFisioterapeuta($this)
-                    ->find($con);
-
-                if (null !== $criteria) {
-                    if (false !== $this->collRegistrosPartial && count($collRegistros)) {
-                        $this->initRegistros(false);
-
-                        foreach ($collRegistros as $obj) {
-                            if (false == $this->collRegistros->contains($obj)) {
-                                $this->collRegistros->append($obj);
-                            }
-                        }
-
-                        $this->collRegistrosPartial = true;
-                    }
-
-                    return $collRegistros;
-                }
-
-                if ($partial && $this->collRegistros) {
-                    foreach ($this->collRegistros as $obj) {
-                        if ($obj->isNew()) {
-                            $collRegistros[] = $obj;
-                        }
-                    }
-                }
-
-                $this->collRegistros = $collRegistros;
-                $this->collRegistrosPartial = false;
-            }
-        }
-
-        return $this->collRegistros;
-    }
-
-    /**
-     * Sets a collection of ChildRegistro objects related by a one-to-many relationship
-     * to the current object.
-     * It will also schedule objects for deletion based on a diff between old objects (aka persisted)
-     * and new objects from the given Propel collection.
-     *
-     * @param Collection $registros A Propel collection.
-     * @param ConnectionInterface $con Optional connection object
-     * @return $this The current object (for fluent API support)
-     */
-    public function setRegistros(Collection $registros, ?ConnectionInterface $con = null)
-    {
-        /** @var ChildRegistro[] $registrosToDelete */
-        $registrosToDelete = $this->getRegistros(new Criteria(), $con)->diff($registros);
-
-
-        $this->registrosScheduledForDeletion = $registrosToDelete;
-
-        foreach ($registrosToDelete as $registroRemoved) {
-            $registroRemoved->setFisioterapeuta(null);
-        }
-
-        $this->collRegistros = null;
-        foreach ($registros as $registro) {
-            $this->addRegistro($registro);
-        }
-
-        $this->collRegistros = $registros;
-        $this->collRegistrosPartial = false;
-
-        return $this;
-    }
-
-    /**
-     * Returns the number of related Registro objects.
-     *
-     * @param Criteria $criteria
-     * @param bool $distinct
-     * @param ConnectionInterface $con
-     * @return int Count of related Registro objects.
-     * @throws \Propel\Runtime\Exception\PropelException
-     */
-    public function countRegistros(?Criteria $criteria = null, bool $distinct = false, ?ConnectionInterface $con = null): int
-    {
-        $partial = $this->collRegistrosPartial && !$this->isNew();
-        if (null === $this->collRegistros || null !== $criteria || $partial) {
-            if ($this->isNew() && null === $this->collRegistros) {
-                return 0;
-            }
-
-            if ($partial && !$criteria) {
-                return count($this->getRegistros());
-            }
-
-            $query = ChildRegistroQuery::create(null, $criteria);
-            if ($distinct) {
-                $query->distinct();
-            }
-
-            return $query
-                ->filterByFisioterapeuta($this)
-                ->count($con);
-        }
-
-        return count($this->collRegistros);
-    }
-
-    /**
-     * Method called to associate a ChildRegistro object to this object
-     * through the ChildRegistro foreign key attribute.
-     *
-     * @param ChildRegistro $l ChildRegistro
-     * @return $this The current object (for fluent API support)
-     */
-    public function addRegistro(ChildRegistro $l)
-    {
-        if ($this->collRegistros === null) {
-            $this->initRegistros();
-            $this->collRegistrosPartial = true;
-        }
-
-        if (!$this->collRegistros->contains($l)) {
-            $this->doAddRegistro($l);
-
-            if ($this->registrosScheduledForDeletion and $this->registrosScheduledForDeletion->contains($l)) {
-                $this->registrosScheduledForDeletion->remove($this->registrosScheduledForDeletion->search($l));
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @param ChildRegistro $registro The ChildRegistro object to add.
-     */
-    protected function doAddRegistro(ChildRegistro $registro): void
-    {
-        $this->collRegistros[]= $registro;
-        $registro->setFisioterapeuta($this);
-    }
-
-    /**
-     * @param ChildRegistro $registro The ChildRegistro object to remove.
-     * @return $this The current object (for fluent API support)
-     */
-    public function removeRegistro(ChildRegistro $registro)
-    {
-        if ($this->getRegistros()->contains($registro)) {
-            $pos = $this->collRegistros->search($registro);
-            $this->collRegistros->remove($pos);
-            if (null === $this->registrosScheduledForDeletion) {
-                $this->registrosScheduledForDeletion = clone $this->collRegistros;
-                $this->registrosScheduledForDeletion->clear();
-            }
-            $this->registrosScheduledForDeletion[]= $registro;
-            $registro->setFisioterapeuta(null);
-        }
-
-        return $this;
-    }
-
-
-    /**
-     * If this collection has already been initialized with
-     * an identical criteria, it returns the collection.
-     * Otherwise if this Fisioterapeuta is new, it will return
-     * an empty collection; or if this Fisioterapeuta has previously
-     * been saved, it will retrieve related Registros from storage.
-     *
-     * This method is protected by default in order to keep the public
-     * api reasonable.  You can provide public methods for those you
-     * actually need in Fisioterapeuta.
-     *
-     * @param Criteria $criteria optional Criteria object to narrow the query
-     * @param ConnectionInterface $con optional connection object
-     * @param string $joinBehavior optional join type to use (defaults to Criteria::LEFT_JOIN)
-     * @return ObjectCollection|ChildRegistro[] List of ChildRegistro objects
-     * @phpstan-return ObjectCollection&\Traversable<ChildRegistro}> List of ChildRegistro objects
-     */
-    public function getRegistrosJoinPaciente(?Criteria $criteria = null, ?ConnectionInterface $con = null, $joinBehavior = Criteria::LEFT_JOIN)
-    {
-        $query = ChildRegistroQuery::create(null, $criteria);
-        $query->joinWith('Paciente', $joinBehavior);
-
-        return $this->getRegistros($query, $con);
-    }
-
     /**
      * Clears the current object, sets all attributes to their default values and removes
      * outgoing references as well as back-references (from other objects to this one. Results probably in a database
@@ -1444,11 +1055,10 @@ abstract class Fisioterapeuta implements ActiveRecordInterface
     public function clear()
     {
         $this->id = null;
-        $this->nome = null;
-        $this->disabled = null;
+        $this->usuario = null;
+        $this->senha = null;
         $this->alreadyInSave = false;
         $this->clearAllReferences();
-        $this->applyDefaultValues();
         $this->resetModified();
         $this->setNew(true);
         $this->setDeleted(false);
@@ -1468,14 +1078,8 @@ abstract class Fisioterapeuta implements ActiveRecordInterface
     public function clearAllReferences(bool $deep = false)
     {
         if ($deep) {
-            if ($this->collRegistros) {
-                foreach ($this->collRegistros as $o) {
-                    $o->clearAllReferences($deep);
-                }
-            }
         } // if ($deep)
 
-        $this->collRegistros = null;
         return $this;
     }
 
@@ -1486,7 +1090,7 @@ abstract class Fisioterapeuta implements ActiveRecordInterface
      */
     public function __toString()
     {
-        return (string) $this->exportTo(FisioterapeutaTableMap::DEFAULT_STRING_FORMAT);
+        return (string) $this->exportTo(UsuarioTableMap::DEFAULT_STRING_FORMAT);
     }
 
     /**

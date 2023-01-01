@@ -134,8 +134,8 @@ class RegistroTableMap extends TableMap
      * @var array<string, mixed>
      */
     protected static $fieldNames = [
-        self::TYPE_PHPNAME       => ['Id', 'PacienteDeprecated', 'Procedimentos', 'FisioterapeutaId', 'PacienteId', 'TipoAtendimento', 'Comparecimento', 'TipoFalta', 'Data', 'Turno', ],
-        self::TYPE_CAMELNAME     => ['id', 'pacienteDeprecated', 'procedimentos', 'fisioterapeutaId', 'pacienteId', 'tipoAtendimento', 'comparecimento', 'tipoFalta', 'data', 'turno', ],
+        self::TYPE_PHPNAME       => ['Id', 'PacienteDeprecated', 'ProcedimentosDeprecated', 'FisioterapeutaId', 'PacienteId', 'TipoAtendimento', 'Comparecimento', 'TipoFalta', 'Data', 'Turno', ],
+        self::TYPE_CAMELNAME     => ['id', 'pacienteDeprecated', 'procedimentosDeprecated', 'fisioterapeutaId', 'pacienteId', 'tipoAtendimento', 'comparecimento', 'tipoFalta', 'data', 'turno', ],
         self::TYPE_COLNAME       => [RegistroTableMap::COL_ID, RegistroTableMap::COL_PACIENTE, RegistroTableMap::COL_PROCEDIMENTOS, RegistroTableMap::COL_FISIOTERAPEUTA_ID, RegistroTableMap::COL_PACIENTE_ID, RegistroTableMap::COL_TIPO_ATENDIMENTO, RegistroTableMap::COL_COMPARECIMENTO, RegistroTableMap::COL_TIPO_FALTA, RegistroTableMap::COL_DATA, RegistroTableMap::COL_TURNO, ],
         self::TYPE_FIELDNAME     => ['id', 'paciente', 'procedimentos', 'fisioterapeuta_id', 'paciente_id', 'tipo_atendimento', 'comparecimento', 'tipo_falta', 'data', 'turno', ],
         self::TYPE_NUM           => [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, ]
@@ -150,8 +150,8 @@ class RegistroTableMap extends TableMap
      * @var array<string, mixed>
      */
     protected static $fieldKeys = [
-        self::TYPE_PHPNAME       => ['Id' => 0, 'PacienteDeprecated' => 1, 'Procedimentos' => 2, 'FisioterapeutaId' => 3, 'PacienteId' => 4, 'TipoAtendimento' => 5, 'Comparecimento' => 6, 'TipoFalta' => 7, 'Data' => 8, 'Turno' => 9, ],
-        self::TYPE_CAMELNAME     => ['id' => 0, 'pacienteDeprecated' => 1, 'procedimentos' => 2, 'fisioterapeutaId' => 3, 'pacienteId' => 4, 'tipoAtendimento' => 5, 'comparecimento' => 6, 'tipoFalta' => 7, 'data' => 8, 'turno' => 9, ],
+        self::TYPE_PHPNAME       => ['Id' => 0, 'PacienteDeprecated' => 1, 'ProcedimentosDeprecated' => 2, 'FisioterapeutaId' => 3, 'PacienteId' => 4, 'TipoAtendimento' => 5, 'Comparecimento' => 6, 'TipoFalta' => 7, 'Data' => 8, 'Turno' => 9, ],
+        self::TYPE_CAMELNAME     => ['id' => 0, 'pacienteDeprecated' => 1, 'procedimentosDeprecated' => 2, 'fisioterapeutaId' => 3, 'pacienteId' => 4, 'tipoAtendimento' => 5, 'comparecimento' => 6, 'tipoFalta' => 7, 'data' => 8, 'turno' => 9, ],
         self::TYPE_COLNAME       => [RegistroTableMap::COL_ID => 0, RegistroTableMap::COL_PACIENTE => 1, RegistroTableMap::COL_PROCEDIMENTOS => 2, RegistroTableMap::COL_FISIOTERAPEUTA_ID => 3, RegistroTableMap::COL_PACIENTE_ID => 4, RegistroTableMap::COL_TIPO_ATENDIMENTO => 5, RegistroTableMap::COL_COMPARECIMENTO => 6, RegistroTableMap::COL_TIPO_FALTA => 7, RegistroTableMap::COL_DATA => 8, RegistroTableMap::COL_TURNO => 9, ],
         self::TYPE_FIELDNAME     => ['id' => 0, 'paciente' => 1, 'procedimentos' => 2, 'fisioterapeuta_id' => 3, 'paciente_id' => 4, 'tipo_atendimento' => 5, 'comparecimento' => 6, 'tipo_falta' => 7, 'data' => 8, 'turno' => 9, ],
         self::TYPE_NUM           => [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, ]
@@ -178,12 +178,13 @@ class RegistroTableMap extends TableMap
         'COL_PACIENTE' => 'PACIENTE',
         'paciente' => 'PACIENTE',
         'registros.paciente' => 'PACIENTE',
-        'Procedimentos' => 'PROCEDIMENTOS',
-        'Registro.Procedimentos' => 'PROCEDIMENTOS',
-        'procedimentos' => 'PROCEDIMENTOS',
-        'registro.procedimentos' => 'PROCEDIMENTOS',
+        'ProcedimentosDeprecated' => 'PROCEDIMENTOS',
+        'Registro.ProcedimentosDeprecated' => 'PROCEDIMENTOS',
+        'procedimentosDeprecated' => 'PROCEDIMENTOS',
+        'registro.procedimentosDeprecated' => 'PROCEDIMENTOS',
         'RegistroTableMap::COL_PROCEDIMENTOS' => 'PROCEDIMENTOS',
         'COL_PROCEDIMENTOS' => 'PROCEDIMENTOS',
+        'procedimentos' => 'PROCEDIMENTOS',
         'registros.procedimentos' => 'PROCEDIMENTOS',
         'FisioterapeutaId' => 'FISIOTERAPEUTA_ID',
         'Registro.FisioterapeutaId' => 'FISIOTERAPEUTA_ID',
@@ -259,11 +260,11 @@ class RegistroTableMap extends TableMap
         // columns
         $this->addPrimaryKey('id', 'Id', 'INTEGER', true, null, null);
         $this->addColumn('paciente', 'PacienteDeprecated', 'VARCHAR', false, 150, null);
-        $this->addColumn('procedimentos', 'Procedimentos', 'LONGVARCHAR', false, null, null);
+        $this->addColumn('procedimentos', 'ProcedimentosDeprecated', 'LONGVARCHAR', false, null, null);
         $this->addForeignKey('fisioterapeuta_id', 'FisioterapeutaId', 'INTEGER', 'fisioterapeutas', 'id', false, null, null);
         $this->addForeignKey('paciente_id', 'PacienteId', 'INTEGER', 'pacientes', 'id', false, null, null);
         $this->addColumn('tipo_atendimento', 'TipoAtendimento', 'VARCHAR', false, 21, null);
-        $this->addColumn('comparecimento', 'Comparecimento', 'VARCHAR', false, 3, null);
+        $this->addColumn('comparecimento', 'Comparecimento', 'BOOLEAN', false, 1, null);
         $this->addColumn('tipo_falta', 'TipoFalta', 'VARCHAR', false, 40, null);
         $this->addColumn('data', 'Data', 'DATE', false, null, null);
         $this->addColumn('turno', 'Turno', 'VARCHAR', false, 5, null);

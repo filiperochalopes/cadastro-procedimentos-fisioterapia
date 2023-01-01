@@ -23,7 +23,7 @@ use Propel\Runtime\Exception\PropelException;
  *
  * @method     ChildRegistroQuery orderById($order = Criteria::ASC) Order by the id column
  * @method     ChildRegistroQuery orderByPacienteDeprecated($order = Criteria::ASC) Order by the paciente column
- * @method     ChildRegistroQuery orderByProcedimentos($order = Criteria::ASC) Order by the procedimentos column
+ * @method     ChildRegistroQuery orderByProcedimentosDeprecated($order = Criteria::ASC) Order by the procedimentos column
  * @method     ChildRegistroQuery orderByFisioterapeutaId($order = Criteria::ASC) Order by the fisioterapeuta_id column
  * @method     ChildRegistroQuery orderByPacienteId($order = Criteria::ASC) Order by the paciente_id column
  * @method     ChildRegistroQuery orderByTipoAtendimento($order = Criteria::ASC) Order by the tipo_atendimento column
@@ -34,7 +34,7 @@ use Propel\Runtime\Exception\PropelException;
  *
  * @method     ChildRegistroQuery groupById() Group by the id column
  * @method     ChildRegistroQuery groupByPacienteDeprecated() Group by the paciente column
- * @method     ChildRegistroQuery groupByProcedimentos() Group by the procedimentos column
+ * @method     ChildRegistroQuery groupByProcedimentosDeprecated() Group by the procedimentos column
  * @method     ChildRegistroQuery groupByFisioterapeutaId() Group by the fisioterapeuta_id column
  * @method     ChildRegistroQuery groupByPacienteId() Group by the paciente_id column
  * @method     ChildRegistroQuery groupByTipoAtendimento() Group by the tipo_atendimento column
@@ -88,11 +88,11 @@ use Propel\Runtime\Exception\PropelException;
  *
  * @method     ChildRegistro|null findOneById(int $id) Return the first ChildRegistro filtered by the id column
  * @method     ChildRegistro|null findOneByPacienteDeprecated(string $paciente) Return the first ChildRegistro filtered by the paciente column
- * @method     ChildRegistro|null findOneByProcedimentos(string $procedimentos) Return the first ChildRegistro filtered by the procedimentos column
+ * @method     ChildRegistro|null findOneByProcedimentosDeprecated(string $procedimentos) Return the first ChildRegistro filtered by the procedimentos column
  * @method     ChildRegistro|null findOneByFisioterapeutaId(int $fisioterapeuta_id) Return the first ChildRegistro filtered by the fisioterapeuta_id column
  * @method     ChildRegistro|null findOneByPacienteId(int $paciente_id) Return the first ChildRegistro filtered by the paciente_id column
  * @method     ChildRegistro|null findOneByTipoAtendimento(string $tipo_atendimento) Return the first ChildRegistro filtered by the tipo_atendimento column
- * @method     ChildRegistro|null findOneByComparecimento(string $comparecimento) Return the first ChildRegistro filtered by the comparecimento column
+ * @method     ChildRegistro|null findOneByComparecimento(boolean $comparecimento) Return the first ChildRegistro filtered by the comparecimento column
  * @method     ChildRegistro|null findOneByTipoFalta(string $tipo_falta) Return the first ChildRegistro filtered by the tipo_falta column
  * @method     ChildRegistro|null findOneByData(string $data) Return the first ChildRegistro filtered by the data column
  * @method     ChildRegistro|null findOneByTurno(string $turno) Return the first ChildRegistro filtered by the turno column *
@@ -102,11 +102,11 @@ use Propel\Runtime\Exception\PropelException;
  *
  * @method     ChildRegistro requireOneById(int $id) Return the first ChildRegistro filtered by the id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildRegistro requireOneByPacienteDeprecated(string $paciente) Return the first ChildRegistro filtered by the paciente column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
- * @method     ChildRegistro requireOneByProcedimentos(string $procedimentos) Return the first ChildRegistro filtered by the procedimentos column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildRegistro requireOneByProcedimentosDeprecated(string $procedimentos) Return the first ChildRegistro filtered by the procedimentos column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildRegistro requireOneByFisioterapeutaId(int $fisioterapeuta_id) Return the first ChildRegistro filtered by the fisioterapeuta_id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildRegistro requireOneByPacienteId(int $paciente_id) Return the first ChildRegistro filtered by the paciente_id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildRegistro requireOneByTipoAtendimento(string $tipo_atendimento) Return the first ChildRegistro filtered by the tipo_atendimento column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
- * @method     ChildRegistro requireOneByComparecimento(string $comparecimento) Return the first ChildRegistro filtered by the comparecimento column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildRegistro requireOneByComparecimento(boolean $comparecimento) Return the first ChildRegistro filtered by the comparecimento column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildRegistro requireOneByTipoFalta(string $tipo_falta) Return the first ChildRegistro filtered by the tipo_falta column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildRegistro requireOneByData(string $data) Return the first ChildRegistro filtered by the data column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildRegistro requireOneByTurno(string $turno) Return the first ChildRegistro filtered by the turno column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
@@ -117,16 +117,16 @@ use Propel\Runtime\Exception\PropelException;
  * @psalm-method Collection&\Traversable<ChildRegistro> findById(int $id) Return ChildRegistro objects filtered by the id column
  * @method     ChildRegistro[]|Collection findByPacienteDeprecated(string $paciente) Return ChildRegistro objects filtered by the paciente column
  * @psalm-method Collection&\Traversable<ChildRegistro> findByPacienteDeprecated(string $paciente) Return ChildRegistro objects filtered by the paciente column
- * @method     ChildRegistro[]|Collection findByProcedimentos(string $procedimentos) Return ChildRegistro objects filtered by the procedimentos column
- * @psalm-method Collection&\Traversable<ChildRegistro> findByProcedimentos(string $procedimentos) Return ChildRegistro objects filtered by the procedimentos column
+ * @method     ChildRegistro[]|Collection findByProcedimentosDeprecated(string $procedimentos) Return ChildRegistro objects filtered by the procedimentos column
+ * @psalm-method Collection&\Traversable<ChildRegistro> findByProcedimentosDeprecated(string $procedimentos) Return ChildRegistro objects filtered by the procedimentos column
  * @method     ChildRegistro[]|Collection findByFisioterapeutaId(int $fisioterapeuta_id) Return ChildRegistro objects filtered by the fisioterapeuta_id column
  * @psalm-method Collection&\Traversable<ChildRegistro> findByFisioterapeutaId(int $fisioterapeuta_id) Return ChildRegistro objects filtered by the fisioterapeuta_id column
  * @method     ChildRegistro[]|Collection findByPacienteId(int $paciente_id) Return ChildRegistro objects filtered by the paciente_id column
  * @psalm-method Collection&\Traversable<ChildRegistro> findByPacienteId(int $paciente_id) Return ChildRegistro objects filtered by the paciente_id column
  * @method     ChildRegistro[]|Collection findByTipoAtendimento(string $tipo_atendimento) Return ChildRegistro objects filtered by the tipo_atendimento column
  * @psalm-method Collection&\Traversable<ChildRegistro> findByTipoAtendimento(string $tipo_atendimento) Return ChildRegistro objects filtered by the tipo_atendimento column
- * @method     ChildRegistro[]|Collection findByComparecimento(string $comparecimento) Return ChildRegistro objects filtered by the comparecimento column
- * @psalm-method Collection&\Traversable<ChildRegistro> findByComparecimento(string $comparecimento) Return ChildRegistro objects filtered by the comparecimento column
+ * @method     ChildRegistro[]|Collection findByComparecimento(boolean $comparecimento) Return ChildRegistro objects filtered by the comparecimento column
+ * @psalm-method Collection&\Traversable<ChildRegistro> findByComparecimento(boolean $comparecimento) Return ChildRegistro objects filtered by the comparecimento column
  * @method     ChildRegistro[]|Collection findByTipoFalta(string $tipo_falta) Return ChildRegistro objects filtered by the tipo_falta column
  * @psalm-method Collection&\Traversable<ChildRegistro> findByTipoFalta(string $tipo_falta) Return ChildRegistro objects filtered by the tipo_falta column
  * @method     ChildRegistro[]|Collection findByData(string $data) Return ChildRegistro objects filtered by the data column
@@ -402,25 +402,25 @@ abstract class RegistroQuery extends ModelCriteria
      *
      * Example usage:
      * <code>
-     * $query->filterByProcedimentos('fooValue');   // WHERE procedimentos = 'fooValue'
-     * $query->filterByProcedimentos('%fooValue%', Criteria::LIKE); // WHERE procedimentos LIKE '%fooValue%'
-     * $query->filterByProcedimentos(['foo', 'bar']); // WHERE procedimentos IN ('foo', 'bar')
+     * $query->filterByProcedimentosDeprecated('fooValue');   // WHERE procedimentos = 'fooValue'
+     * $query->filterByProcedimentosDeprecated('%fooValue%', Criteria::LIKE); // WHERE procedimentos LIKE '%fooValue%'
+     * $query->filterByProcedimentosDeprecated(['foo', 'bar']); // WHERE procedimentos IN ('foo', 'bar')
      * </code>
      *
-     * @param string|string[] $procedimentos The value to use as filter.
+     * @param string|string[] $procedimentosDeprecated The value to use as filter.
      * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return $this The current query, for fluid interface
      */
-    public function filterByProcedimentos($procedimentos = null, ?string $comparison = null)
+    public function filterByProcedimentosDeprecated($procedimentosDeprecated = null, ?string $comparison = null)
     {
         if (null === $comparison) {
-            if (is_array($procedimentos)) {
+            if (is_array($procedimentosDeprecated)) {
                 $comparison = Criteria::IN;
             }
         }
 
-        $this->addUsingAlias(RegistroTableMap::COL_PROCEDIMENTOS, $procedimentos, $comparison);
+        $this->addUsingAlias(RegistroTableMap::COL_PROCEDIMENTOS, $procedimentosDeprecated, $comparison);
 
         return $this;
     }
@@ -548,22 +548,23 @@ abstract class RegistroQuery extends ModelCriteria
      *
      * Example usage:
      * <code>
-     * $query->filterByComparecimento('fooValue');   // WHERE comparecimento = 'fooValue'
-     * $query->filterByComparecimento('%fooValue%', Criteria::LIKE); // WHERE comparecimento LIKE '%fooValue%'
-     * $query->filterByComparecimento(['foo', 'bar']); // WHERE comparecimento IN ('foo', 'bar')
+     * $query->filterByComparecimento(true); // WHERE comparecimento = true
+     * $query->filterByComparecimento('yes'); // WHERE comparecimento = true
      * </code>
      *
-     * @param string|string[] $comparecimento The value to use as filter.
+     * @param bool|string $comparecimento The value to use as filter.
+     *              Non-boolean arguments are converted using the following rules:
+     *                * 1, '1', 'true',  'on',  and 'yes' are converted to boolean true
+     *                * 0, '0', 'false', 'off', and 'no'  are converted to boolean false
+     *              Check on string values is case insensitive (so 'FaLsE' is seen as 'false').
      * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
      * @return $this The current query, for fluid interface
      */
     public function filterByComparecimento($comparecimento = null, ?string $comparison = null)
     {
-        if (null === $comparison) {
-            if (is_array($comparecimento)) {
-                $comparison = Criteria::IN;
-            }
+        if (is_string($comparecimento)) {
+            $comparecimento = in_array(strtolower($comparecimento), array('false', 'off', '-', 'no', 'n', '0', '')) ? false : true;
         }
 
         $this->addUsingAlias(RegistroTableMap::COL_COMPARECIMENTO, $comparecimento, $comparison);

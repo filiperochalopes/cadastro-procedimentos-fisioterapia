@@ -2,8 +2,8 @@
 
 namespace Api\Models\Map;
 
-use Api\Models\Fisioterapeuta;
-use Api\Models\FisioterapeutaQuery;
+use Api\Models\Usuario;
+use Api\Models\UsuarioQuery;
 use Propel\Runtime\Propel;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\ActiveQuery\InstancePoolTrait;
@@ -16,7 +16,7 @@ use Propel\Runtime\Map\TableMapTrait;
 
 
 /**
- * This class defines the structure of the 'fisioterapeutas' table.
+ * This class defines the structure of the 'usuarios' table.
  *
  *
  *
@@ -25,7 +25,7 @@ use Propel\Runtime\Map\TableMapTrait;
  * ORDER BY clause to know whether it needs to apply SQL to make the ORDER BY case-insensitive
  * (i.e. if it's a text column type).
  */
-class FisioterapeutaTableMap extends TableMap
+class UsuarioTableMap extends TableMap
 {
     use InstancePoolTrait;
     use TableMapTrait;
@@ -33,7 +33,7 @@ class FisioterapeutaTableMap extends TableMap
     /**
      * The (dot-path) name of this class
      */
-    public const CLASS_NAME = 'Api.Models.Map.FisioterapeutaTableMap';
+    public const CLASS_NAME = 'Api.Models.Map.UsuarioTableMap';
 
     /**
      * The default database name for this class
@@ -43,17 +43,17 @@ class FisioterapeutaTableMap extends TableMap
     /**
      * The table name for this class
      */
-    public const TABLE_NAME = 'fisioterapeutas';
+    public const TABLE_NAME = 'usuarios';
 
     /**
      * The related Propel class for this table
      */
-    public const OM_CLASS = '\\Api\\Models\\Fisioterapeuta';
+    public const OM_CLASS = '\\Api\\Models\\Usuario';
 
     /**
      * A class that can be returned by this tableMap
      */
-    public const CLASS_DEFAULT = 'Api.Models.Fisioterapeuta';
+    public const CLASS_DEFAULT = 'Api.Models.Usuario';
 
     /**
      * The total number of columns
@@ -73,17 +73,17 @@ class FisioterapeutaTableMap extends TableMap
     /**
      * the column name for the id field
      */
-    public const COL_ID = 'fisioterapeutas.id';
+    public const COL_ID = 'usuarios.id';
 
     /**
-     * the column name for the nome field
+     * the column name for the usuario field
      */
-    public const COL_NOME = 'fisioterapeutas.nome';
+    public const COL_USUARIO = 'usuarios.usuario';
 
     /**
-     * the column name for the disabled field
+     * the column name for the senha field
      */
-    public const COL_DISABLED = 'fisioterapeutas.disabled';
+    public const COL_SENHA = 'usuarios.senha';
 
     /**
      * The default string format for model objects of the related table
@@ -99,10 +99,10 @@ class FisioterapeutaTableMap extends TableMap
      * @var array<string, mixed>
      */
     protected static $fieldNames = [
-        self::TYPE_PHPNAME       => ['Id', 'Nome', 'Desabilitado', ],
-        self::TYPE_CAMELNAME     => ['id', 'nome', 'desabilitado', ],
-        self::TYPE_COLNAME       => [FisioterapeutaTableMap::COL_ID, FisioterapeutaTableMap::COL_NOME, FisioterapeutaTableMap::COL_DISABLED, ],
-        self::TYPE_FIELDNAME     => ['id', 'nome', 'disabled', ],
+        self::TYPE_PHPNAME       => ['Id', 'Usuario', 'Senha', ],
+        self::TYPE_CAMELNAME     => ['id', 'usuario', 'senha', ],
+        self::TYPE_COLNAME       => [UsuarioTableMap::COL_ID, UsuarioTableMap::COL_USUARIO, UsuarioTableMap::COL_SENHA, ],
+        self::TYPE_FIELDNAME     => ['id', 'usuario', 'senha', ],
         self::TYPE_NUM           => [0, 1, 2, ]
     ];
 
@@ -115,10 +115,10 @@ class FisioterapeutaTableMap extends TableMap
      * @var array<string, mixed>
      */
     protected static $fieldKeys = [
-        self::TYPE_PHPNAME       => ['Id' => 0, 'Nome' => 1, 'Desabilitado' => 2, ],
-        self::TYPE_CAMELNAME     => ['id' => 0, 'nome' => 1, 'desabilitado' => 2, ],
-        self::TYPE_COLNAME       => [FisioterapeutaTableMap::COL_ID => 0, FisioterapeutaTableMap::COL_NOME => 1, FisioterapeutaTableMap::COL_DISABLED => 2, ],
-        self::TYPE_FIELDNAME     => ['id' => 0, 'nome' => 1, 'disabled' => 2, ],
+        self::TYPE_PHPNAME       => ['Id' => 0, 'Usuario' => 1, 'Senha' => 2, ],
+        self::TYPE_CAMELNAME     => ['id' => 0, 'usuario' => 1, 'senha' => 2, ],
+        self::TYPE_COLNAME       => [UsuarioTableMap::COL_ID => 0, UsuarioTableMap::COL_USUARIO => 1, UsuarioTableMap::COL_SENHA => 2, ],
+        self::TYPE_FIELDNAME     => ['id' => 0, 'usuario' => 1, 'senha' => 2, ],
         self::TYPE_NUM           => [0, 1, 2, ]
     ];
 
@@ -129,27 +129,26 @@ class FisioterapeutaTableMap extends TableMap
      */
     protected $normalizedColumnNameMap = [
         'Id' => 'ID',
-        'Fisioterapeuta.Id' => 'ID',
+        'Usuario.Id' => 'ID',
         'id' => 'ID',
-        'fisioterapeuta.id' => 'ID',
-        'FisioterapeutaTableMap::COL_ID' => 'ID',
+        'usuario.id' => 'ID',
+        'UsuarioTableMap::COL_ID' => 'ID',
         'COL_ID' => 'ID',
-        'fisioterapeutas.id' => 'ID',
-        'Nome' => 'NOME',
-        'Fisioterapeuta.Nome' => 'NOME',
-        'nome' => 'NOME',
-        'fisioterapeuta.nome' => 'NOME',
-        'FisioterapeutaTableMap::COL_NOME' => 'NOME',
-        'COL_NOME' => 'NOME',
-        'fisioterapeutas.nome' => 'NOME',
-        'Desabilitado' => 'DISABLED',
-        'Fisioterapeuta.Desabilitado' => 'DISABLED',
-        'desabilitado' => 'DISABLED',
-        'fisioterapeuta.desabilitado' => 'DISABLED',
-        'FisioterapeutaTableMap::COL_DISABLED' => 'DISABLED',
-        'COL_DISABLED' => 'DISABLED',
-        'disabled' => 'DISABLED',
-        'fisioterapeutas.disabled' => 'DISABLED',
+        'usuarios.id' => 'ID',
+        'Usuario' => 'USUARIO',
+        'Usuario.Usuario' => 'USUARIO',
+        'usuario' => 'USUARIO',
+        'usuario.usuario' => 'USUARIO',
+        'UsuarioTableMap::COL_USUARIO' => 'USUARIO',
+        'COL_USUARIO' => 'USUARIO',
+        'usuarios.usuario' => 'USUARIO',
+        'Senha' => 'SENHA',
+        'Usuario.Senha' => 'SENHA',
+        'senha' => 'SENHA',
+        'usuario.senha' => 'SENHA',
+        'UsuarioTableMap::COL_SENHA' => 'SENHA',
+        'COL_SENHA' => 'SENHA',
+        'usuarios.senha' => 'SENHA',
     ];
 
     /**
@@ -162,16 +161,16 @@ class FisioterapeutaTableMap extends TableMap
     public function initialize(): void
     {
         // attributes
-        $this->setName('fisioterapeutas');
-        $this->setPhpName('Fisioterapeuta');
+        $this->setName('usuarios');
+        $this->setPhpName('Usuario');
         $this->setIdentifierQuoting(false);
-        $this->setClassName('\\Api\\Models\\Fisioterapeuta');
+        $this->setClassName('\\Api\\Models\\Usuario');
         $this->setPackage('Api.Models');
         $this->setUseIdGenerator(true);
         // columns
         $this->addPrimaryKey('id', 'Id', 'INTEGER', true, null, null);
-        $this->addColumn('nome', 'Nome', 'VARCHAR', true, 150, null);
-        $this->addColumn('disabled', 'Desabilitado', 'BOOLEAN', true, 1, false);
+        $this->addColumn('usuario', 'Usuario', 'VARCHAR', true, 50, null);
+        $this->addColumn('senha', 'Senha', 'VARCHAR', true, 32, null);
     }
 
     /**
@@ -181,13 +180,6 @@ class FisioterapeutaTableMap extends TableMap
      */
     public function buildRelations(): void
     {
-        $this->addRelation('Registro', '\\Api\\Models\\Registro', RelationMap::ONE_TO_MANY, array (
-  0 =>
-  array (
-    0 => ':fisioterapeuta_id',
-    1 => ':id',
-  ),
-), null, null, 'Registros', false);
     }
 
     /**
@@ -247,7 +239,7 @@ class FisioterapeutaTableMap extends TableMap
      */
     public static function getOMClass(bool $withPrefix = true): string
     {
-        return $withPrefix ? FisioterapeutaTableMap::CLASS_DEFAULT : FisioterapeutaTableMap::OM_CLASS;
+        return $withPrefix ? UsuarioTableMap::CLASS_DEFAULT : UsuarioTableMap::OM_CLASS;
     }
 
     /**
@@ -261,22 +253,22 @@ class FisioterapeutaTableMap extends TableMap
      *
      * @throws \Propel\Runtime\Exception\PropelException Any exceptions caught during processing will be
      *                         rethrown wrapped into a PropelException.
-     * @return array (Fisioterapeuta object, last column rank)
+     * @return array (Usuario object, last column rank)
      */
     public static function populateObject(array $row, int $offset = 0, string $indexType = TableMap::TYPE_NUM): array
     {
-        $key = FisioterapeutaTableMap::getPrimaryKeyHashFromRow($row, $offset, $indexType);
-        if (null !== ($obj = FisioterapeutaTableMap::getInstanceFromPool($key))) {
+        $key = UsuarioTableMap::getPrimaryKeyHashFromRow($row, $offset, $indexType);
+        if (null !== ($obj = UsuarioTableMap::getInstanceFromPool($key))) {
             // We no longer rehydrate the object, since this can cause data loss.
             // See http://www.propelorm.org/ticket/509
             // $obj->hydrate($row, $offset, true); // rehydrate
-            $col = $offset + FisioterapeutaTableMap::NUM_HYDRATE_COLUMNS;
+            $col = $offset + UsuarioTableMap::NUM_HYDRATE_COLUMNS;
         } else {
-            $cls = FisioterapeutaTableMap::OM_CLASS;
-            /** @var Fisioterapeuta $obj */
+            $cls = UsuarioTableMap::OM_CLASS;
+            /** @var Usuario $obj */
             $obj = new $cls();
             $col = $obj->hydrate($row, $offset, false, $indexType);
-            FisioterapeutaTableMap::addInstanceToPool($obj, $key);
+            UsuarioTableMap::addInstanceToPool($obj, $key);
         }
 
         return array($obj, $col);
@@ -299,18 +291,18 @@ class FisioterapeutaTableMap extends TableMap
         $cls = static::getOMClass(false);
         // populate the object(s)
         while ($row = $dataFetcher->fetch()) {
-            $key = FisioterapeutaTableMap::getPrimaryKeyHashFromRow($row, 0, $dataFetcher->getIndexType());
-            if (null !== ($obj = FisioterapeutaTableMap::getInstanceFromPool($key))) {
+            $key = UsuarioTableMap::getPrimaryKeyHashFromRow($row, 0, $dataFetcher->getIndexType());
+            if (null !== ($obj = UsuarioTableMap::getInstanceFromPool($key))) {
                 // We no longer rehydrate the object, since this can cause data loss.
                 // See http://www.propelorm.org/ticket/509
                 // $obj->hydrate($row, 0, true); // rehydrate
                 $results[] = $obj;
             } else {
-                /** @var Fisioterapeuta $obj */
+                /** @var Usuario $obj */
                 $obj = new $cls();
                 $obj->hydrate($row);
                 $results[] = $obj;
-                FisioterapeutaTableMap::addInstanceToPool($obj, $key);
+                UsuarioTableMap::addInstanceToPool($obj, $key);
             } // if key exists
         }
 
@@ -332,13 +324,13 @@ class FisioterapeutaTableMap extends TableMap
     public static function addSelectColumns(Criteria $criteria, ?string $alias = null): void
     {
         if (null === $alias) {
-            $criteria->addSelectColumn(FisioterapeutaTableMap::COL_ID);
-            $criteria->addSelectColumn(FisioterapeutaTableMap::COL_NOME);
-            $criteria->addSelectColumn(FisioterapeutaTableMap::COL_DISABLED);
+            $criteria->addSelectColumn(UsuarioTableMap::COL_ID);
+            $criteria->addSelectColumn(UsuarioTableMap::COL_USUARIO);
+            $criteria->addSelectColumn(UsuarioTableMap::COL_SENHA);
         } else {
             $criteria->addSelectColumn($alias . '.id');
-            $criteria->addSelectColumn($alias . '.nome');
-            $criteria->addSelectColumn($alias . '.disabled');
+            $criteria->addSelectColumn($alias . '.usuario');
+            $criteria->addSelectColumn($alias . '.senha');
         }
     }
 
@@ -357,13 +349,13 @@ class FisioterapeutaTableMap extends TableMap
     public static function removeSelectColumns(Criteria $criteria, ?string $alias = null): void
     {
         if (null === $alias) {
-            $criteria->removeSelectColumn(FisioterapeutaTableMap::COL_ID);
-            $criteria->removeSelectColumn(FisioterapeutaTableMap::COL_NOME);
-            $criteria->removeSelectColumn(FisioterapeutaTableMap::COL_DISABLED);
+            $criteria->removeSelectColumn(UsuarioTableMap::COL_ID);
+            $criteria->removeSelectColumn(UsuarioTableMap::COL_USUARIO);
+            $criteria->removeSelectColumn(UsuarioTableMap::COL_SENHA);
         } else {
             $criteria->removeSelectColumn($alias . '.id');
-            $criteria->removeSelectColumn($alias . '.nome');
-            $criteria->removeSelectColumn($alias . '.disabled');
+            $criteria->removeSelectColumn($alias . '.usuario');
+            $criteria->removeSelectColumn($alias . '.senha');
         }
     }
 
@@ -376,13 +368,13 @@ class FisioterapeutaTableMap extends TableMap
      */
     public static function getTableMap(): TableMap
     {
-        return Propel::getServiceContainer()->getDatabaseMap(FisioterapeutaTableMap::DATABASE_NAME)->getTable(FisioterapeutaTableMap::TABLE_NAME);
+        return Propel::getServiceContainer()->getDatabaseMap(UsuarioTableMap::DATABASE_NAME)->getTable(UsuarioTableMap::TABLE_NAME);
     }
 
     /**
-     * Performs a DELETE on the database, given a Fisioterapeuta or Criteria object OR a primary key value.
+     * Performs a DELETE on the database, given a Usuario or Criteria object OR a primary key value.
      *
-     * @param mixed $values Criteria or Fisioterapeuta object or primary key or array of primary keys
+     * @param mixed $values Criteria or Usuario object or primary key or array of primary keys
      *              which is used to create the DELETE statement
      * @param ConnectionInterface $con the connection to use
      * @return int The number of affected rows (if supported by underlying database driver).  This includes CASCADE-related rows
@@ -393,27 +385,27 @@ class FisioterapeutaTableMap extends TableMap
      public static function doDelete($values, ?ConnectionInterface $con = null): int
      {
         if (null === $con) {
-            $con = Propel::getServiceContainer()->getWriteConnection(FisioterapeutaTableMap::DATABASE_NAME);
+            $con = Propel::getServiceContainer()->getWriteConnection(UsuarioTableMap::DATABASE_NAME);
         }
 
         if ($values instanceof Criteria) {
             // rename for clarity
             $criteria = $values;
-        } elseif ($values instanceof \Api\Models\Fisioterapeuta) { // it's a model object
+        } elseif ($values instanceof \Api\Models\Usuario) { // it's a model object
             // create criteria based on pk values
             $criteria = $values->buildPkeyCriteria();
         } else { // it's a primary key, or an array of pks
-            $criteria = new Criteria(FisioterapeutaTableMap::DATABASE_NAME);
-            $criteria->add(FisioterapeutaTableMap::COL_ID, (array) $values, Criteria::IN);
+            $criteria = new Criteria(UsuarioTableMap::DATABASE_NAME);
+            $criteria->add(UsuarioTableMap::COL_ID, (array) $values, Criteria::IN);
         }
 
-        $query = FisioterapeutaQuery::create()->mergeWith($criteria);
+        $query = UsuarioQuery::create()->mergeWith($criteria);
 
         if ($values instanceof Criteria) {
-            FisioterapeutaTableMap::clearInstancePool();
+            UsuarioTableMap::clearInstancePool();
         } elseif (!is_object($values)) { // it's a primary key, or an array of pks
             foreach ((array) $values as $singleval) {
-                FisioterapeutaTableMap::removeInstanceFromPool($singleval);
+                UsuarioTableMap::removeInstanceFromPool($singleval);
             }
         }
 
@@ -421,20 +413,20 @@ class FisioterapeutaTableMap extends TableMap
     }
 
     /**
-     * Deletes all rows from the fisioterapeutas table.
+     * Deletes all rows from the usuarios table.
      *
      * @param ConnectionInterface $con the connection to use
      * @return int The number of affected rows (if supported by underlying database driver).
      */
     public static function doDeleteAll(?ConnectionInterface $con = null): int
     {
-        return FisioterapeutaQuery::create()->doDeleteAll($con);
+        return UsuarioQuery::create()->doDeleteAll($con);
     }
 
     /**
-     * Performs an INSERT on the database, given a Fisioterapeuta or Criteria object.
+     * Performs an INSERT on the database, given a Usuario or Criteria object.
      *
-     * @param mixed $criteria Criteria or Fisioterapeuta object containing data that is used to create the INSERT statement.
+     * @param mixed $criteria Criteria or Usuario object containing data that is used to create the INSERT statement.
      * @param ConnectionInterface $con the ConnectionInterface connection to use
      * @return mixed The new primary key.
      * @throws \Propel\Runtime\Exception\PropelException Any exceptions caught during processing will be
@@ -443,22 +435,22 @@ class FisioterapeutaTableMap extends TableMap
     public static function doInsert($criteria, ?ConnectionInterface $con = null)
     {
         if (null === $con) {
-            $con = Propel::getServiceContainer()->getWriteConnection(FisioterapeutaTableMap::DATABASE_NAME);
+            $con = Propel::getServiceContainer()->getWriteConnection(UsuarioTableMap::DATABASE_NAME);
         }
 
         if ($criteria instanceof Criteria) {
             $criteria = clone $criteria; // rename for clarity
         } else {
-            $criteria = $criteria->buildCriteria(); // build Criteria from Fisioterapeuta object
+            $criteria = $criteria->buildCriteria(); // build Criteria from Usuario object
         }
 
-        if ($criteria->containsKey(FisioterapeutaTableMap::COL_ID) && $criteria->keyContainsValue(FisioterapeutaTableMap::COL_ID) ) {
-            throw new PropelException('Cannot insert a value for auto-increment primary key ('.FisioterapeutaTableMap::COL_ID.')');
+        if ($criteria->containsKey(UsuarioTableMap::COL_ID) && $criteria->keyContainsValue(UsuarioTableMap::COL_ID) ) {
+            throw new PropelException('Cannot insert a value for auto-increment primary key ('.UsuarioTableMap::COL_ID.')');
         }
 
 
         // Set the correct dbName
-        $query = FisioterapeutaQuery::create()->mergeWith($criteria);
+        $query = UsuarioQuery::create()->mergeWith($criteria);
 
         // use transaction because $criteria could contain info
         // for more than one table (I guess, conceivably)

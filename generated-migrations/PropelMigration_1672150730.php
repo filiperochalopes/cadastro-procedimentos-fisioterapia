@@ -88,7 +88,7 @@ class PropelMigration_1672150730
         $resultset = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($resultset as $row) {
             // Preenchendo tabela de fisioterapeutas com dados excluídos
-            $sql = "INSERT INTO `fisioterapeutas` (nome, deleted) 
+            $sql = "INSERT INTO `fisioterapeutas` (nome, `disabled`) 
                 VALUES (?, 1);";
             $stmt = $pdo->prepare($sql);
             $stmt->bindValue(1, $row['fisioterapeuta']);
@@ -153,7 +153,7 @@ class PropelMigration_1672150730
             $paciente_id = $paciente->getId();
             $fisioterapeuta = $fisioterapeutas_map_by_name[$row['tab_nome_fisioterapeuta']];
             $fisioterapeuta_id = $fisioterapeuta->getId();
-            $registro = RegistroQuery::create()->filterById($row['reg_id']);
+            $registro = RegistroQuery::create()->filterById($row['registro_id']);
             $registro->update(array(
                 'paciente_id' => $paciente_id,
                 'fisioterapeuta_id' => $fisioterapeuta_id,
@@ -200,7 +200,7 @@ class PropelMigration_1672150730
 SET FOREIGN_KEY_CHECKS = 0;
 ALTER TABLE `fisioterapeutas`
     CHANGE `fisioterapeuta` `nome` VARCHAR(150) NOT NULL,
-    ADD `deleted` TINYINT(1) DEFAULT 0 AFTER `nome`;
+    ADD `disabled` TINYINT(1) DEFAULT 0 AFTER `nome`;
 ALTER TABLE `pacientes`
     CHANGE `posto_graduacao` `posto_graduacao` VARCHAR(10),
     CHANGE `nip_paciente` `nip_paciente` VARCHAR(8),
@@ -270,7 +270,7 @@ SET FOREIGN_KEY_CHECKS = 0;
 DROP TABLE IF EXISTS `registro_procedimento`;
 ALTER TABLE `fisioterapeutas`
   CHANGE `nome` `fisioterapeuta` VARCHAR(150) NOT NULL,
-  DROP `deleted`;
+  DROP `disabled`;
 ALTER TABLE `pacientes`
   CHANGE `posto_graduacao` `posto_graduacao` VARCHAR(10) NOT NULL,
   CHANGE `nip_paciente` `nip_paciente` INTEGER(8) NOT NULL,

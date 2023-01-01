@@ -639,7 +639,7 @@ class TabelaTableMap extends TableMap
         $this->addColumn('atleta', 'Atleta', 'VARCHAR', false, 3, null);
         $this->addColumn('modalidade', 'Modalidade', 'VARCHAR', false, 20, null);
         $this->addColumn('outra_modalidade', 'OutraModalidade', 'VARCHAR', false, 10, null);
-        $this->addColumn('comparecimento', 'Comparecimento', 'VARCHAR', false, 3, null);
+        $this->addColumn('comparecimento', 'Comparecimento', 'BOOLEAN', false, 1, null);
         $this->addColumn('tipo_falta', 'TipoFalta', 'VARCHAR', true, 40, null);
         $this->addColumn('procedimento_1', 'Procedimento1', 'VARCHAR', false, 50, null);
         $this->addColumn('procedimento_2', 'Procedimento2', 'VARCHAR', false, 50, null);

@@ -3,7 +3,7 @@
   <table name="fisioterapeutas" idMethod="native" phpName="Fisioterapeuta">
     <column name="id" phpName="Id" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
     <column name="nome" phpName="Nome" type="VARCHAR" size="150" required="true"/>
-    <column name="deleted" phpName="Excluido" type="BOOLEAN" defaultValue="0" required="true"/>
+    <column name="disabled" phpName="Desabilitado" type="BOOLEAN" defaultValue="0" required="true"/>
     <vendor type="mysql">
       <parameter name="Engine" value="InnoDB"/>
     </vendor>

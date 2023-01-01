@@ -176,7 +176,7 @@ abstract class Tabela implements ActiveRecordInterface
     /**
      * The value for the comparecimento field.
      *
-     * @var        string|null
+     * @var        boolean|null
      */
     protected $comparecimento;
 
@@ -731,11 +731,21 @@ abstract class Tabela implements ActiveRecordInterface
     /**
      * Get the [comparecimento] column value.
      *
-     * @return string|null
+     * @return boolean|null
      */
     public function getComparecimento()
     {
         return $this->comparecimento;
+    }
+
+    /**
+     * Get the [comparecimento] column value.
+     *
+     * @return boolean|null
+     */
+    public function isComparecimento()
+    {
+        return $this->getComparecimento();
     }
 
     /**
@@ -1279,15 +1289,23 @@ abstract class Tabela implements ActiveRecordInterface
     }
 
     /**
-     * Set the value of [comparecimento] column.
+     * Sets the value of the [comparecimento] column.
+     * Non-boolean arguments are converted using the following rules:
+     *   * 1, '1', 'true',  'on',  and 'yes' are converted to boolean true
+     *   * 0, '0', 'false', 'off', and 'no'  are converted to boolean false
+     * Check on string values is case insensitive (so 'FaLsE' is seen as 'false').
      *
-     * @param string|null $v New value
+     * @param bool|integer|string|null $v The new value
      * @return $this The current object (for fluent API support)
      */
     public function setComparecimento($v)
     {
         if ($v !== null) {
-            $v = (string) $v;
+            if (is_string($v)) {
+                $v = in_array(strtolower($v), array('false', 'off', '-', 'no', 'n', '0', '')) ? false : true;
+            } else {
+                $v = (boolean) $v;
+            }
         }
 
         if ($this->comparecimento !== $v) {
@@ -1823,7 +1841,7 @@ abstract class Tabela implements ActiveRecordInterface
             $this->outra_modalidade = (null !== $col) ? (string) $col : null;
 
             $col = $row[TableMap::TYPE_NUM == $indexType ? 16 + $startcol : TabelaTableMap::translateFieldName('Comparecimento', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->comparecimento = (null !== $col) ? (string) $col : null;
+            $this->comparecimento = (null !== $col) ? (boolean) $col : null;
 
             $col = $row[TableMap::TYPE_NUM == $indexType ? 17 + $startcol : TabelaTableMap::translateFieldName('TipoFalta', TableMap::TYPE_PHPNAME, $indexType)];
             $this->tipo_falta = (null !== $col) ? (string) $col : null;
@@ -2277,7 +2295,7 @@ abstract class Tabela implements ActiveRecordInterface
                         $stmt->bindValue($identifier, $this->outra_modalidade, PDO::PARAM_STR);
                         break;
                     case 'comparecimento':
-                        $stmt->bindValue($identifier, $this->comparecimento, PDO::PARAM_STR);
+                        $stmt->bindValue($identifier, (int) $this->comparecimento, PDO::PARAM_INT);
                         break;
                     case 'tipo_falta':
                         $stmt->bindValue($identifier, $this->tipo_falta, PDO::PARAM_STR);
