@@ -59,13 +59,13 @@ class PropelMigration_1672150730
 
         echo "Removendo patentes de fisioterapeutas (tabela)...\n";
         // Removendo patentes e títulos do nome do fisioterapeuta na lista de tabelas
-        $sql = "UPDATE tabela SET fisioterapeuta=TRIM(REGEXP_REPLACE(fisioterapeuta, 'GM\\s(\\(S\\)\\s)?|Ten\\.\\s|\\s\\(Estagiári.\\)|CC\\s(\\(S\\)\\s)?|SO\\s|Dr.?\\.\\s', '')) WHERE fisioterapeuta  IS NOT NULL;";
+        $sql = "UPDATE tabela SET fisioterapeuta=TRIM(REGEXP_REPLACE(fisioterapeuta, 'GM\\\s(\\\(S\\\)\\\s)?|Ten\\\.\\\s|\\\s\\\(Estagiári.\\\)|CC\\\s(\\\(S\\\)\\\s)?|SO\\\s|Dr.?\\\.\\\s', '')) WHERE fisioterapeuta  IS NOT NULL;";
         $stmt = $pdo->prepare($sql);
         $stmt->execute();
 
         echo "Removendo patentes de fisioterapeutas (fisioterapeuta)...\n";
         // Removendo patentes e títulos do nome do fisioterapeuta na lista de fisioterapeutas
-        $sql = "UPDATE fisioterapeutas SET fisioterapeuta=TRIM(REGEXP_REPLACE(fisioterapeuta, 'GM\\s(\\(S\\)\\s)?|Ten\\.\\s|\\s\\(Estagiári.\\)|CC\\s(\\(S\\)\\s)?|SO\\s|Dr.?\\.\\s', '')) WHERE fisioterapeuta IS NOT NULL;";
+        $sql = "UPDATE fisioterapeutas SET fisioterapeuta=TRIM(REGEXP_REPLACE(fisioterapeuta, 'GM\\\s(\\\(S\\\)\\s)?|Ten\\\.\\\s|\\\s\\\(Estagiári.\\\)|CC\\\s(\\\(S\\\)\\\s)?|SO\\\s|Dr.?\\\.\\\s', '')) WHERE fisioterapeuta IS NOT NULL;";
         $stmt = $pdo->prepare($sql);
         $stmt->execute();
 
