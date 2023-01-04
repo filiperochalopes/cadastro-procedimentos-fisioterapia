@@ -14,6 +14,7 @@ use Api\Models\Procedimentos;
 use Api\Models\ProcedimentosQuery;
 use Api\Models\RegistroQuery;
 use Api\Models\RegistrosQuery;
+use Api\Models\TabelaDeprecatedQuery;
 
 /**
  * Data object containing the SQL and PHP code to migrate the database
@@ -28,11 +29,36 @@ class PropelMigration_1672150730
     {
 
         $pdo = $manager->getAdapterConnection('default');
+        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+        echo "Preenchendo fisioterapeuta vazio...\n";
+        // Substituindo registros vazios de fisioterapeutas por "Erro[Vazio]"
+        $sql = "UPDATE tabela SET fisioterapeuta='Erro[Vazio]' WHERE fisioterapeuta = '';";
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute();
+
+        echo "Removendo patentes de fisioterapeutas (tabela)...\n";
+        $fisioterapeutas = FisioterapeutasQuery::create()->find();
+        $fisioterapeuta_nome_pattern = '/GM\\s(\\(S\\)\\s)?|Ten\\.\\s|\\s\\(Estagiári.\\)|CC\\s(\\(S\\)\\s)?|SO\\s|Dr.?\\.\\s/i';
+
+        foreach($fisioterapeutas as $fisioterapeuta){
+            $fisioterapeuta_nome = preg_replace($fisioterapeuta_nome_pattern, '', $fisioterapeuta->getFisioterapeuta());
+            print($fisioterapeuta_nome);
+            $fisioterapeuta_nome = trim($fisioterapeuta_nome);
+            print($fisioterapeuta_nome);
+            $fisioterapeuta->setFisioterapeuta($fisioterapeuta_nome);
+            $fisioterapeuta->save();
+        }
+        // Removendo patentes e títulos do nome do fisioterapeuta na lista de tabelas
+        $stmt = $pdo->prepare("UPDATE tabela SET `fisioterapeuta` = TRIM(REGEXP_REPLACE(`fisioterapeuta`, 'GM\\s(\\(S\\)\\s)?|Ten\\.\\s|\\s\\(Estagiári.\\)|CC\\s(\\(S\\)\\s)?|SO\\s|Dr.?\\.\\s', '')) WHERE `fisioterapeuta` IS NOT NULL;")->execute();
+        print($stmt."\n");
+        $stmt = $pdo->exec("UPDATE fisioterapeutas SET fisioterapeuta=TRIM(REGEXP_REPLACE(fisioterapeuta, 'GM\\s(\\(S\\)\\s)?|Ten\\.\\s|\\s\\(Estagiári.\\)|CC\\s(\\(S\\)\\s)?|SO\\s|Dr.?\\.\\s', '')) WHERE fisioterapeuta IS NOT NULL;");
+        $pdo->commit();
 
         $tabela_records = TabelaQuery::create()->find();
 
-        echo "Corrigindo data da tabela...\n";
         foreach ($tabela_records as $row) {
+            echo "Corrigindo data da tabela...\n";
             $new_data = explode('/', $row->getData());
             $new_data = $new_data[2] . '-' . $new_data[1] . '-' . $new_data[0];
             // Alterando formato da string de data
@@ -41,6 +67,12 @@ class PropelMigration_1672150730
             $stmt->bindValue(1, $new_data);
             $stmt->bindValue(2, $row->getId());
             $stmt->execute();
+
+            $fisioterapeuta_nome = preg_replace($fisioterapeuta_nome_pattern, '', $row->getFisioterapeuta());
+            $fisioterapeuta_nome = trim($fisioterapeuta_nome);
+            echo "Removendo patente de {$row->getFisioterapeuta()} para {$fisioterapeuta_nome} de `tabela`...\n";
+            $row->setFisioterapeuta($fisioterapeuta_nome);
+            $row->save();
         }
 
         echo "Corrigindo atleta...\n";
@@ -57,21 +89,9 @@ class PropelMigration_1672150730
         $stmt = $pdo->prepare($sql);
         $stmt->execute();
 
-        echo "Removendo patentes de fisioterapeutas (tabela)...\n";
-        // Removendo patentes e títulos do nome do fisioterapeuta na lista de tabelas
-        $sql = "UPDATE tabela SET fisioterapeuta=TRIM(REGEXP_REPLACE(fisioterapeuta, 'GM\\s(\\(S\\)\\s)?|Ten\\.\\s|\\s\\(Estagiári.\\)|CC\\s(\\(S\\)\\s)?|SO\\s|Dr.?\\.\\s', '')) WHERE fisioterapeuta  IS NOT NULL;";
-        $stmt = $pdo->prepare($sql);
-        $stmt->execute();
-
         echo "Removendo patentes de fisioterapeutas (fisioterapeuta)...\n";
         // Removendo patentes e títulos do nome do fisioterapeuta na lista de fisioterapeutas
         $sql = "UPDATE fisioterapeutas SET fisioterapeuta=TRIM(REGEXP_REPLACE(fisioterapeuta, 'GM\\s(\\(S\\)\\s)?|Ten\\.\\s|\\s\\(Estagiári.\\)|CC\\s(\\(S\\)\\s)?|SO\\s|Dr.?\\.\\s', '')) WHERE fisioterapeuta IS NOT NULL;";
-        $stmt = $pdo->prepare($sql);
-        $stmt->execute();
-
-        echo "Preenchendo fisioterapeuta vazio...\n";
-        // Substituindo registros vazios de fisioterapeutas por "Erro[Vazio]"
-        $sql = "UPDATE tabela SET fisioterapeuta='Erro[Vazio]' WHERE fisioterapeuta = '';";
         $stmt = $pdo->prepare($sql);
         $stmt->execute();
     }
@@ -104,15 +124,18 @@ class PropelMigration_1672150730
         }
 
         // Lista em memória de fisioterapeutas
-        echo "Criando registro em memória de procedimentos...\n";
+        echo "Criando registro em memória de fisioterapeutas...\n";
         $fisioterapeutas = FisioterapeutaQuery::create()->find();
         $fisioterapeutas_map_by_name = [];
         foreach ($fisioterapeutas as $fisioterapeuta) {
             $fisioterapeutas_map_by_name[$fisioterapeuta->getNome()] = $fisioterapeuta;
         }
-        print_r($fisioterapeutas_map_by_name);
 
-        echo "Unindo tabelas para análise JOIN tabela + registros...";
+        foreach($fisioterapeutas_map_by_name as $fisioterapeuta){
+            print $fisioterapeuta->getNome().' | ';
+        }
+
+        echo "Unindo tabelas para análise JOIN tabela + registros...\n";
         // Verifico todos os registros que foram feitos
         $sql = "SELECT 
             r.id as registro_id, 
@@ -124,7 +147,7 @@ class PropelMigration_1672150730
             r.data as reg_data, 
             r.turno as reg_turno, 
             t.id as tabela_id, 
-            t.data as tab_data, 
+            t.data as tab_data,
             t.turno as tab_turno, 
             t.fisioterapeuta as tab_nome_fisioterapeuta, 
             t.nome_paciente as tab_nome_paciente, 
@@ -145,29 +168,29 @@ class PropelMigration_1672150730
         $stmt->execute();
         $resultset = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        echo "Aplicando mudanças em ".count($resultset)." registros...";
+        echo "Aplicando mudanças em ".count($resultset)." registros... \n";
         foreach ($resultset as $row) {
-            print_r($row);
             // Verificando usuário
-            $paciente = PacienteQuery::create()->filterByNome($row['reg_nome_paciente'])->findOne();
-            $paciente_id = $paciente->getId();
-            $fisioterapeuta = $fisioterapeutas_map_by_name[$row['tab_nome_fisioterapeuta']];
-            $fisioterapeuta_id = $fisioterapeuta->getId();
             $registro = RegistroQuery::create()->filterById($row['registro_id']);
+            print_r(array(
+                'FisioterapeutaId' => $row['fisioterapeuta_id'],
+                'PacienteId' => $row['paciente_id'],
+                'Comparecimento' => $row['tab_comparecimento'],
+                'TipoFalta' => $row['tab_tipo_falta']
+            ));
             $registro->update(array(
-                'paciente_id' => $paciente_id,
-                'fisioterapeuta_id' => $fisioterapeuta_id,
-                'comparecimento' => $row['comparecimento'],
-                'tipo_falta' => $row['tipo_falta']
+                'PacienteId' => $row['paciente_id'],
+                'FisioterapeutaId' => $row['fisioterapeuta_id'],
+                'Comparecimento' => $row['tab_comparecimento'],
+                'TipoFalta' => $row['tab_tipo_falta']
             ));
             for ($i = 1; $i <= 20; $i++) {
-                if ($row["procedimento_{$i}"] != '') {
-                    $registro->setFisioterapeuta($procedimentos_map_by_name[$row["procedimento_{$i}"]]);
+                $procedimento_nome = $row["procedimento_{$i}"];
+                if ($procedimento_nome !== null && trim($procedimento_nome) !== '' ) {
+                    $registro->setProcedimento($procedimentos_map_by_name[$row["procedimento_{$i}"]]);
                 }
             }
-            print_r($row);
-            echo gettype($row);
-            break;
+            echo "Atualizado {$registro->getId()} \n";
         }
     }
 

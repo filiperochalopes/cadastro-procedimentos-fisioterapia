@@ -18,6 +18,8 @@ COPY . .
 
 ENV PHP_MEMORY_LIMIT=-1
 
+RUN touch /var/www/propel.log
+RUN chmod 777 /var/www/propel.log
 RUN mkdir -p /var/www/html/twigcache
 RUN chown -R www-data:www-data /var/www/html/twigcache/
 
