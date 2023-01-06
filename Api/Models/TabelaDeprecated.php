@@ -2,10 +2,10 @@
 
 namespace Api\Models;
 
-use Api\Models\Base\ProcedimentosQuery as BaseProcedimentosQuery;
+use Api\Models\Base\TabelaDeprecated as BaseTabelaDeprecated;
 
 /**
- * Skeleton subclass for performing query and update operations on the 'procedimentos' table.
+ * Skeleton subclass for representing a row from the 'tabela' table.
  *
  *
  *
@@ -13,7 +13,7 @@ use Api\Models\Base\ProcedimentosQuery as BaseProcedimentosQuery;
  * application requirements.  This class will only be generated as
  * long as it does not already exist in the output directory.
  */
-class ProcedimentosQuery extends BaseProcedimentosQuery
+class TabelaDeprecated extends BaseTabelaDeprecated
 {
 
 }

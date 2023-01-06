@@ -137,10 +137,7 @@ include "page/parts/header.php";
         <button type="submit" id="adicionar_registro">Enviar</button>
        
     </form>
-    </main> 
-    <script async defer src="https://apis.google.com/js/api.js" onload="this.onload=function(){};handleClientLoad()"
-    onreadystatechange="if (this.readyState === 'complete') this.onload()">
-    </script>           
+    </main>        
     </div>
     <?php
     include "page/parts/footer.php";

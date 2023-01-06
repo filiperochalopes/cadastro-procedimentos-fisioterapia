@@ -3,12 +3,18 @@ propel:
         connections:
             default:
                 adapter: mysql
+                classname: Propel\Runtime\Connection\DebugPDO
                 dsn: mysql:host=db;port=3306;dbname=fisiocefan
                 user: thiago
                 password: securePass
                 settings:
                     charset: utf8
     runtime:
+        log:
+            defaultLogger:
+                type: stream
+                path: /var/log/propel.log
+                level: 300
         defaultConnection: default
         connections:
             - default

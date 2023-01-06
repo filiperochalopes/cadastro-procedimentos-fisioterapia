@@ -31,7 +31,12 @@ Avaliando registro em `tabela` igual ou superiores a 2021 antes da migração
 
 ```sql
 -- 14655 registros totalizados na busca
-SELECT COUNT(id) FROM tabela WHERE `data` LIKE "%/2021" OR `data` LIKE "%/2022";
+SELECT COUNT(id) FROM tabela WHERE `data` LIKE "%/2021" OR `data` LIKE "%/2022" OR `data` LIKE "%/2023";
+```
+
+```sql
+-- 14659 registros totalizados na busca
+SELECT COUNT(id) FROM registros WHERE `data` >= "2021-01-01";
 ```
 
 ### Alterando limite de uso de memória do container

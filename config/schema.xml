@@ -63,7 +63,7 @@
       <reference local="procedimento_id" foreign="id"/>
     </foreign-key>
   </table>
-  <table name="tabela" idMethod="native" phpName="Tabela">
+  <table name="tabela" idMethod="native" phpName="TabelaDeprecated">
     <column name="id" phpName="Id" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
     <column name="data" phpName="Data" type="DATE"/>
     <column name="turno" phpName="Turno" type="VARCHAR" size="5" required="true"/>

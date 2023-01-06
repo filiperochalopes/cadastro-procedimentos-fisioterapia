@@ -6,6 +6,8 @@ reset:
 run:
 	docker compose up -d --build
 	docker exec -it fisiocefan_app bash -c "composer install"
+	docker exec -it fisiocefan_app bash -c "echo 'memory_limit = -1' >> /usr/local/etc/php/conf.d/docker-php-ram-limit.ini"
+	docker exec -it fisiocefan_app bash -c "php -r \"echo ini_get('memory_limit').PHP_EOL;\""
 	docker compose logs -f
 db-dump:
 	docker exec fisiocefan_db sh -c 'exec mariadb-dump --all-databases -uroot -p"$MARIADB_ROOT_PASSWORD"' > /home/$(date +"%Y_%m_%d__%H_%M_%S").sql

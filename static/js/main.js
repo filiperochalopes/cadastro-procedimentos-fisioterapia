@@ -49,6 +49,13 @@ $(document).ready(function () {
     json_condicionais = data;
   });
 
+  /**
+   * 
+   * @param {string} id 
+   * @param {string} valor 
+   * @param {boolean} nondestructive
+   * @param {string} justRefresh 
+   */
   function condicionais(id, valor, nondestructive = false, justRefresh) {
     array = json_condicionais[id][valor];
     if (!nondestructive) {
@@ -189,7 +196,7 @@ $(document).ready(function () {
       console.log($("#form_registro").serialize());
 
       $.ajax({
-        url: "php/resources/registros.php",
+        url: "/api/v1/atendimento",
         method: "POST",
         data: $("#form_registro").serialize(),
         beforeSend: function (xhr) {
@@ -298,11 +305,11 @@ $(document).ready(function () {
   /* --------- ENVIAR TABELA ---------- */
 
   function resetForm() {
-    console.log("Reset Form");
+    console.log("----- Reset Form -----");
 
     $("#form_registro").trigger("reset");
 
-    //Reset de todos os inputs condicionais
+    // Reset de todos os inputs condicionais
     $(".condicional").addClass("none").attr("required", false);
 
     $("#situacao_adm").change(function () {
@@ -383,7 +390,7 @@ $(document).ready(function () {
   /* --------- ENVIO DE FORMULÁRIO DE LOGIN ----------- */
 
   $("#form_login").submit(function (e) {
-    e.preventDefault()
+    e.preventDefault();
     var form = $(this);
     var url = form.attr("action");
     $.ajax({
@@ -394,7 +401,7 @@ $(document).ready(function () {
         window.location.replace("/");
       },
       error: function (data) {
-        window.location.replace(data.getResponseHeader('Location'));
+        window.location.replace(data.getResponseHeader("Location"));
       },
     });
   });

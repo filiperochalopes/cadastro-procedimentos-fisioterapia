@@ -5,15 +5,9 @@ require_once __DIR__ . '/../generated-conf/config.php';
 
 use Propel\Generator\Manager\MigrationManager;
 use Api\Models\FisioterapeutaQuery;
-use Api\Models\TabelaQuery;
-use Api\Models\FisioterapeutasQuery;
-use Api\Models\PacienteQuery;
-use Api\Models\PacientesQuery;
 use Api\Models\ProcedimentoQuery;
-use Api\Models\Procedimentos;
-use Api\Models\ProcedimentosQuery;
+use Api\Models\Registro;
 use Api\Models\RegistroQuery;
-use Api\Models\RegistrosQuery;
 
 /**
  * Data object containing the SQL and PHP code to migrate the database
@@ -29,19 +23,11 @@ class PropelMigration_1672150730
 
         $pdo = $manager->getAdapterConnection('default');
 
-        $tabela_records = TabelaQuery::create()->find();
-
         echo "Corrigindo data da tabela...\n";
-        foreach ($tabela_records as $row) {
-            $new_data = explode('/', $row->getData());
-            $new_data = $new_data[2] . '-' . $new_data[1] . '-' . $new_data[0];
-            // Alterando formato da string de data
-            $sql = "UPDATE tabela SET `data` = ? WHERE `id` = ?;";
-            $stmt = $pdo->prepare($sql);
-            $stmt->bindValue(1, $new_data);
-            $stmt->bindValue(2, $row->getId());
-            $stmt->execute();
-        }
+        // Alterando o formato de data
+        $sql = "UPDATE tabela SET `data` = REGEXP_REPLACE(`data`, '(\\\d+)\\/(\\\d+)\\/(\\\d+)', '\\\\3-\\\\2-\\\\1') WHERE `data` IS NOT NULL;";
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute();
 
         echo "Corrigindo atleta...\n";
         // Corrigindo campo atleta para boleano
@@ -59,13 +45,13 @@ class PropelMigration_1672150730
 
         echo "Removendo patentes de fisioterapeutas (tabela)...\n";
         // Removendo patentes e títulos do nome do fisioterapeuta na lista de tabelas
-        $sql = "UPDATE tabela SET fisioterapeuta=TRIM(REGEXP_REPLACE(fisioterapeuta, 'GM\\\s(\\\(S\\\)\\\s)?|Ten\\\.\\\s|\\\s\\\(Estagiári.\\\)|CC\\\s(\\\(S\\\)\\\s)?|SO\\\s|Dr.?\\\.\\\s', '')) WHERE fisioterapeuta  IS NOT NULL;";
+        $sql = "UPDATE tabela SET fisioterapeuta=TRIM(REGEXP_REPLACE(fisioterapeuta, 'GM\\\s\\\(S\\\)\\\s|GM\\\s(\\\(S\\\)\\\s)?|Ten\\\.\\\s|\\\s\\\(Estagiári.\\\)|CC\\\s(\\\(S\\\)\\\s)?|SO\\\s|Dr.?\\\.\\\s', '')) WHERE fisioterapeuta IS NOT NULL;";
         $stmt = $pdo->prepare($sql);
         $stmt->execute();
 
         echo "Removendo patentes de fisioterapeutas (fisioterapeuta)...\n";
         // Removendo patentes e títulos do nome do fisioterapeuta na lista de fisioterapeutas
-        $sql = "UPDATE fisioterapeutas SET fisioterapeuta=TRIM(REGEXP_REPLACE(fisioterapeuta, 'GM\\\s(\\\(S\\\)\\s)?|Ten\\\.\\\s|\\\s\\\(Estagiári.\\\)|CC\\\s(\\\(S\\\)\\\s)?|SO\\\s|Dr.?\\\.\\\s', '')) WHERE fisioterapeuta IS NOT NULL;";
+        $sql = "UPDATE fisioterapeutas SET fisioterapeuta=TRIM(REGEXP_REPLACE(fisioterapeuta, 'GM\\\s\\\(S\\\)\\\s|GM\\\s(\\\(S\\\)\\s)?|Ten\\\.\\\s|\\\s\\\(Estagiári.\\\)|CC\\\s(\\\(S\\\)\\\s)?|SO\\\s|Dr.?\\\.\\\s', '')) WHERE fisioterapeuta IS NOT NULL;";
         $stmt = $pdo->prepare($sql);
         $stmt->execute();
 
@@ -79,10 +65,10 @@ class PropelMigration_1672150730
     public function postUp(MigrationManager $manager)
     {   
         $pdo = $manager->getAdapterConnection('default');
-        
+
         echo "Adicionando fisioterapeutas excluídos...\n";
         // Obtendo lista de fisioterapeutas que estão em tabela, mas não estão em fisioterapeutas
-        $sql = "SELECT DISTINCT fisioterapeuta FROM tabela t LEFT JOIN fisioterapeutas f ON t.fisioterapeuta = f.nome WHERE  f.nome IS NULL;";
+        $sql = "SELECT DISTINCT fisioterapeuta FROM tabela t LEFT JOIN fisioterapeutas f ON t.fisioterapeuta = f.nome WHERE f.nome IS NULL;";
         $stmt = $pdo->prepare($sql);
         $stmt->execute();
         $resultset = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -104,15 +90,14 @@ class PropelMigration_1672150730
         }
 
         // Lista em memória de fisioterapeutas
-        echo "Criando registro em memória de procedimentos...\n";
+        echo "Criando registro em memória de fisioterapeutas...\n";
         $fisioterapeutas = FisioterapeutaQuery::create()->find();
         $fisioterapeutas_map_by_name = [];
         foreach ($fisioterapeutas as $fisioterapeuta) {
             $fisioterapeutas_map_by_name[$fisioterapeuta->getNome()] = $fisioterapeuta;
         }
-        print_r($fisioterapeutas_map_by_name);
 
-        echo "Unindo tabelas para análise JOIN tabela + registros...";
+        echo "Unindo tabelas para análise JOIN tabela + registros...\n";
         // Verifico todos os registros que foram feitos
         $sql = "SELECT 
             r.id as registro_id, 
@@ -145,29 +130,25 @@ class PropelMigration_1672150730
         $stmt->execute();
         $resultset = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        echo "Aplicando mudanças em ".count($resultset)." registros...";
+        echo "Aplicando mudanças em ".count($resultset)." registros...\n";
         foreach ($resultset as $row) {
-            print_r($row);
+            print("❚");
             // Verificando usuário
-            $paciente = PacienteQuery::create()->filterByNome($row['reg_nome_paciente'])->findOne();
-            $paciente_id = $paciente->getId();
-            $fisioterapeuta = $fisioterapeutas_map_by_name[$row['tab_nome_fisioterapeuta']];
-            $fisioterapeuta_id = $fisioterapeuta->getId();
-            $registro = RegistroQuery::create()->filterById($row['registro_id']);
-            $registro->update(array(
-                'paciente_id' => $paciente_id,
-                'fisioterapeuta_id' => $fisioterapeuta_id,
-                'comparecimento' => $row['comparecimento'],
-                'tipo_falta' => $row['tipo_falta']
-            ));
+            $registro = RegistroQuery::create()->findOneById($row['registro_id']);
+            $registro->setPacienteId($row['paciente_id']);
+            $registro->setFisioterapeutaId($row['fisioterapeuta_id']);
+            $registro->setComparecimento($row['tab_comparecimento']);
+            $registro->setTipoFalta($row['tab_tipo_falta']);
+            $registro->setTipoAtendimento($row['tab_tipo_atendimento']);
+
+            // Criando procedimentos
             for ($i = 1; $i <= 20; $i++) {
-                if ($row["procedimento_{$i}"] != '') {
-                    $registro->setFisioterapeuta($procedimentos_map_by_name[$row["procedimento_{$i}"]]);
+                if (trim($row["procedimento_{$i}"]) !== '' && $row["procedimento_{$i}"] !== null) {
+                    $registro->addProcedimento($procedimentos_map_by_name[$row["procedimento_{$i}"]]);
                 }
             }
-            print_r($row);
-            echo gettype($row);
-            break;
+
+            $registro->save();
         }
     }
 
@@ -227,10 +208,10 @@ ALTER TABLE `registros` ADD CONSTRAINT `registros_fk_00f1f7`
     FOREIGN KEY (`fisioterapeuta_id`)
     REFERENCES `fisioterapeutas` (`id`);
 ALTER TABLE `registros` ADD CONSTRAINT `registros_fk_7c873f`
-    FOREIGN KEY (`paciente_id`)
-    REFERENCES `pacientes` (`id`);
+FOREIGN KEY (`paciente_id`)
+REFERENCES `pacientes` (`id`);
 ALTER TABLE `tabela`
-  CHANGE `comparecimento` `comparecimento` TINYINT(1),
+CHANGE `comparecimento` `comparecimento` TINYINT(1),
   CHANGE `data` `data` DATE,
   CHANGE `tipo_falta` `tipo_falta` VARCHAR(40);
 CREATE TABLE `registro_procedimento`
@@ -246,6 +227,22 @@ CREATE TABLE `registro_procedimento`
         FOREIGN KEY (`procedimento_id`)
         REFERENCES `procedimentos` (`id`)
 ) ENGINE=InnoDB;
+
+DROP VIEW IF EXISTS powerbi;
+CREATE VIEW powerbi AS
+	SELECT r.id AS id, r.data, r.turno, pa.nome as paciente_nome, pa.situacao_administ, pa.posto_graduacao, pa.nip_paciente, pa.nip_titular, pa.cpf_titular, pa.origem, pa.corpo_quadro, IF(pa.atleta=1, 'Sim', 'Não') as atleta, pa.atleta_modalidade, pa.outra_modalidade, f.nome as fisioterapeuta_nome, r.tipo_atendimento, IF(r.comparecimento=1, 'Sim', 'Não') as comparecimento, r.tipo_falta, rpjoin.procedimentos, rpjoin.total_procedimentos
+    FROM registros r  
+	INNER JOIN
+ 		(SELECT GROUP_CONCAT(DISTINCT p.nome SEPARATOR ',') AS procedimentos, COUNT(DISTINCT p.nome) as total_procedimentos, rp.registro_id 
+		FROM procedimentos p 
+		INNER JOIN registro_procedimento rp 
+		ON rp.procedimento_id = p.id GROUP BY rp.registro_id) rpjoin
+	ON r.id = rpjoin.registro_id
+	JOIN pacientes pa
+	ON pa.id = r.paciente_id 
+	JOIN fisioterapeutas f 
+	ON f.id = r.fisioterapeuta_id;
+
 # This restores the fkey checks, after having unset them earlier
 SET FOREIGN_KEY_CHECKS = 1;
 EOT;
@@ -299,6 +296,9 @@ ALTER TABLE `tabela`
   CHANGE `comparecimento` `comparecimento` VARCHAR(3),
   CHANGE `data` `data` VARCHAR(10),
   CHANGE `tipo_falta` `tipo_falta` VARCHAR(40) NOT NULL;
+
+DROP VIEW IF EXISTS powerbi;
+
 # This restores the fkey checks, after having unset them earlier
 SET FOREIGN_KEY_CHECKS = 1;
 EOT;

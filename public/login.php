@@ -1,6 +1,6 @@
 <?php
 
-include_once __DIR__.'/index.php';
+include_once __DIR__.'/imports.php';
 
 if (isset($_GET["erro"])) {
     $error = $_GET["erro"];
