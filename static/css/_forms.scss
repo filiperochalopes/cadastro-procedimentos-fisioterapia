@@ -4,6 +4,7 @@
 
     &.none{
         display: none;
+        visibility: hidden;
     }
 }
 
@@ -29,7 +30,15 @@ input{
     }
 
     &[type=radio]{
-        display: none;
+        display: inline;
+        width: 1px;
+        margin: 0;
+        padding: 0;
+        position: relative;
+        float: left;
+        z-index: 5;
+        border: transparent;
+        background: transparent;
 
         & ~ label{
             display: inline-block;

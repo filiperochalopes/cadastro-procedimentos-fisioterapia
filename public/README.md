@@ -16,6 +16,7 @@ Terceira atualização do sistema, porém o segundo registro
 - Adição de tela de alerta de inconsistências para avaliação e edição de tabela de registros e pacientes
 - Criação de tela de versões para acompanhamento das mesmas
 - Remoção de fisioterapeutas agora é lógica para poder manter retrocompatibilidade de registros com possibilidade de habilitar fisioterapeutas desabilitados (Pending)
+- Aviso de campo pendente de preenchimento em formulário principal para `inputs` tipo `radio`
 
 ## Versão 1.1.0
 

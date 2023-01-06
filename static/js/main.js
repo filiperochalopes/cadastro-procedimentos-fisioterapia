@@ -171,9 +171,8 @@ $(document).ready(function () {
 
     if (window.confirm("Deseja realmente excluir " + confirm_str + "?")) {
       $.ajax({
-        url: "php/resources/pacientes.php",
+        url: `/api/v1/paciente/${id}`,
         method: "DELETE",
-        data: { id: id },
         beforeSend: function (xhr) {
           aviso({
             mensagem:
@@ -182,7 +181,7 @@ $(document).ready(function () {
           });
         },
       }).done(function (data) {
-        aviso(data);
+        aviso(data.msg);
         $("tr[data-id=" + id + "]").hide();
       });
     }
@@ -230,15 +229,16 @@ $(document).ready(function () {
     }).done(function (data) {
       $("#" + hintBox + " ul").html("");
       if (data.length) {
+        // Caso tenha conteúdo do retorno escreve nas dicas
         $("#" + hintBox).show();
         data.forEach(function (element, index, array) {
-          // console.log(element);
 
           $("#" + hintBox + " ul").append(
             '<li data-value="' + index + '">' + element.nome + "</li>"
           );
         });
       } else {
+        // Caso não haja apaga blocos
         $("#" + hintBox).hide();
         $("#" + hintBox + " ul").html("");
       }

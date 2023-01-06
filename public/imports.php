@@ -22,4 +22,5 @@ if(!isset($_SESSION["id_usuario"]) || !isset($_SESSION["usuario"])){
     // Usuário não logado! Redireciona para a página de login 
     $template = $twig->load('login.html');
     echo $template->render();
+    exit();
 }
