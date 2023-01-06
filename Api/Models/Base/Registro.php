@@ -82,20 +82,6 @@ abstract class Registro implements ActiveRecordInterface
     protected $id;
 
     /**
-     * The value for the paciente field.
-     *
-     * @var        string|null
-     */
-    protected $paciente;
-
-    /**
-     * The value for the procedimentos field.
-     *
-     * @var        string|null
-     */
-    protected $procedimentos;
-
-    /**
      * The value for the fisioterapeuta_id field.
      *
      * @var        int|null
@@ -431,26 +417,6 @@ abstract class Registro implements ActiveRecordInterface
     }
 
     /**
-     * Get the [paciente] column value.
-     *
-     * @return string|null
-     */
-    public function getPacienteDeprecated()
-    {
-        return $this->paciente;
-    }
-
-    /**
-     * Get the [procedimentos] column value.
-     *
-     * @return string|null
-     */
-    public function getProcedimentosDeprecated()
-    {
-        return $this->procedimentos;
-    }
-
-    /**
      * Get the [fisioterapeuta_id] column value.
      *
      * @return int|null
@@ -557,46 +523,6 @@ abstract class Registro implements ActiveRecordInterface
         if ($this->id !== $v) {
             $this->id = $v;
             $this->modifiedColumns[RegistroTableMap::COL_ID] = true;
-        }
-
-        return $this;
-    }
-
-    /**
-     * Set the value of [paciente] column.
-     *
-     * @param string|null $v New value
-     * @return $this The current object (for fluent API support)
-     */
-    public function setPacienteDeprecated($v)
-    {
-        if ($v !== null) {
-            $v = (string) $v;
-        }
-
-        if ($this->paciente !== $v) {
-            $this->paciente = $v;
-            $this->modifiedColumns[RegistroTableMap::COL_PACIENTE] = true;
-        }
-
-        return $this;
-    }
-
-    /**
-     * Set the value of [procedimentos] column.
-     *
-     * @param string|null $v New value
-     * @return $this The current object (for fluent API support)
-     */
-    public function setProcedimentosDeprecated($v)
-    {
-        if ($v !== null) {
-            $v = (string) $v;
-        }
-
-        if ($this->procedimentos !== $v) {
-            $this->procedimentos = $v;
-            $this->modifiedColumns[RegistroTableMap::COL_PROCEDIMENTOS] = true;
         }
 
         return $this;
@@ -797,34 +723,28 @@ abstract class Registro implements ActiveRecordInterface
             $col = $row[TableMap::TYPE_NUM == $indexType ? 0 + $startcol : RegistroTableMap::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)];
             $this->id = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : RegistroTableMap::translateFieldName('PacienteDeprecated', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->paciente = (null !== $col) ? (string) $col : null;
-
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : RegistroTableMap::translateFieldName('ProcedimentosDeprecated', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->procedimentos = (null !== $col) ? (string) $col : null;
-
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : RegistroTableMap::translateFieldName('FisioterapeutaId', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : RegistroTableMap::translateFieldName('FisioterapeutaId', TableMap::TYPE_PHPNAME, $indexType)];
             $this->fisioterapeuta_id = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : RegistroTableMap::translateFieldName('PacienteId', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : RegistroTableMap::translateFieldName('PacienteId', TableMap::TYPE_PHPNAME, $indexType)];
             $this->paciente_id = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 5 + $startcol : RegistroTableMap::translateFieldName('TipoAtendimento', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : RegistroTableMap::translateFieldName('TipoAtendimento', TableMap::TYPE_PHPNAME, $indexType)];
             $this->tipo_atendimento = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 6 + $startcol : RegistroTableMap::translateFieldName('Comparecimento', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 4 + $startcol : RegistroTableMap::translateFieldName('Comparecimento', TableMap::TYPE_PHPNAME, $indexType)];
             $this->comparecimento = (null !== $col) ? (boolean) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 7 + $startcol : RegistroTableMap::translateFieldName('TipoFalta', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 5 + $startcol : RegistroTableMap::translateFieldName('TipoFalta', TableMap::TYPE_PHPNAME, $indexType)];
             $this->tipo_falta = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 8 + $startcol : RegistroTableMap::translateFieldName('Data', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 6 + $startcol : RegistroTableMap::translateFieldName('Data', TableMap::TYPE_PHPNAME, $indexType)];
             if ($col === '0000-00-00') {
                 $col = null;
             }
             $this->data = (null !== $col) ? PropelDateTime::newInstance($col, null, 'DateTime') : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 9 + $startcol : RegistroTableMap::translateFieldName('Turno', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 7 + $startcol : RegistroTableMap::translateFieldName('Turno', TableMap::TYPE_PHPNAME, $indexType)];
             $this->turno = (null !== $col) ? (string) $col : null;
             $this->resetModified();
 
@@ -834,7 +754,7 @@ abstract class Registro implements ActiveRecordInterface
                 $this->ensureConsistency();
             }
 
-            return $startcol + 10; // 10 = RegistroTableMap::NUM_HYDRATE_COLUMNS.
+            return $startcol + 8; // 8 = RegistroTableMap::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException(sprintf('Error populating %s object', '\\Api\\Models\\Registro'), 0, $e);
@@ -1115,12 +1035,6 @@ abstract class Registro implements ActiveRecordInterface
         if ($this->isColumnModified(RegistroTableMap::COL_ID)) {
             $modifiedColumns[':p' . $index++]  = 'id';
         }
-        if ($this->isColumnModified(RegistroTableMap::COL_PACIENTE)) {
-            $modifiedColumns[':p' . $index++]  = 'paciente';
-        }
-        if ($this->isColumnModified(RegistroTableMap::COL_PROCEDIMENTOS)) {
-            $modifiedColumns[':p' . $index++]  = 'procedimentos';
-        }
         if ($this->isColumnModified(RegistroTableMap::COL_FISIOTERAPEUTA_ID)) {
             $modifiedColumns[':p' . $index++]  = 'fisioterapeuta_id';
         }
@@ -1155,12 +1069,6 @@ abstract class Registro implements ActiveRecordInterface
                 switch ($columnName) {
                     case 'id':
                         $stmt->bindValue($identifier, $this->id, PDO::PARAM_INT);
-                        break;
-                    case 'paciente':
-                        $stmt->bindValue($identifier, $this->paciente, PDO::PARAM_STR);
-                        break;
-                    case 'procedimentos':
-                        $stmt->bindValue($identifier, $this->procedimentos, PDO::PARAM_STR);
                         break;
                     case 'fisioterapeuta_id':
                         $stmt->bindValue($identifier, $this->fisioterapeuta_id, PDO::PARAM_INT);
@@ -1249,30 +1157,24 @@ abstract class Registro implements ActiveRecordInterface
                 return $this->getId();
 
             case 1:
-                return $this->getPacienteDeprecated();
-
-            case 2:
-                return $this->getProcedimentosDeprecated();
-
-            case 3:
                 return $this->getFisioterapeutaId();
 
-            case 4:
+            case 2:
                 return $this->getPacienteId();
 
-            case 5:
+            case 3:
                 return $this->getTipoAtendimento();
 
-            case 6:
+            case 4:
                 return $this->getComparecimento();
 
-            case 7:
+            case 5:
                 return $this->getTipoFalta();
 
-            case 8:
+            case 6:
                 return $this->getData();
 
-            case 9:
+            case 7:
                 return $this->getTurno();
 
             default:
@@ -1304,18 +1206,16 @@ abstract class Registro implements ActiveRecordInterface
         $keys = RegistroTableMap::getFieldNames($keyType);
         $result = [
             $keys[0] => $this->getId(),
-            $keys[1] => $this->getPacienteDeprecated(),
-            $keys[2] => $this->getProcedimentosDeprecated(),
-            $keys[3] => $this->getFisioterapeutaId(),
-            $keys[4] => $this->getPacienteId(),
-            $keys[5] => $this->getTipoAtendimento(),
-            $keys[6] => $this->getComparecimento(),
-            $keys[7] => $this->getTipoFalta(),
-            $keys[8] => $this->getData(),
-            $keys[9] => $this->getTurno(),
+            $keys[1] => $this->getFisioterapeutaId(),
+            $keys[2] => $this->getPacienteId(),
+            $keys[3] => $this->getTipoAtendimento(),
+            $keys[4] => $this->getComparecimento(),
+            $keys[5] => $this->getTipoFalta(),
+            $keys[6] => $this->getData(),
+            $keys[7] => $this->getTurno(),
         ];
-        if ($result[$keys[8]] instanceof \DateTimeInterface) {
-            $result[$keys[8]] = $result[$keys[8]]->format('Y-m-d');
+        if ($result[$keys[6]] instanceof \DateTimeInterface) {
+            $result[$keys[6]] = $result[$keys[6]]->format('Y-m-d');
         }
 
         $virtualColumns = $this->virtualColumns;
@@ -1409,30 +1309,24 @@ abstract class Registro implements ActiveRecordInterface
                 $this->setId($value);
                 break;
             case 1:
-                $this->setPacienteDeprecated($value);
-                break;
-            case 2:
-                $this->setProcedimentosDeprecated($value);
-                break;
-            case 3:
                 $this->setFisioterapeutaId($value);
                 break;
-            case 4:
+            case 2:
                 $this->setPacienteId($value);
                 break;
-            case 5:
+            case 3:
                 $this->setTipoAtendimento($value);
                 break;
-            case 6:
+            case 4:
                 $this->setComparecimento($value);
                 break;
-            case 7:
+            case 5:
                 $this->setTipoFalta($value);
                 break;
-            case 8:
+            case 6:
                 $this->setData($value);
                 break;
-            case 9:
+            case 7:
                 $this->setTurno($value);
                 break;
         } // switch()
@@ -1465,31 +1359,25 @@ abstract class Registro implements ActiveRecordInterface
             $this->setId($arr[$keys[0]]);
         }
         if (array_key_exists($keys[1], $arr)) {
-            $this->setPacienteDeprecated($arr[$keys[1]]);
+            $this->setFisioterapeutaId($arr[$keys[1]]);
         }
         if (array_key_exists($keys[2], $arr)) {
-            $this->setProcedimentosDeprecated($arr[$keys[2]]);
+            $this->setPacienteId($arr[$keys[2]]);
         }
         if (array_key_exists($keys[3], $arr)) {
-            $this->setFisioterapeutaId($arr[$keys[3]]);
+            $this->setTipoAtendimento($arr[$keys[3]]);
         }
         if (array_key_exists($keys[4], $arr)) {
-            $this->setPacienteId($arr[$keys[4]]);
+            $this->setComparecimento($arr[$keys[4]]);
         }
         if (array_key_exists($keys[5], $arr)) {
-            $this->setTipoAtendimento($arr[$keys[5]]);
+            $this->setTipoFalta($arr[$keys[5]]);
         }
         if (array_key_exists($keys[6], $arr)) {
-            $this->setComparecimento($arr[$keys[6]]);
+            $this->setData($arr[$keys[6]]);
         }
         if (array_key_exists($keys[7], $arr)) {
-            $this->setTipoFalta($arr[$keys[7]]);
-        }
-        if (array_key_exists($keys[8], $arr)) {
-            $this->setData($arr[$keys[8]]);
-        }
-        if (array_key_exists($keys[9], $arr)) {
-            $this->setTurno($arr[$keys[9]]);
+            $this->setTurno($arr[$keys[7]]);
         }
 
         return $this;
@@ -1536,12 +1424,6 @@ abstract class Registro implements ActiveRecordInterface
 
         if ($this->isColumnModified(RegistroTableMap::COL_ID)) {
             $criteria->add(RegistroTableMap::COL_ID, $this->id);
-        }
-        if ($this->isColumnModified(RegistroTableMap::COL_PACIENTE)) {
-            $criteria->add(RegistroTableMap::COL_PACIENTE, $this->paciente);
-        }
-        if ($this->isColumnModified(RegistroTableMap::COL_PROCEDIMENTOS)) {
-            $criteria->add(RegistroTableMap::COL_PROCEDIMENTOS, $this->procedimentos);
         }
         if ($this->isColumnModified(RegistroTableMap::COL_FISIOTERAPEUTA_ID)) {
             $criteria->add(RegistroTableMap::COL_FISIOTERAPEUTA_ID, $this->fisioterapeuta_id);
@@ -1652,8 +1534,6 @@ abstract class Registro implements ActiveRecordInterface
      */
     public function copyInto(object $copyObj, bool $deepCopy = false, bool $makeNew = true): void
     {
-        $copyObj->setPacienteDeprecated($this->getPacienteDeprecated());
-        $copyObj->setProcedimentosDeprecated($this->getProcedimentosDeprecated());
         $copyObj->setFisioterapeutaId($this->getFisioterapeutaId());
         $copyObj->setPacienteId($this->getPacienteId());
         $copyObj->setTipoAtendimento($this->getTipoAtendimento());
@@ -2350,8 +2230,6 @@ abstract class Registro implements ActiveRecordInterface
             $this->aPaciente->removeRegistro($this);
         }
         $this->id = null;
-        $this->paciente = null;
-        $this->procedimentos = null;
         $this->fisioterapeuta_id = null;
         $this->paciente_id = null;
         $this->tipo_atendimento = null;

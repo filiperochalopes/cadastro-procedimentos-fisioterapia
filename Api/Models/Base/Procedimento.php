@@ -83,6 +83,14 @@ abstract class Procedimento implements ActiveRecordInterface
     protected $nome;
 
     /**
+     * The value for the disabled field.
+     *
+     * Note: this column has a database default value of: false
+     * @var        boolean
+     */
+    protected $disabled;
+
+    /**
      * @var        ObjectCollection|ChildRegistroProcedimento[] Collection to store aggregation of ChildRegistroProcedimento objects.
      * @phpstan-var ObjectCollection&\Traversable<ChildRegistroProcedimento> Collection to store aggregation of ChildRegistroProcedimento objects.
      */
@@ -123,10 +131,23 @@ abstract class Procedimento implements ActiveRecordInterface
     protected $registroProcedimentosScheduledForDeletion = null;
 
     /**
+     * Applies default values to this object.
+     * This method should be called from the object's constructor (or
+     * equivalent initialization method).
+     * @see __construct()
+     */
+    public function applyDefaultValues(): void
+    {
+        $this->disabled = false;
+    }
+
+    /**
      * Initializes internal state of Api\Models\Base\Procedimento object.
+     * @see applyDefaults()
      */
     public function __construct()
     {
+        $this->applyDefaultValues();
     }
 
     /**
@@ -369,6 +390,26 @@ abstract class Procedimento implements ActiveRecordInterface
     }
 
     /**
+     * Get the [disabled] column value.
+     *
+     * @return boolean
+     */
+    public function getDesabilitado()
+    {
+        return $this->disabled;
+    }
+
+    /**
+     * Get the [disabled] column value.
+     *
+     * @return boolean
+     */
+    public function isDesabilitado()
+    {
+        return $this->getDesabilitado();
+    }
+
+    /**
      * Set the value of [id] column.
      *
      * @param int $v New value
@@ -409,6 +450,34 @@ abstract class Procedimento implements ActiveRecordInterface
     }
 
     /**
+     * Sets the value of the [disabled] column.
+     * Non-boolean arguments are converted using the following rules:
+     *   * 1, '1', 'true',  'on',  and 'yes' are converted to boolean true
+     *   * 0, '0', 'false', 'off', and 'no'  are converted to boolean false
+     * Check on string values is case insensitive (so 'FaLsE' is seen as 'false').
+     *
+     * @param bool|integer|string $v The new value
+     * @return $this The current object (for fluent API support)
+     */
+    public function setDesabilitado($v)
+    {
+        if ($v !== null) {
+            if (is_string($v)) {
+                $v = in_array(strtolower($v), array('false', 'off', '-', 'no', 'n', '0', '')) ? false : true;
+            } else {
+                $v = (boolean) $v;
+            }
+        }
+
+        if ($this->disabled !== $v) {
+            $this->disabled = $v;
+            $this->modifiedColumns[ProcedimentoTableMap::COL_DISABLED] = true;
+        }
+
+        return $this;
+    }
+
+    /**
      * Indicates whether the columns in this object are only set to default values.
      *
      * This method can be used in conjunction with isModified() to indicate whether an object is both
@@ -418,6 +487,10 @@ abstract class Procedimento implements ActiveRecordInterface
      */
     public function hasOnlyDefaultValues(): bool
     {
+            if ($this->disabled !== false) {
+                return false;
+            }
+
         // otherwise, everything was equal, so return TRUE
         return true;
     }
@@ -449,6 +522,9 @@ abstract class Procedimento implements ActiveRecordInterface
 
             $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : ProcedimentoTableMap::translateFieldName('Nome', TableMap::TYPE_PHPNAME, $indexType)];
             $this->nome = (null !== $col) ? (string) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : ProcedimentoTableMap::translateFieldName('Desabilitado', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->disabled = (null !== $col) ? (boolean) $col : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -457,7 +533,7 @@ abstract class Procedimento implements ActiveRecordInterface
                 $this->ensureConsistency();
             }
 
-            return $startcol + 2; // 2 = ProcedimentoTableMap::NUM_HYDRATE_COLUMNS.
+            return $startcol + 3; // 3 = ProcedimentoTableMap::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException(sprintf('Error populating %s object', '\\Api\\Models\\Procedimento'), 0, $e);
@@ -714,6 +790,9 @@ abstract class Procedimento implements ActiveRecordInterface
         if ($this->isColumnModified(ProcedimentoTableMap::COL_NOME)) {
             $modifiedColumns[':p' . $index++]  = 'nome';
         }
+        if ($this->isColumnModified(ProcedimentoTableMap::COL_DISABLED)) {
+            $modifiedColumns[':p' . $index++]  = 'disabled';
+        }
 
         $sql = sprintf(
             'INSERT INTO procedimentos (%s) VALUES (%s)',
@@ -730,6 +809,9 @@ abstract class Procedimento implements ActiveRecordInterface
                         break;
                     case 'nome':
                         $stmt->bindValue($identifier, $this->nome, PDO::PARAM_STR);
+                        break;
+                    case 'disabled':
+                        $stmt->bindValue($identifier, (int) $this->disabled, PDO::PARAM_INT);
                         break;
                 }
             }
@@ -799,6 +881,9 @@ abstract class Procedimento implements ActiveRecordInterface
             case 1:
                 return $this->getNome();
 
+            case 2:
+                return $this->getDesabilitado();
+
             default:
                 return null;
         } // switch()
@@ -829,6 +914,7 @@ abstract class Procedimento implements ActiveRecordInterface
         $result = [
             $keys[0] => $this->getId(),
             $keys[1] => $this->getNome(),
+            $keys[2] => $this->getDesabilitado(),
         ];
         $virtualColumns = $this->virtualColumns;
         foreach ($virtualColumns as $key => $virtualColumn) {
@@ -893,6 +979,9 @@ abstract class Procedimento implements ActiveRecordInterface
             case 1:
                 $this->setNome($value);
                 break;
+            case 2:
+                $this->setDesabilitado($value);
+                break;
         } // switch()
 
         return $this;
@@ -924,6 +1013,9 @@ abstract class Procedimento implements ActiveRecordInterface
         }
         if (array_key_exists($keys[1], $arr)) {
             $this->setNome($arr[$keys[1]]);
+        }
+        if (array_key_exists($keys[2], $arr)) {
+            $this->setDesabilitado($arr[$keys[2]]);
         }
 
         return $this;
@@ -973,6 +1065,9 @@ abstract class Procedimento implements ActiveRecordInterface
         }
         if ($this->isColumnModified(ProcedimentoTableMap::COL_NOME)) {
             $criteria->add(ProcedimentoTableMap::COL_NOME, $this->nome);
+        }
+        if ($this->isColumnModified(ProcedimentoTableMap::COL_DISABLED)) {
+            $criteria->add(ProcedimentoTableMap::COL_DISABLED, $this->disabled);
         }
 
         return $criteria;
@@ -1063,6 +1158,7 @@ abstract class Procedimento implements ActiveRecordInterface
     public function copyInto(object $copyObj, bool $deepCopy = false, bool $makeNew = true): void
     {
         $copyObj->setNome($this->getNome());
+        $copyObj->setDesabilitado($this->getDesabilitado());
 
         if ($deepCopy) {
             // important: temporarily setNew(false) because this affects the behavior of
@@ -1645,8 +1741,10 @@ abstract class Procedimento implements ActiveRecordInterface
     {
         $this->id = null;
         $this->nome = null;
+        $this->disabled = null;
         $this->alreadyInSave = false;
         $this->clearAllReferences();
+        $this->applyDefaultValues();
         $this->resetModified();
         $this->setNew(true);
         $this->setDeleted(false);

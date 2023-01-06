@@ -58,7 +58,7 @@ class ProcedimentoTableMap extends TableMap
     /**
      * The total number of columns
      */
-    public const NUM_COLUMNS = 2;
+    public const NUM_COLUMNS = 3;
 
     /**
      * The number of lazy-loaded columns
@@ -68,7 +68,7 @@ class ProcedimentoTableMap extends TableMap
     /**
      * The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS)
      */
-    public const NUM_HYDRATE_COLUMNS = 2;
+    public const NUM_HYDRATE_COLUMNS = 3;
 
     /**
      * the column name for the id field
@@ -79,6 +79,11 @@ class ProcedimentoTableMap extends TableMap
      * the column name for the nome field
      */
     public const COL_NOME = 'procedimentos.nome';
+
+    /**
+     * the column name for the disabled field
+     */
+    public const COL_DISABLED = 'procedimentos.disabled';
 
     /**
      * The default string format for model objects of the related table
@@ -94,11 +99,11 @@ class ProcedimentoTableMap extends TableMap
      * @var array<string, mixed>
      */
     protected static $fieldNames = [
-        self::TYPE_PHPNAME       => ['Id', 'Nome', ],
-        self::TYPE_CAMELNAME     => ['id', 'nome', ],
-        self::TYPE_COLNAME       => [ProcedimentoTableMap::COL_ID, ProcedimentoTableMap::COL_NOME, ],
-        self::TYPE_FIELDNAME     => ['id', 'nome', ],
-        self::TYPE_NUM           => [0, 1, ]
+        self::TYPE_PHPNAME       => ['Id', 'Nome', 'Desabilitado', ],
+        self::TYPE_CAMELNAME     => ['id', 'nome', 'desabilitado', ],
+        self::TYPE_COLNAME       => [ProcedimentoTableMap::COL_ID, ProcedimentoTableMap::COL_NOME, ProcedimentoTableMap::COL_DISABLED, ],
+        self::TYPE_FIELDNAME     => ['id', 'nome', 'disabled', ],
+        self::TYPE_NUM           => [0, 1, 2, ]
     ];
 
     /**
@@ -110,11 +115,11 @@ class ProcedimentoTableMap extends TableMap
      * @var array<string, mixed>
      */
     protected static $fieldKeys = [
-        self::TYPE_PHPNAME       => ['Id' => 0, 'Nome' => 1, ],
-        self::TYPE_CAMELNAME     => ['id' => 0, 'nome' => 1, ],
-        self::TYPE_COLNAME       => [ProcedimentoTableMap::COL_ID => 0, ProcedimentoTableMap::COL_NOME => 1, ],
-        self::TYPE_FIELDNAME     => ['id' => 0, 'nome' => 1, ],
-        self::TYPE_NUM           => [0, 1, ]
+        self::TYPE_PHPNAME       => ['Id' => 0, 'Nome' => 1, 'Desabilitado' => 2, ],
+        self::TYPE_CAMELNAME     => ['id' => 0, 'nome' => 1, 'desabilitado' => 2, ],
+        self::TYPE_COLNAME       => [ProcedimentoTableMap::COL_ID => 0, ProcedimentoTableMap::COL_NOME => 1, ProcedimentoTableMap::COL_DISABLED => 2, ],
+        self::TYPE_FIELDNAME     => ['id' => 0, 'nome' => 1, 'disabled' => 2, ],
+        self::TYPE_NUM           => [0, 1, 2, ]
     ];
 
     /**
@@ -137,6 +142,14 @@ class ProcedimentoTableMap extends TableMap
         'ProcedimentoTableMap::COL_NOME' => 'NOME',
         'COL_NOME' => 'NOME',
         'procedimentos.nome' => 'NOME',
+        'Desabilitado' => 'DISABLED',
+        'Procedimento.Desabilitado' => 'DISABLED',
+        'desabilitado' => 'DISABLED',
+        'procedimento.desabilitado' => 'DISABLED',
+        'ProcedimentoTableMap::COL_DISABLED' => 'DISABLED',
+        'COL_DISABLED' => 'DISABLED',
+        'disabled' => 'DISABLED',
+        'procedimentos.disabled' => 'DISABLED',
     ];
 
     /**
@@ -158,6 +171,7 @@ class ProcedimentoTableMap extends TableMap
         // columns
         $this->addPrimaryKey('id', 'Id', 'INTEGER', true, null, null);
         $this->addColumn('nome', 'Nome', 'VARCHAR', true, 100, null);
+        $this->addColumn('disabled', 'Desabilitado', 'BOOLEAN', true, 1, false);
     }
 
     /**
@@ -321,9 +335,11 @@ class ProcedimentoTableMap extends TableMap
         if (null === $alias) {
             $criteria->addSelectColumn(ProcedimentoTableMap::COL_ID);
             $criteria->addSelectColumn(ProcedimentoTableMap::COL_NOME);
+            $criteria->addSelectColumn(ProcedimentoTableMap::COL_DISABLED);
         } else {
             $criteria->addSelectColumn($alias . '.id');
             $criteria->addSelectColumn($alias . '.nome');
+            $criteria->addSelectColumn($alias . '.disabled');
         }
     }
 
@@ -344,9 +360,11 @@ class ProcedimentoTableMap extends TableMap
         if (null === $alias) {
             $criteria->removeSelectColumn(ProcedimentoTableMap::COL_ID);
             $criteria->removeSelectColumn(ProcedimentoTableMap::COL_NOME);
+            $criteria->removeSelectColumn(ProcedimentoTableMap::COL_DISABLED);
         } else {
             $criteria->removeSelectColumn($alias . '.id');
             $criteria->removeSelectColumn($alias . '.nome');
+            $criteria->removeSelectColumn($alias . '.disabled');
         }
     }
 

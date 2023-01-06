@@ -23,9 +23,11 @@ use Propel\Runtime\Exception\PropelException;
  *
  * @method     ChildProcedimentoQuery orderById($order = Criteria::ASC) Order by the id column
  * @method     ChildProcedimentoQuery orderByNome($order = Criteria::ASC) Order by the nome column
+ * @method     ChildProcedimentoQuery orderByDesabilitado($order = Criteria::ASC) Order by the disabled column
  *
  * @method     ChildProcedimentoQuery groupById() Group by the id column
  * @method     ChildProcedimentoQuery groupByNome() Group by the nome column
+ * @method     ChildProcedimentoQuery groupByDesabilitado() Group by the disabled column
  *
  * @method     ChildProcedimentoQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
  * @method     ChildProcedimentoQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
@@ -51,13 +53,15 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildProcedimento findOneOrCreate(?ConnectionInterface $con = null) Return the first ChildProcedimento matching the query, or a new ChildProcedimento object populated from the query conditions when no match is found
  *
  * @method     ChildProcedimento|null findOneById(int $id) Return the first ChildProcedimento filtered by the id column
- * @method     ChildProcedimento|null findOneByNome(string $nome) Return the first ChildProcedimento filtered by the nome column *
+ * @method     ChildProcedimento|null findOneByNome(string $nome) Return the first ChildProcedimento filtered by the nome column
+ * @method     ChildProcedimento|null findOneByDesabilitado(boolean $disabled) Return the first ChildProcedimento filtered by the disabled column *
 
  * @method     ChildProcedimento requirePk($key, ?ConnectionInterface $con = null) Return the ChildProcedimento by primary key and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildProcedimento requireOne(?ConnectionInterface $con = null) Return the first ChildProcedimento matching the query and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
  * @method     ChildProcedimento requireOneById(int $id) Return the first ChildProcedimento filtered by the id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildProcedimento requireOneByNome(string $nome) Return the first ChildProcedimento filtered by the nome column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildProcedimento requireOneByDesabilitado(boolean $disabled) Return the first ChildProcedimento filtered by the disabled column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
  * @method     ChildProcedimento[]|Collection find(?ConnectionInterface $con = null) Return ChildProcedimento objects based on current ModelCriteria
  * @psalm-method Collection&\Traversable<ChildProcedimento> find(?ConnectionInterface $con = null) Return ChildProcedimento objects based on current ModelCriteria
@@ -65,6 +69,8 @@ use Propel\Runtime\Exception\PropelException;
  * @psalm-method Collection&\Traversable<ChildProcedimento> findById(int $id) Return ChildProcedimento objects filtered by the id column
  * @method     ChildProcedimento[]|Collection findByNome(string $nome) Return ChildProcedimento objects filtered by the nome column
  * @psalm-method Collection&\Traversable<ChildProcedimento> findByNome(string $nome) Return ChildProcedimento objects filtered by the nome column
+ * @method     ChildProcedimento[]|Collection findByDesabilitado(boolean $disabled) Return ChildProcedimento objects filtered by the disabled column
+ * @psalm-method Collection&\Traversable<ChildProcedimento> findByDesabilitado(boolean $disabled) Return ChildProcedimento objects filtered by the disabled column
  * @method     ChildProcedimento[]|\Propel\Runtime\Util\PropelModelPager paginate($page = 1, $maxPerPage = 10, ?ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
  * @psalm-method \Propel\Runtime\Util\PropelModelPager&\Traversable<ChildProcedimento> paginate($page = 1, $maxPerPage = 10, ?ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
  *
@@ -164,7 +170,7 @@ abstract class ProcedimentoQuery extends ModelCriteria
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT id, nome FROM procedimentos WHERE id = :p0';
+        $sql = 'SELECT id, nome, disabled FROM procedimentos WHERE id = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -325,6 +331,35 @@ abstract class ProcedimentoQuery extends ModelCriteria
         }
 
         $this->addUsingAlias(ProcedimentoTableMap::COL_NOME, $nome, $comparison);
+
+        return $this;
+    }
+
+    /**
+     * Filter the query on the disabled column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByDesabilitado(true); // WHERE disabled = true
+     * $query->filterByDesabilitado('yes'); // WHERE disabled = true
+     * </code>
+     *
+     * @param bool|string $desabilitado The value to use as filter.
+     *              Non-boolean arguments are converted using the following rules:
+     *                * 1, '1', 'true',  'on',  and 'yes' are converted to boolean true
+     *                * 0, '0', 'false', 'off', and 'no'  are converted to boolean false
+     *              Check on string values is case insensitive (so 'FaLsE' is seen as 'false').
+     * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this The current query, for fluid interface
+     */
+    public function filterByDesabilitado($desabilitado = null, ?string $comparison = null)
+    {
+        if (is_string($desabilitado)) {
+            $desabilitado = in_array(strtolower($desabilitado), array('false', 'off', '-', 'no', 'n', '0', '')) ? false : true;
+        }
+
+        $this->addUsingAlias(ProcedimentoTableMap::COL_DISABLED, $desabilitado, $comparison);
 
         return $this;
     }

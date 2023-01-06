@@ -224,9 +224,9 @@ $(document).ready(function () {
     var hintBox = "nome_paciente_hint";
 
     $.ajax({
-      url: "php/resources/pacientes.php",
+      url: "/api/v1/paciente",
       method: "GET",
-      data: { nome: $(this).val() },
+      data: { q: $(this).val() },
     }).done(function (data) {
       $("#" + hintBox + " ul").html("");
       if (data.length) {

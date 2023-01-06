@@ -27,15 +27,15 @@
   </table>
   <table name="procedimentos" idMethod="native" phpName="Procedimento">
     <column name="id" phpName="Id" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
-    <column name="nome" phpName="Nome" type="VARCHAR" size="100" required="true"/>
+    <column name="nome" phpName="Nome" type="VARCHAR" size="100" 
+    required="true"/>
+    <column name="disabled" phpName="Desabilitado" type="BOOLEAN" defaultValue="0" required="true"/>
     <vendor type="mysql">
       <parameter name="Engine" value="InnoDB"/>
     </vendor>
   </table>
   <table name="registros" idMethod="native" phpName="Registro">
     <column name="id" phpName="Id" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
-    <column name="paciente" phpName="PacienteDeprecated" type="VARCHAR" size="150"/>
-    <column name="procedimentos" phpName="ProcedimentosDeprecated" type="LONGVARCHAR"/>
     <column name="fisioterapeuta_id" phpName="FisioterapeutaId" type="INTEGER"/>
     <column name="paciente_id" phpName="PacienteId" type="INTEGER"/>
     <column name="tipo_atendimento" phpName="TipoAtendimento" type="VARCHAR" size="21"/>

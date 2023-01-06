@@ -22,8 +22,6 @@ use Propel\Runtime\Exception\PropelException;
  *
  *
  * @method     ChildRegistroQuery orderById($order = Criteria::ASC) Order by the id column
- * @method     ChildRegistroQuery orderByPacienteDeprecated($order = Criteria::ASC) Order by the paciente column
- * @method     ChildRegistroQuery orderByProcedimentosDeprecated($order = Criteria::ASC) Order by the procedimentos column
  * @method     ChildRegistroQuery orderByFisioterapeutaId($order = Criteria::ASC) Order by the fisioterapeuta_id column
  * @method     ChildRegistroQuery orderByPacienteId($order = Criteria::ASC) Order by the paciente_id column
  * @method     ChildRegistroQuery orderByTipoAtendimento($order = Criteria::ASC) Order by the tipo_atendimento column
@@ -33,8 +31,6 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildRegistroQuery orderByTurno($order = Criteria::ASC) Order by the turno column
  *
  * @method     ChildRegistroQuery groupById() Group by the id column
- * @method     ChildRegistroQuery groupByPacienteDeprecated() Group by the paciente column
- * @method     ChildRegistroQuery groupByProcedimentosDeprecated() Group by the procedimentos column
  * @method     ChildRegistroQuery groupByFisioterapeutaId() Group by the fisioterapeuta_id column
  * @method     ChildRegistroQuery groupByPacienteId() Group by the paciente_id column
  * @method     ChildRegistroQuery groupByTipoAtendimento() Group by the tipo_atendimento column
@@ -87,8 +83,6 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildRegistro findOneOrCreate(?ConnectionInterface $con = null) Return the first ChildRegistro matching the query, or a new ChildRegistro object populated from the query conditions when no match is found
  *
  * @method     ChildRegistro|null findOneById(int $id) Return the first ChildRegistro filtered by the id column
- * @method     ChildRegistro|null findOneByPacienteDeprecated(string $paciente) Return the first ChildRegistro filtered by the paciente column
- * @method     ChildRegistro|null findOneByProcedimentosDeprecated(string $procedimentos) Return the first ChildRegistro filtered by the procedimentos column
  * @method     ChildRegistro|null findOneByFisioterapeutaId(int $fisioterapeuta_id) Return the first ChildRegistro filtered by the fisioterapeuta_id column
  * @method     ChildRegistro|null findOneByPacienteId(int $paciente_id) Return the first ChildRegistro filtered by the paciente_id column
  * @method     ChildRegistro|null findOneByTipoAtendimento(string $tipo_atendimento) Return the first ChildRegistro filtered by the tipo_atendimento column
@@ -101,8 +95,6 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildRegistro requireOne(?ConnectionInterface $con = null) Return the first ChildRegistro matching the query and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
  * @method     ChildRegistro requireOneById(int $id) Return the first ChildRegistro filtered by the id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
- * @method     ChildRegistro requireOneByPacienteDeprecated(string $paciente) Return the first ChildRegistro filtered by the paciente column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
- * @method     ChildRegistro requireOneByProcedimentosDeprecated(string $procedimentos) Return the first ChildRegistro filtered by the procedimentos column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildRegistro requireOneByFisioterapeutaId(int $fisioterapeuta_id) Return the first ChildRegistro filtered by the fisioterapeuta_id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildRegistro requireOneByPacienteId(int $paciente_id) Return the first ChildRegistro filtered by the paciente_id column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildRegistro requireOneByTipoAtendimento(string $tipo_atendimento) Return the first ChildRegistro filtered by the tipo_atendimento column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
@@ -115,10 +107,6 @@ use Propel\Runtime\Exception\PropelException;
  * @psalm-method Collection&\Traversable<ChildRegistro> find(?ConnectionInterface $con = null) Return ChildRegistro objects based on current ModelCriteria
  * @method     ChildRegistro[]|Collection findById(int $id) Return ChildRegistro objects filtered by the id column
  * @psalm-method Collection&\Traversable<ChildRegistro> findById(int $id) Return ChildRegistro objects filtered by the id column
- * @method     ChildRegistro[]|Collection findByPacienteDeprecated(string $paciente) Return ChildRegistro objects filtered by the paciente column
- * @psalm-method Collection&\Traversable<ChildRegistro> findByPacienteDeprecated(string $paciente) Return ChildRegistro objects filtered by the paciente column
- * @method     ChildRegistro[]|Collection findByProcedimentosDeprecated(string $procedimentos) Return ChildRegistro objects filtered by the procedimentos column
- * @psalm-method Collection&\Traversable<ChildRegistro> findByProcedimentosDeprecated(string $procedimentos) Return ChildRegistro objects filtered by the procedimentos column
  * @method     ChildRegistro[]|Collection findByFisioterapeutaId(int $fisioterapeuta_id) Return ChildRegistro objects filtered by the fisioterapeuta_id column
  * @psalm-method Collection&\Traversable<ChildRegistro> findByFisioterapeutaId(int $fisioterapeuta_id) Return ChildRegistro objects filtered by the fisioterapeuta_id column
  * @method     ChildRegistro[]|Collection findByPacienteId(int $paciente_id) Return ChildRegistro objects filtered by the paciente_id column
@@ -232,7 +220,7 @@ abstract class RegistroQuery extends ModelCriteria
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT id, paciente, procedimentos, fisioterapeuta_id, paciente_id, tipo_atendimento, comparecimento, tipo_falta, data, turno FROM registros WHERE id = :p0';
+        $sql = 'SELECT id, fisioterapeuta_id, paciente_id, tipo_atendimento, comparecimento, tipo_falta, data, turno FROM registros WHERE id = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -365,62 +353,6 @@ abstract class RegistroQuery extends ModelCriteria
         }
 
         $this->addUsingAlias(RegistroTableMap::COL_ID, $id, $comparison);
-
-        return $this;
-    }
-
-    /**
-     * Filter the query on the paciente column
-     *
-     * Example usage:
-     * <code>
-     * $query->filterByPacienteDeprecated('fooValue');   // WHERE paciente = 'fooValue'
-     * $query->filterByPacienteDeprecated('%fooValue%', Criteria::LIKE); // WHERE paciente LIKE '%fooValue%'
-     * $query->filterByPacienteDeprecated(['foo', 'bar']); // WHERE paciente IN ('foo', 'bar')
-     * </code>
-     *
-     * @param string|string[] $pacienteDeprecated The value to use as filter.
-     * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-     *
-     * @return $this The current query, for fluid interface
-     */
-    public function filterByPacienteDeprecated($pacienteDeprecated = null, ?string $comparison = null)
-    {
-        if (null === $comparison) {
-            if (is_array($pacienteDeprecated)) {
-                $comparison = Criteria::IN;
-            }
-        }
-
-        $this->addUsingAlias(RegistroTableMap::COL_PACIENTE, $pacienteDeprecated, $comparison);
-
-        return $this;
-    }
-
-    /**
-     * Filter the query on the procedimentos column
-     *
-     * Example usage:
-     * <code>
-     * $query->filterByProcedimentosDeprecated('fooValue');   // WHERE procedimentos = 'fooValue'
-     * $query->filterByProcedimentosDeprecated('%fooValue%', Criteria::LIKE); // WHERE procedimentos LIKE '%fooValue%'
-     * $query->filterByProcedimentosDeprecated(['foo', 'bar']); // WHERE procedimentos IN ('foo', 'bar')
-     * </code>
-     *
-     * @param string|string[] $procedimentosDeprecated The value to use as filter.
-     * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
-     *
-     * @return $this The current query, for fluid interface
-     */
-    public function filterByProcedimentosDeprecated($procedimentosDeprecated = null, ?string $comparison = null)
-    {
-        if (null === $comparison) {
-            if (is_array($procedimentosDeprecated)) {
-                $comparison = Criteria::IN;
-            }
-        }
-
-        $this->addUsingAlias(RegistroTableMap::COL_PROCEDIMENTOS, $procedimentosDeprecated, $comparison);
 
         return $this;
     }

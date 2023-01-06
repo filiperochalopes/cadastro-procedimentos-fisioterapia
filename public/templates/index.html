@@ -18,7 +18,7 @@
         <label>TURNO <span>*</span></label>
         {% for input in turno_inputs %}
             <div>
-                <input type="radio" name="{{input.name}}" id="{{input.id}}" value="{{input.label}}" /><label for="{{input.id}}" >{{input.label}}</label>
+                <input type="radio" name="{{input.name}}" id="{{input.id}}" value="{{input.label}}" required /><label for="{{input.id}}" >{{input.label}}</label>
             </div>
         {% endfor %}
 
@@ -68,7 +68,7 @@
         <label>ORIGEM <span>*</span></label>
         {% for input in origem_inputs %}
             <div>
-                <input type="radio" name="{{input.name}}" id="{{input.id}}" value="{{input.label}}" /><label for="{{input.id}}" >{{input.label}}</label>
+                <input type="radio" name="{{input.name}}" id="{{input.id}}" value="{{input.label}}" required /><label for="{{input.id}}" >{{input.label}}</label>
             </div>
         {% endfor %}
 
@@ -78,7 +78,7 @@
         <label>PACIENTE COMPARECEU AO TRATAMENTO? <span>*</span></label>
         {% for input in comparecimento_inputs %}
             <div>
-                <input type="radio" name="{{input.name}}" id="{{input.id}}" value="{{input.label}}" /><label for="{{input.id}}" >{{input.label}}</label>
+                <input type="radio" name="{{input.name}}" id="{{input.id}}" value="{{input.label}}" required /><label for="{{input.id}}" >{{input.label}}</label>
             </div>
         {% endfor %}
 

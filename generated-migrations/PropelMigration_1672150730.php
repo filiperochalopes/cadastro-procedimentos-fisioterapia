@@ -7,7 +7,6 @@ use Propel\Generator\Manager\MigrationManager;
 use Api\Models\FisioterapeutaQuery;
 use Api\Models\ProcedimentoQuery;
 use Api\Models\Registro;
-use Api\Models\RegistroQuery;
 
 /**
  * Data object containing the SQL and PHP code to migrate the database
@@ -60,6 +59,11 @@ class PropelMigration_1672150730
         $sql = "UPDATE tabela SET fisioterapeuta='Erro[Vazio]' WHERE fisioterapeuta = '';";
         $stmt = $pdo->prepare($sql);
         $stmt->execute();
+        
+        echo "Esvaziando tabela de registros para uma nova estrutura...\n";
+        $sql = "TRUNCATE TABLE registros;";
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute();
     }
 
     public function postUp(MigrationManager $manager)
@@ -81,6 +85,20 @@ class PropelMigration_1672150730
             $stmt->execute();
         }
 
+        echo "Adicionando procedimentos excluídos...\n";
+        // Itens obtidos em 6 de Janeiro por meio do recolhimento na lista de de `tabela`
+        $procedimentos = ['Hidroterapia', 'Cinesioterapia','Avaliação','Termofototerapia', 'Eletroterapia', 'Acupuntura','Uroginecologia', 'Pilates', 'Terapia Manual','Alta','Neurologia','Crioterapia','Ultrassom','RPG','Laser','Massoterapia','Cinesioterapia Ativa','GLOBUS','Cinesioterapia','Passiva','TENS','Mecanoterapia','Infravermelho','Osteopatia']  ;
+        
+        foreach ($procedimentos as $procedimento) {
+            if(ProcedimentoQuery::create()->filterByNome($procedimento)->count() <= 0){
+                $sql = "INSERT INTO `procedimentos` (nome, `disabled`) 
+                    VALUES (?, 1);";
+                $stmt = $pdo->prepare($sql);
+                $stmt->bindValue(1, $procedimento);
+                $stmt->execute();
+            }
+        }
+
         // Lista em memória de procedimentos
         echo "Criando registro em memória de procedimentos...\n";
         $procedimentos = ProcedimentoQuery::create()->find();
@@ -100,46 +118,32 @@ class PropelMigration_1672150730
         echo "Unindo tabelas para análise JOIN tabela + registros...\n";
         // Verifico todos os registros que foram feitos
         $sql = "SELECT 
-            r.id as registro_id, 
-            r.paciente as reg_nome_paciente, 
-            r.procedimentos as reg_procedimentos_array, 
-            r.tipo_atendimento as reg_tipo_atendimento, 
-            r.comparecimento as reg_comparecimento, 
-            r.tipo_falta as reg_tipo_falta, 
-            r.data as reg_data, 
-            r.turno as reg_turno, 
             t.id as tabela_id, 
-            t.data as tab_data, 
-            t.turno as tab_turno, 
-            t.fisioterapeuta as tab_nome_fisioterapeuta, 
-            t.nome_paciente as tab_nome_paciente, 
-            t.tipo_atendimento as tab_tipo_atendimento, 
-            t.comparecimento as tab_comparecimento, 
-            t.tipo_falta as tab_tipo_falta, 
+            t.fisioterapeuta as nome_fisioterapeuta, 
+            t.data, t.turno, t.nome_paciente, t.tipo_atendimento, t.comparecimento, t.tipo_falta, 
             t.procedimento_1, t.procedimento_2, t.procedimento_3, t.procedimento_4, t.procedimento_5, t.procedimento_6, t.procedimento_7, t.procedimento_8, t.procedimento_9, t.procedimento_10, t.procedimento_11, t.procedimento_12, t.procedimento_13, t.procedimento_14, t.procedimento_15, t.procedimento_16, t.procedimento_17, t.procedimento_18, t.procedimento_19, t.procedimento_20, t.total_procedimentos,
             p.id as paciente_id,
             f.id as fisioterapeuta_id 
-        FROM `registros` as r 
-        JOIN `tabela` as t 
-        ON UPPER(r.paciente) = UPPER(t.nome_paciente) AND r.turno = t.turno AND r.data = t.data
-        JOIN pacientes as p
+        FROM `tabela` as t
+        LEFT JOIN pacientes as p
         ON p.nome = t.nome_paciente 
-        JOIN fisioterapeutas f 
+        LEFT JOIN fisioterapeutas f 
         ON f.nome = t.fisioterapeuta;";
         $stmt = $pdo->prepare($sql);
         $stmt->execute();
         $resultset = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        echo "Aplicando mudanças em ".count($resultset)." registros...\n";
+        echo "Inserindo ".count($resultset)." linhas da antiga tabela em `Registro`...\n";
         foreach ($resultset as $row) {
             print("❚");
-            // Verificando usuário
-            $registro = RegistroQuery::create()->findOneById($row['registro_id']);
+            $registro = new Registro;
+            $registro->setData($row['data']);
+            $registro->setTurno($row['turno']);
             $registro->setPacienteId($row['paciente_id']);
             $registro->setFisioterapeutaId($row['fisioterapeuta_id']);
-            $registro->setComparecimento($row['tab_comparecimento']);
-            $registro->setTipoFalta($row['tab_tipo_falta']);
-            $registro->setTipoAtendimento($row['tab_tipo_atendimento']);
+            $registro->setComparecimento($row['comparecimento']);
+            $registro->setTipoFalta($row['tipo_falta']);
+            $registro->setTipoAtendimento($row['tipo_atendimento']);
 
             // Criando procedimentos
             for ($i = 1; $i <= 20; $i++) {
@@ -150,6 +154,9 @@ class PropelMigration_1672150730
 
             $registro->save();
         }
+
+        // Deixando o log mais apresentável
+        print("\n\n");
     }
 
     public function preDown(MigrationManager $manager)
@@ -194,10 +201,12 @@ ALTER TABLE `pacientes`
     CHANGE `corpoquadro` `corpo_quadro` VARCHAR(5),
     CHANGE `modalidade` `atleta_modalidade` VARCHAR(50);
 ALTER TABLE `procedimentos`
-    CHANGE `procedimento` `nome` VARCHAR(100) NOT NULL;
+    CHANGE `procedimento` `nome` VARCHAR(100) NOT NULL,
+    ADD `disabled` TINYINT(1) DEFAULT 0 AFTER `nome`;
 ALTER TABLE `registros`
-    CHANGE `paciente` `paciente` VARCHAR(150),
-    ADD `fisioterapeuta_id` INTEGER AFTER `procedimentos`,
+    DROP `paciente`,
+    DROP `procedimentos`,
+    ADD `fisioterapeuta_id` INTEGER AFTER `id`,
     ADD `paciente_id` INTEGER AFTER `fisioterapeuta_id`,
     ADD `tipo_atendimento` VARCHAR(21) AFTER `paciente_id`,
     ADD `comparecimento` TINYINT(1) AFTER `tipo_atendimento`,
@@ -280,13 +289,15 @@ ALTER TABLE `pacientes`
   CHANGE `corpo_quadro` `corpoquadro` VARCHAR(5) NOT NULL,
   CHANGE `atleta_modalidade` `modalidade` VARCHAR(50) NOT NULL;
 ALTER TABLE `procedimentos`
-  CHANGE `nome` `procedimento` VARCHAR(100) NOT NULL;
+  CHANGE `nome` `procedimento` VARCHAR(100) NOT NULL,
+  DROP `disabled`;
 ALTER TABLE `registros` DROP FOREIGN KEY `registros_fk_00f1f7`;
 ALTER TABLE `registros` DROP FOREIGN KEY `registros_fk_7c873f`;
 DROP INDEX `registros_fi_00f1f7` ON `registros`;
 DROP INDEX `registros_fi_7c873f` ON `registros`;
 ALTER TABLE `registros`
-  CHANGE `paciente` `paciente` VARCHAR(150) NOT NULL,
+  ADD `paciente` VARCHAR(150) NOT NULL AFTER `id`,
+  ADD `procedimentos` TEXT AFTER `paciente`,
   DROP `fisioterapeuta_id`,
   DROP `paciente_id`,
   DROP `tipo_atendimento`,
