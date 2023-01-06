@@ -50,11 +50,11 @@ $(document).ready(function () {
   });
 
   /**
-   * 
-   * @param {string} id 
-   * @param {string} valor 
+   *
+   * @param {string} id
+   * @param {string} valor
    * @param {boolean} nondestructive
-   * @param {string} justRefresh 
+   * @param {string} justRefresh
    */
   function condicionais(id, valor, nondestructive = false, justRefresh) {
     array = json_condicionais[id][valor];
@@ -191,11 +191,12 @@ $(document).ready(function () {
 
   $("#adicionar_registro").click(function (e) {
     if (document.getElementById("form_registro").checkValidity()) {
+      // Se ocorreu a validação mínima de campos
       e.preventDefault();
       console.log($("#form_registro").serialize());
 
       $.ajax({
-        url: "/api/v1/atendimento",
+        url: "/api/v1/registro",
         method: "POST",
         data: $("#form_registro").serialize(),
         beforeSend: function (xhr) {
@@ -206,11 +207,8 @@ $(document).ready(function () {
           });
         },
       }).done(function (data) {
-        console.log(data);
-        if (data.fisioterapeuta) {
-          sendTableToDatabase(data);
-        }
         aviso(data);
+        resetForm();
       });
     }
   });
@@ -232,9 +230,8 @@ $(document).ready(function () {
         // Caso tenha conteúdo do retorno escreve nas dicas
         $("#" + hintBox).show();
         data.forEach(function (element, index, array) {
-
           $("#" + hintBox + " ul").append(
-            '<li data-value="' + index + '">' + element.nome + "</li>"
+            '<li data-value="' + index + '">' + element.Nome + "</li>"
           );
         });
       } else {
@@ -243,6 +240,7 @@ $(document).ready(function () {
         $("#" + hintBox + " ul").html("");
       }
 
+      // Dados provisórios que contém as informações capturadas do banco
       array_hint = data;
     });
   });
@@ -279,26 +277,42 @@ $(document).ready(function () {
   function fillInputs(data) {
     array = Object.entries(data);
     array.forEach(function (el) {
-      if (el[0] != "id") {
-        $("#" + el[0])
-          .focus()
-          .val(el[1])
-          .blur()
-          .change();
+      function changeSelectInput(id, value) {
+        $(`#${id}`).focus().val(value).blur().change();
       }
-      $("input[name=origem][value=" + data.origem + "]").prop("checked", true);
-      data.corpoquadro
-        ? $("input[name=corpoquadro][value=" + data.corpoquadro + "]").prop(
-            "checked",
-            true
-          )
-        : null;
-      data.atleta
-        ? $("input[name=atleta][value=" + data.atleta + "]").prop(
-            "checked",
-            true
-          )
-        : null;
+
+      $("input[name=origem][value=" + data.Origem + "]").prop("checked", true);
+
+      if (data.CorpoQuadro) {
+        $("input[name=corpoquadro][value=" + data.CorpoQuadro + "]").prop(
+          "checked",
+          true
+        );
+      }
+
+      if (typeof data.Atleta == "boolean") {
+        $(`input[name=atleta][value=${+ data.Atleta}]`).prop("checked", true).change()
+        changeSelectInput("modalidade", data.Modalidade);
+        if(data.Modalidade == "Outra"){
+          changeSelectInput("outra_modalidade", data.OutraModalidade);
+        }
+      }
+
+      if (data.PostoGraduacao) {
+        changeSelectInput("posto_graduacao", data.PostoGraduacao);
+      }
+
+      if (data.NipPaciente) {
+        changeSelectInput("nip_paciente", data.NipPaciente);
+      }
+
+      if (data.NipTitular) {
+        changeSelectInput("nip_titular", data.NipTitular);
+      }
+
+      if (data.CpfTitular) {
+        changeSelectInput("cpf_titular", data.CpfTitular);
+      }
     });
   }
 
@@ -338,53 +352,6 @@ $(document).ready(function () {
     var s = num + "";
     while (s.length < size) s = "0" + s;
     return s;
-  }
-
-  function sendTableToDatabase(array) {
-    // Cálculo de número de procedimentos
-
-    num_procedimentos = 0;
-    for (let idx = 1; idx <= 20; idx++) {
-      //campos de procedimentos
-      array["procedimento_" + idx] != "" ? num_procedimentos++ : null;
-    }
-
-    array["id"] = "";
-    array["nip_paciente"] ? null : (array["nip_paciente"] = "");
-    array["nip_titular"] ? null : (array["nip_titular"] = "");
-    array["cpf_titular"] ? null : (array["cpf_titular"] = "");
-    array["origem"] ? null : (array["origem"] = "");
-    array["corpoquadro"] ? null : (array["corpoquadro"] = "");
-    array["posto_graduacao"] ? null : (array["posto_graduacao"] = "");
-    array["atleta"] ? null : (array["atleta"] = "");
-    array["modalidade"] ? null : (array["modalidade"] = "");
-    array["outra_modalidade"] ? null : (array["outra_modalidade"] = "");
-    array["comparecimento"] ? null : (array["comparecimento"] = "");
-
-    for (let idx = 1; idx <= 20; idx++) {
-      //campos de procedimentos
-      array["procedimento_" + idx] ? null : (array["procedimento_" + idx] = "");
-    }
-
-    array["total_procedimentos"] = num_procedimentos;
-
-    console.log(array);
-
-    $.ajax({
-      url: "php/resources/tabela.php",
-      method: "POST",
-      data: { json: array },
-      beforeSend: function (xhr) {
-        aviso({
-          mensagem:
-            "<div class='spinner'><i class='fas fa-spinner'></i></div> Carregando...",
-          class: "yellow",
-        });
-      },
-    }).done(function (data) {
-      aviso(data);
-      resetForm();
-    });
   }
 
   /* --------- ENVIO DE FORMULÁRIO DE LOGIN ----------- */

@@ -78,7 +78,7 @@
         <label>PACIENTE COMPARECEU AO TRATAMENTO? <span>*</span></label>
         {% for input in comparecimento_inputs %}
             <div>
-                <input type="radio" name="{{input.name}}" id="{{input.id}}" value="{{input.label}}" required /><label for="{{input.id}}" >{{input.label}}</label>
+                <input type="radio" name="{{input.name}}" id="{{input.id}}" value="{{input.value is empty ? input.label : input.value}}" required /><label for="{{input.id}}" >{{input.label}}</label>
             </div>
         {% endfor %}
 
@@ -106,7 +106,7 @@
         <label class="condicional" data-condicional="atleta" >ATLETA? <span>*</span></label>
         {% for input in atleta_inputs %}
             <div>
-                <input type="radio" name="{{input.name}}" id="{{input.id}}" value="{{input.label}}" class="condicional" data-condicional="{{input.name}}" /><label for="{{input.id}}" class="condicional" data-condicional="{{input.name}}" >{{input.label}}</label>
+                <input type="radio" name="{{input.name}}" id="{{input.id}}" value="{{input.value is empty ? input.label : input.value}}" class="condicional" data-condicional="{{input.name}}" /><label for="{{input.id}}" class="condicional" data-condicional="{{input.name}}" >{{input.label}}</label>
             </div>
         {% endfor %}
 

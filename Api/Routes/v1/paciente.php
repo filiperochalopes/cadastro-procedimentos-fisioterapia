@@ -17,15 +17,10 @@ $app->get($baseUrlV1 . '/paciente', function (Request $request, Response $respon
     $data = [];
 
     foreach($pacientes as $paciente){
-        array_push($data, [
-            "id" => $paciente->getId(),
-            "nome" => $paciente->getNome()
-        ]);
+        array_push($data, json_decode($paciente->toJSON()));
     }
 
-    $payload = json_encode($data);
-
-    $response->getBody()->write($payload);
+    $response->getBody()->write(json_encode($data));
 
     return $response
             ->withHeader('Content-Type', 'application/json')

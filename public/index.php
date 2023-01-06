@@ -50,11 +50,13 @@ echo $template->render([
             'name' => 'comparecimento',
             'id' => 'comparecimento_sim',
             'label' => 'Sim',
+            'value' => 1,
         ],
         [
             'name' => 'comparecimento',
             'id' => 'comparecimento_nao',
             'label' => 'Não',
+            'value' => '0'
         ],
     ],
     'tipo_falta_options' => [
@@ -77,11 +79,13 @@ echo $template->render([
             'name' => 'atleta',
             'id' => 'atleta_nao',
             'label' => 'Não',
+            'value' => '0'
         ],
         [
             'name' => 'atleta',
             'id' => 'atleta_sim',
             'label' => 'Sim',
+            'value' => 1,
         ],
     ],
     'atleta_modalidade_options' => [

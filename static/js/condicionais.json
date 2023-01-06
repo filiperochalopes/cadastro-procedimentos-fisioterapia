@@ -34,24 +34,24 @@
     },
 
     "atleta_sim" : {
-        "Sim" : [
+        "1" : [
             "modalidade"
         ]
     },
 
     "atleta_nao" : {
-        "Não" : [
+        "0" : [
         ]
     },
 
     "comparecimento_sim" : {
-        "Sim" : [
+        "1" : [
             "procedimento_1"
         ]
     },
 
     "comparecimento_nao" : {
-        "Não" : [
+        "0" : [
             "tipo_falta"
         ]
     },
