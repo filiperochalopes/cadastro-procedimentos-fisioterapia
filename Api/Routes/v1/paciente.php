@@ -34,7 +34,7 @@ $app->delete($baseUrlV1 . '/paciente/{id}', function (Request $request, Response
     $paciente->save();
 
     $response->getBody()->write(json_encode(array(
-        "mensagem" => "Paciente {$args['id']} desabilitado com sucesso. Atualize a página.",
+        "mensagem" => "Paciente {$paciente->getNome()} desabilitado com sucesso. Atualize a página.",
         "class" => "green"
     )));
 
@@ -50,7 +50,7 @@ $app->put($baseUrlV1 . '/paciente/{id}', function (Request $request, Response $r
     $paciente->save();
 
     $response->getBody()->write(json_encode(array(
-        "mensagem" => "O paciente {$args['id']} foi recuperado com sucesso. Atualize a página.",
+        "mensagem" => "O paciente {$paciente->getNome()} foi recuperado com sucesso. Atualize a página.",
         "class" => "green"
     )));
 

@@ -110,47 +110,50 @@ $(document).ready(function () {
     nome = $(this).parent().find("input").val();
 
     $.ajax({
-      url: "php/resources/fisioterapeutas.php",
+      url: "/api/v1/fisioterapeuta",
       method: "POST",
-      data: { nome: nome },
+      data: { nome },
       beforeSend: function (xhr) {
         aviso('loading');
       },
     }).done(function (data) {
-      console.log(data);
-
       aviso(data);
-      $("#table_fisioterapeuta").append(
-        '<tr data-id="' +
-          data.id +
-          '"><td class="nome">' +
-          nome +
-          '</td><td><button class="options-bt del static" data-del="' +
-          data.id +
-          '" data-confirm="' +
-          nome +
-          '"><i class="fas fa-trash-alt"></i></button></td></tr>'
+      $("#table_fisioterapeutas").append(
+        `<tr data-id="${data.id}"><td class="nome">${nome}</td><td><button class="options-bt del static" data-del="${data.id}" data-confirm="${nome}"><i class="fas fa-trash-alt"></i></button></td></tr>`
       );
     });
   });
 
   /* --------- EXCLUIR FISIOTERAPEUTA ---------- */
 
-  $("#table_fisioterapeuta").on("click", ".del", function () {
+  $("#table_fisioterapeutas").on("click", ".del", function () {
     id = $(this).attr("data-del");
-    confirm_str = $(this).attr("data-confirm");
 
-    if (window.confirm("Deseja realmente excluir " + confirm_str + "?")) {
+    if (window.confirm(`Deseja desabilitar ${$(this).attr("data-confirm")}?`)) {
       $.ajax({
-        url: "php/resources/fisioterapeutas.php",
+        url: `/api/v1/fisioterapeuta/${id}`,
         method: "DELETE",
-        data: { id: id },
-        beforeSend: function (xhr) {
-          aviso('loading');
-        },
+        beforeSend: () => aviso('loading'),
       }).done(function (data) {
         aviso(data);
-        $("tr[data-id=" + id + "]").hide();
+        $(`tr[data-id=${id}]`).hide();
+      });
+    }
+  });
+
+  /* --------- EDITAR/RENOVAR FISIOTERAPEUTA ---------- */
+
+  $("#table_fisioterapeutas_desabilitados").on("click", ".renew", function () {
+    id = $(this).attr("data-renew");
+
+    if (window.confirm(`Deseja habilitar ${$(this).attr("data-confirm")}?`)) {
+      $.ajax({
+        url: `/api/v1/fisioterapeuta/${id}`,
+        method: "PUT",
+        beforeSend: () => aviso('loading'),
+      }).done(function (data) {
+        aviso(data);
+        $(`tr[data-id=${id}]`).hide();
       });
     }
   });
@@ -173,7 +176,7 @@ $(document).ready(function () {
     }
   });
 
-  /* --------- RENOVAR PACIENTE ---------- */
+  /* --------- EDITAR/RENOVAR PACIENTE ---------- */
 
   $("#table_pacientes_desabilitados").on("click", ".renew", function () {
     id = $(this).attr("data-renew");
