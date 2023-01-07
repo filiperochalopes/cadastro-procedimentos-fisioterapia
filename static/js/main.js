@@ -114,11 +114,7 @@ $(document).ready(function () {
       method: "POST",
       data: { nome: nome },
       beforeSend: function (xhr) {
-        aviso({
-          mensagem:
-            "<div class='spinner'><i class='fas fa-spinner'></i></div> Carregando...",
-          class: "yellow",
-        });
+        aviso('loading');
       },
     }).done(function (data) {
       console.log(data);
@@ -150,11 +146,7 @@ $(document).ready(function () {
         method: "DELETE",
         data: { id: id },
         beforeSend: function (xhr) {
-          aviso({
-            mensagem:
-              "<div class='spinner'><i class='fas fa-spinner'></i></div> Carregando...",
-            class: "yellow",
-          });
+          aviso('loading');
         },
       }).done(function (data) {
         aviso(data);
@@ -169,20 +161,32 @@ $(document).ready(function () {
     id = $(this).attr("data-del");
     confirm_str = $(this).attr("data-confirm");
 
-    if (window.confirm("Deseja realmente excluir " + confirm_str + "?")) {
+    if (window.confirm("Deseja realmente desabilitar " + confirm_str + "?")) {
       $.ajax({
         url: `/api/v1/paciente/${id}`,
         method: "DELETE",
-        beforeSend: function (xhr) {
-          aviso({
-            mensagem:
-              "<div class='spinner'><i class='fas fa-spinner'></i></div> Carregando...",
-            class: "yellow",
-          });
-        },
+        beforeSend: () => aviso('loading'),
       }).done(function (data) {
-        aviso(data.msg);
-        $("tr[data-id=" + id + "]").hide();
+        aviso(data);
+        $(`tr[data-id=${id}]`).hide();
+      });
+    }
+  });
+
+  /* --------- RENOVAR PACIENTE ---------- */
+
+  $("#table_pacientes_desabilitados").on("click", ".renew", function () {
+    id = $(this).attr("data-renew");
+    confirm_str = $(this).attr("data-confirm");
+
+    if (window.confirm("Deseja habilitar " + confirm_str + "?")) {
+      $.ajax({
+        url: `/api/v1/paciente/${id}`,
+        method: "PUT",
+        beforeSend: () => aviso('loading'),
+      }).done(function (data) {
+        aviso(data);
+        $(`tr[data-id=${id}]`).hide();
       });
     }
   });
@@ -200,11 +204,7 @@ $(document).ready(function () {
         method: "POST",
         data: $("#form_registro").serialize(),
         beforeSend: function (xhr) {
-          aviso({
-            mensagem:
-              "<div class='spinner'><i class='fas fa-spinner'></i></div> Carregando...",
-            class: "yellow",
-          });
+          aviso('loading');
         },
       }).done(function (data) {
         aviso(data);
@@ -383,9 +383,15 @@ function aviso(props, long = false) {
     clearTimeout(timeaviso);
   }
 
-  props = typeof props == "object" ? props : JSON.parse(props);
-  color = props.class || "grey";
-  mensagem = props.mensagem || "Aguarde um momento.";
+  if(props == 'loading'){
+    mensagem = "<div class='spinner'><i class='fas fa-spinner'></i></div> Carregando..."
+    color = 'yellow';
+  }else{
+    props = typeof props == "object" ? props : JSON.parse(props);
+    color = props.class || "grey";
+    mensagem = props.mensagem || "Aguarde um momento.";
+  }
+
 
   $("#aviso").removeClass("red green yellow grey");
   $("#aviso").addClass(color).find("div").html(mensagem);

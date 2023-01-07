@@ -7,7 +7,7 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 
 require_once __DIR__ . '/../../../config/env.php';
 
-$app->get($baseUrlV1 . '/paciente', function (Request $request, Response $response, array $args) {
+$app->get($baseUrlV1 . '/paciente', function (Request $request, Response $response) {
 
     $q = $request->getQueryParams()['q'];
 
@@ -27,11 +27,31 @@ $app->get($baseUrlV1 . '/paciente', function (Request $request, Response $respon
             ->withStatus(201);
 });
 
-$app->delete($baseUrlV1 . '/paciente/:id', function (Request $request, Response $response, int $id) {
+$app->delete($baseUrlV1 . '/paciente/{id}', function (Request $request, Response $response, array $args) {
+
+    $paciente = PacienteQuery::create()->findOneById($args['id']);
+    $paciente->setDesabilitado(1);
+    $paciente->save();
 
     $response->getBody()->write(json_encode(array(
-        "mensagem" => "Um paciente não pode ser excluído. Id {$id}",
-        "class" => "red"
+        "mensagem" => "Paciente {$args['id']} desabilitado com sucesso. Atualize a página.",
+        "class" => "green"
+    )));
+
+    return $response
+            ->withHeader('Content-Type', 'application/json')
+            ->withStatus(201);
+});
+
+$app->put($baseUrlV1 . '/paciente/{id}', function (Request $request, Response $response, array $args) {
+
+    $paciente = PacienteQuery::create()->findOneById($args['id']);
+    $paciente->setDesabilitado(0);
+    $paciente->save();
+
+    $response->getBody()->write(json_encode(array(
+        "mensagem" => "O paciente {$args['id']} foi recuperado com sucesso. Atualize a página.",
+        "class" => "green"
     )));
 
     return $response

@@ -23,5 +23,9 @@ table{
         &.del{
             color: $red;
         }
+
+        &.renew{
+            color: $secundary_color;
+        }
     }
 }

@@ -21,6 +21,10 @@
     <column name="atleta" phpName="Atleta" type="BOOLEAN"/>
     <column name="atleta_modalidade" phpName="Modalidade" type="VARCHAR" size="50"/>
     <column name="outra_modalidade" phpName="OutraModalidade" type="VARCHAR" size="50"/>
+    <column name="disabled" phpName="Desabilitado" type="BOOLEAN" defaultValue="0" required="true"/>
+    <unique name="IndexUniqueNome">
+      <unique-column name="nome" size="150" />
+    </unique>
     <vendor type="mysql">
       <parameter name="Engine" value="InnoDB"/>
     </vendor>

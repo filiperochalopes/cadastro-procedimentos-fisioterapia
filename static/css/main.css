@@ -77,6 +77,9 @@ table button {
 table button.del {
   color: #bd3131;
 }
+table button.renew {
+  color: #2eb682;
+}
 
 .condicional {
   transition: 0.5s all;
@@ -357,6 +360,19 @@ footer {
   font-size: 0.9em;
   opacity: 0.5;
   margin: 20px;
+}
+
+span.btn {
+  border-width: 4px;
+  background-color: #c7c7c7;
+  border-color: #d9d9d9;
+  border-style: outset;
+  padding: 0 6px;
+  border-radius: 7px;
+}
+
+.pre {
+  font-family: "Courier New", Courier, monospace;
 }
 
 /* ---------- AVISO ---------- */

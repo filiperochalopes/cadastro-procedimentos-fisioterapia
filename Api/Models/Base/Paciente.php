@@ -151,6 +151,14 @@ abstract class Paciente implements ActiveRecordInterface
     protected $outra_modalidade;
 
     /**
+     * The value for the disabled field.
+     *
+     * Note: this column has a database default value of: false
+     * @var        boolean
+     */
+    protected $disabled;
+
+    /**
      * @var        ObjectCollection|ChildRegistro[] Collection to store aggregation of ChildRegistro objects.
      * @phpstan-var ObjectCollection&\Traversable<ChildRegistro> Collection to store aggregation of ChildRegistro objects.
      */
@@ -173,10 +181,23 @@ abstract class Paciente implements ActiveRecordInterface
     protected $registrosScheduledForDeletion = null;
 
     /**
+     * Applies default values to this object.
+     * This method should be called from the object's constructor (or
+     * equivalent initialization method).
+     * @see __construct()
+     */
+    public function applyDefaultValues(): void
+    {
+        $this->disabled = false;
+    }
+
+    /**
      * Initializes internal state of Api\Models\Base\Paciente object.
+     * @see applyDefaults()
      */
     public function __construct()
     {
+        $this->applyDefaultValues();
     }
 
     /**
@@ -529,6 +550,26 @@ abstract class Paciente implements ActiveRecordInterface
     }
 
     /**
+     * Get the [disabled] column value.
+     *
+     * @return boolean
+     */
+    public function getDesabilitado()
+    {
+        return $this->disabled;
+    }
+
+    /**
+     * Get the [disabled] column value.
+     *
+     * @return boolean
+     */
+    public function isDesabilitado()
+    {
+        return $this->getDesabilitado();
+    }
+
+    /**
      * Set the value of [id] column.
      *
      * @param int $v New value
@@ -777,6 +818,34 @@ abstract class Paciente implements ActiveRecordInterface
     }
 
     /**
+     * Sets the value of the [disabled] column.
+     * Non-boolean arguments are converted using the following rules:
+     *   * 1, '1', 'true',  'on',  and 'yes' are converted to boolean true
+     *   * 0, '0', 'false', 'off', and 'no'  are converted to boolean false
+     * Check on string values is case insensitive (so 'FaLsE' is seen as 'false').
+     *
+     * @param bool|integer|string $v The new value
+     * @return $this The current object (for fluent API support)
+     */
+    public function setDesabilitado($v)
+    {
+        if ($v !== null) {
+            if (is_string($v)) {
+                $v = in_array(strtolower($v), array('false', 'off', '-', 'no', 'n', '0', '')) ? false : true;
+            } else {
+                $v = (boolean) $v;
+            }
+        }
+
+        if ($this->disabled !== $v) {
+            $this->disabled = $v;
+            $this->modifiedColumns[PacienteTableMap::COL_DISABLED] = true;
+        }
+
+        return $this;
+    }
+
+    /**
      * Indicates whether the columns in this object are only set to default values.
      *
      * This method can be used in conjunction with isModified() to indicate whether an object is both
@@ -786,6 +855,10 @@ abstract class Paciente implements ActiveRecordInterface
      */
     public function hasOnlyDefaultValues(): bool
     {
+            if ($this->disabled !== false) {
+                return false;
+            }
+
         // otherwise, everything was equal, so return TRUE
         return true;
     }
@@ -847,6 +920,9 @@ abstract class Paciente implements ActiveRecordInterface
 
             $col = $row[TableMap::TYPE_NUM == $indexType ? 11 + $startcol : PacienteTableMap::translateFieldName('OutraModalidade', TableMap::TYPE_PHPNAME, $indexType)];
             $this->outra_modalidade = (null !== $col) ? (string) $col : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 12 + $startcol : PacienteTableMap::translateFieldName('Desabilitado', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->disabled = (null !== $col) ? (boolean) $col : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -855,7 +931,7 @@ abstract class Paciente implements ActiveRecordInterface
                 $this->ensureConsistency();
             }
 
-            return $startcol + 12; // 12 = PacienteTableMap::NUM_HYDRATE_COLUMNS.
+            return $startcol + 13; // 13 = PacienteTableMap::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException(sprintf('Error populating %s object', '\\Api\\Models\\Paciente'), 0, $e);
@@ -1113,6 +1189,9 @@ abstract class Paciente implements ActiveRecordInterface
         if ($this->isColumnModified(PacienteTableMap::COL_OUTRA_MODALIDADE)) {
             $modifiedColumns[':p' . $index++]  = 'outra_modalidade';
         }
+        if ($this->isColumnModified(PacienteTableMap::COL_DISABLED)) {
+            $modifiedColumns[':p' . $index++]  = 'disabled';
+        }
 
         $sql = sprintf(
             'INSERT INTO pacientes (%s) VALUES (%s)',
@@ -1159,6 +1238,9 @@ abstract class Paciente implements ActiveRecordInterface
                         break;
                     case 'outra_modalidade':
                         $stmt->bindValue($identifier, $this->outra_modalidade, PDO::PARAM_STR);
+                        break;
+                    case 'disabled':
+                        $stmt->bindValue($identifier, (int) $this->disabled, PDO::PARAM_INT);
                         break;
                 }
             }
@@ -1258,6 +1340,9 @@ abstract class Paciente implements ActiveRecordInterface
             case 11:
                 return $this->getOutraModalidade();
 
+            case 12:
+                return $this->getDesabilitado();
+
             default:
                 return null;
         } // switch()
@@ -1298,6 +1383,7 @@ abstract class Paciente implements ActiveRecordInterface
             $keys[9] => $this->getAtleta(),
             $keys[10] => $this->getModalidade(),
             $keys[11] => $this->getOutraModalidade(),
+            $keys[12] => $this->getDesabilitado(),
         ];
         $virtualColumns = $this->virtualColumns;
         foreach ($virtualColumns as $key => $virtualColumn) {
@@ -1392,6 +1478,9 @@ abstract class Paciente implements ActiveRecordInterface
             case 11:
                 $this->setOutraModalidade($value);
                 break;
+            case 12:
+                $this->setDesabilitado($value);
+                break;
         } // switch()
 
         return $this;
@@ -1453,6 +1542,9 @@ abstract class Paciente implements ActiveRecordInterface
         }
         if (array_key_exists($keys[11], $arr)) {
             $this->setOutraModalidade($arr[$keys[11]]);
+        }
+        if (array_key_exists($keys[12], $arr)) {
+            $this->setDesabilitado($arr[$keys[12]]);
         }
 
         return $this;
@@ -1532,6 +1624,9 @@ abstract class Paciente implements ActiveRecordInterface
         }
         if ($this->isColumnModified(PacienteTableMap::COL_OUTRA_MODALIDADE)) {
             $criteria->add(PacienteTableMap::COL_OUTRA_MODALIDADE, $this->outra_modalidade);
+        }
+        if ($this->isColumnModified(PacienteTableMap::COL_DISABLED)) {
+            $criteria->add(PacienteTableMap::COL_DISABLED, $this->disabled);
         }
 
         return $criteria;
@@ -1632,6 +1727,7 @@ abstract class Paciente implements ActiveRecordInterface
         $copyObj->setAtleta($this->getAtleta());
         $copyObj->setModalidade($this->getModalidade());
         $copyObj->setOutraModalidade($this->getOutraModalidade());
+        $copyObj->setDesabilitado($this->getDesabilitado());
 
         if ($deepCopy) {
             // important: temporarily setNew(false) because this affects the behavior of
@@ -1977,8 +2073,10 @@ abstract class Paciente implements ActiveRecordInterface
         $this->atleta = null;
         $this->atleta_modalidade = null;
         $this->outra_modalidade = null;
+        $this->disabled = null;
         $this->alreadyInSave = false;
         $this->clearAllReferences();
+        $this->applyDefaultValues();
         $this->resetModified();
         $this->setNew(true);
         $this->setDeleted(false);

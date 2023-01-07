@@ -33,6 +33,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildPacienteQuery orderByAtleta($order = Criteria::ASC) Order by the atleta column
  * @method     ChildPacienteQuery orderByModalidade($order = Criteria::ASC) Order by the atleta_modalidade column
  * @method     ChildPacienteQuery orderByOutraModalidade($order = Criteria::ASC) Order by the outra_modalidade column
+ * @method     ChildPacienteQuery orderByDesabilitado($order = Criteria::ASC) Order by the disabled column
  *
  * @method     ChildPacienteQuery groupById() Group by the id column
  * @method     ChildPacienteQuery groupByNome() Group by the nome column
@@ -46,6 +47,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildPacienteQuery groupByAtleta() Group by the atleta column
  * @method     ChildPacienteQuery groupByModalidade() Group by the atleta_modalidade column
  * @method     ChildPacienteQuery groupByOutraModalidade() Group by the outra_modalidade column
+ * @method     ChildPacienteQuery groupByDesabilitado() Group by the disabled column
  *
  * @method     ChildPacienteQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
  * @method     ChildPacienteQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
@@ -81,7 +83,8 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildPaciente|null findOneByCorpoQuadro(string $corpo_quadro) Return the first ChildPaciente filtered by the corpo_quadro column
  * @method     ChildPaciente|null findOneByAtleta(boolean $atleta) Return the first ChildPaciente filtered by the atleta column
  * @method     ChildPaciente|null findOneByModalidade(string $atleta_modalidade) Return the first ChildPaciente filtered by the atleta_modalidade column
- * @method     ChildPaciente|null findOneByOutraModalidade(string $outra_modalidade) Return the first ChildPaciente filtered by the outra_modalidade column *
+ * @method     ChildPaciente|null findOneByOutraModalidade(string $outra_modalidade) Return the first ChildPaciente filtered by the outra_modalidade column
+ * @method     ChildPaciente|null findOneByDesabilitado(boolean $disabled) Return the first ChildPaciente filtered by the disabled column *
 
  * @method     ChildPaciente requirePk($key, ?ConnectionInterface $con = null) Return the ChildPaciente by primary key and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildPaciente requireOne(?ConnectionInterface $con = null) Return the first ChildPaciente matching the query and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
@@ -98,6 +101,7 @@ use Propel\Runtime\Exception\PropelException;
  * @method     ChildPaciente requireOneByAtleta(boolean $atleta) Return the first ChildPaciente filtered by the atleta column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildPaciente requireOneByModalidade(string $atleta_modalidade) Return the first ChildPaciente filtered by the atleta_modalidade column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  * @method     ChildPaciente requireOneByOutraModalidade(string $outra_modalidade) Return the first ChildPaciente filtered by the outra_modalidade column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
+ * @method     ChildPaciente requireOneByDesabilitado(boolean $disabled) Return the first ChildPaciente filtered by the disabled column and throws \Propel\Runtime\Exception\EntityNotFoundException when not found
  *
  * @method     ChildPaciente[]|Collection find(?ConnectionInterface $con = null) Return ChildPaciente objects based on current ModelCriteria
  * @psalm-method Collection&\Traversable<ChildPaciente> find(?ConnectionInterface $con = null) Return ChildPaciente objects based on current ModelCriteria
@@ -125,6 +129,8 @@ use Propel\Runtime\Exception\PropelException;
  * @psalm-method Collection&\Traversable<ChildPaciente> findByModalidade(string $atleta_modalidade) Return ChildPaciente objects filtered by the atleta_modalidade column
  * @method     ChildPaciente[]|Collection findByOutraModalidade(string $outra_modalidade) Return ChildPaciente objects filtered by the outra_modalidade column
  * @psalm-method Collection&\Traversable<ChildPaciente> findByOutraModalidade(string $outra_modalidade) Return ChildPaciente objects filtered by the outra_modalidade column
+ * @method     ChildPaciente[]|Collection findByDesabilitado(boolean $disabled) Return ChildPaciente objects filtered by the disabled column
+ * @psalm-method Collection&\Traversable<ChildPaciente> findByDesabilitado(boolean $disabled) Return ChildPaciente objects filtered by the disabled column
  * @method     ChildPaciente[]|\Propel\Runtime\Util\PropelModelPager paginate($page = 1, $maxPerPage = 10, ?ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
  * @psalm-method \Propel\Runtime\Util\PropelModelPager&\Traversable<ChildPaciente> paginate($page = 1, $maxPerPage = 10, ?ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
  *
@@ -224,7 +230,7 @@ abstract class PacienteQuery extends ModelCriteria
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT id, nome, situacao_administ, posto_graduacao, nip_paciente, nip_titular, cpf_titular, origem, corpo_quadro, atleta, atleta_modalidade, outra_modalidade FROM pacientes WHERE id = :p0';
+        $sql = 'SELECT id, nome, situacao_administ, posto_graduacao, nip_paciente, nip_titular, cpf_titular, origem, corpo_quadro, atleta, atleta_modalidade, outra_modalidade, disabled FROM pacientes WHERE id = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -666,6 +672,35 @@ abstract class PacienteQuery extends ModelCriteria
         }
 
         $this->addUsingAlias(PacienteTableMap::COL_OUTRA_MODALIDADE, $outraModalidade, $comparison);
+
+        return $this;
+    }
+
+    /**
+     * Filter the query on the disabled column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByDesabilitado(true); // WHERE disabled = true
+     * $query->filterByDesabilitado('yes'); // WHERE disabled = true
+     * </code>
+     *
+     * @param bool|string $desabilitado The value to use as filter.
+     *              Non-boolean arguments are converted using the following rules:
+     *                * 1, '1', 'true',  'on',  and 'yes' are converted to boolean true
+     *                * 0, '0', 'false', 'off', and 'no'  are converted to boolean false
+     *              Check on string values is case insensitive (so 'FaLsE' is seen as 'false').
+     * @param string|null $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return $this The current query, for fluid interface
+     */
+    public function filterByDesabilitado($desabilitado = null, ?string $comparison = null)
+    {
+        if (is_string($desabilitado)) {
+            $desabilitado = in_array(strtolower($desabilitado), array('false', 'off', '-', 'no', 'n', '0', '')) ? false : true;
+        }
+
+        $this->addUsingAlias(PacienteTableMap::COL_DISABLED, $desabilitado, $comparison);
 
         return $this;
     }

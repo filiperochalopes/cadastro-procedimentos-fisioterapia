@@ -58,7 +58,7 @@ class PacienteTableMap extends TableMap
     /**
      * The total number of columns
      */
-    public const NUM_COLUMNS = 12;
+    public const NUM_COLUMNS = 13;
 
     /**
      * The number of lazy-loaded columns
@@ -68,7 +68,7 @@ class PacienteTableMap extends TableMap
     /**
      * The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS)
      */
-    public const NUM_HYDRATE_COLUMNS = 12;
+    public const NUM_HYDRATE_COLUMNS = 13;
 
     /**
      * the column name for the id field
@@ -131,6 +131,11 @@ class PacienteTableMap extends TableMap
     public const COL_OUTRA_MODALIDADE = 'pacientes.outra_modalidade';
 
     /**
+     * the column name for the disabled field
+     */
+    public const COL_DISABLED = 'pacientes.disabled';
+
+    /**
      * The default string format for model objects of the related table
      */
     public const DEFAULT_STRING_FORMAT = 'YAML';
@@ -144,11 +149,11 @@ class PacienteTableMap extends TableMap
      * @var array<string, mixed>
      */
     protected static $fieldNames = [
-        self::TYPE_PHPNAME       => ['Id', 'Nome', 'SituacaoAdmistrativa', 'PostoGraduacao', 'Nip', 'NipTitular', 'CpfTitular', 'Origem', 'CorpoQuadro', 'Atleta', 'Modalidade', 'OutraModalidade', ],
-        self::TYPE_CAMELNAME     => ['id', 'nome', 'situacaoAdmistrativa', 'postoGraduacao', 'nip', 'nipTitular', 'cpfTitular', 'origem', 'corpoQuadro', 'atleta', 'modalidade', 'outraModalidade', ],
-        self::TYPE_COLNAME       => [PacienteTableMap::COL_ID, PacienteTableMap::COL_NOME, PacienteTableMap::COL_SITUACAO_ADMINIST, PacienteTableMap::COL_POSTO_GRADUACAO, PacienteTableMap::COL_NIP_PACIENTE, PacienteTableMap::COL_NIP_TITULAR, PacienteTableMap::COL_CPF_TITULAR, PacienteTableMap::COL_ORIGEM, PacienteTableMap::COL_CORPO_QUADRO, PacienteTableMap::COL_ATLETA, PacienteTableMap::COL_ATLETA_MODALIDADE, PacienteTableMap::COL_OUTRA_MODALIDADE, ],
-        self::TYPE_FIELDNAME     => ['id', 'nome', 'situacao_administ', 'posto_graduacao', 'nip_paciente', 'nip_titular', 'cpf_titular', 'origem', 'corpo_quadro', 'atleta', 'atleta_modalidade', 'outra_modalidade', ],
-        self::TYPE_NUM           => [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, ]
+        self::TYPE_PHPNAME       => ['Id', 'Nome', 'SituacaoAdmistrativa', 'PostoGraduacao', 'Nip', 'NipTitular', 'CpfTitular', 'Origem', 'CorpoQuadro', 'Atleta', 'Modalidade', 'OutraModalidade', 'Desabilitado', ],
+        self::TYPE_CAMELNAME     => ['id', 'nome', 'situacaoAdmistrativa', 'postoGraduacao', 'nip', 'nipTitular', 'cpfTitular', 'origem', 'corpoQuadro', 'atleta', 'modalidade', 'outraModalidade', 'desabilitado', ],
+        self::TYPE_COLNAME       => [PacienteTableMap::COL_ID, PacienteTableMap::COL_NOME, PacienteTableMap::COL_SITUACAO_ADMINIST, PacienteTableMap::COL_POSTO_GRADUACAO, PacienteTableMap::COL_NIP_PACIENTE, PacienteTableMap::COL_NIP_TITULAR, PacienteTableMap::COL_CPF_TITULAR, PacienteTableMap::COL_ORIGEM, PacienteTableMap::COL_CORPO_QUADRO, PacienteTableMap::COL_ATLETA, PacienteTableMap::COL_ATLETA_MODALIDADE, PacienteTableMap::COL_OUTRA_MODALIDADE, PacienteTableMap::COL_DISABLED, ],
+        self::TYPE_FIELDNAME     => ['id', 'nome', 'situacao_administ', 'posto_graduacao', 'nip_paciente', 'nip_titular', 'cpf_titular', 'origem', 'corpo_quadro', 'atleta', 'atleta_modalidade', 'outra_modalidade', 'disabled', ],
+        self::TYPE_NUM           => [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, ]
     ];
 
     /**
@@ -160,11 +165,11 @@ class PacienteTableMap extends TableMap
      * @var array<string, mixed>
      */
     protected static $fieldKeys = [
-        self::TYPE_PHPNAME       => ['Id' => 0, 'Nome' => 1, 'SituacaoAdmistrativa' => 2, 'PostoGraduacao' => 3, 'Nip' => 4, 'NipTitular' => 5, 'CpfTitular' => 6, 'Origem' => 7, 'CorpoQuadro' => 8, 'Atleta' => 9, 'Modalidade' => 10, 'OutraModalidade' => 11, ],
-        self::TYPE_CAMELNAME     => ['id' => 0, 'nome' => 1, 'situacaoAdmistrativa' => 2, 'postoGraduacao' => 3, 'nip' => 4, 'nipTitular' => 5, 'cpfTitular' => 6, 'origem' => 7, 'corpoQuadro' => 8, 'atleta' => 9, 'modalidade' => 10, 'outraModalidade' => 11, ],
-        self::TYPE_COLNAME       => [PacienteTableMap::COL_ID => 0, PacienteTableMap::COL_NOME => 1, PacienteTableMap::COL_SITUACAO_ADMINIST => 2, PacienteTableMap::COL_POSTO_GRADUACAO => 3, PacienteTableMap::COL_NIP_PACIENTE => 4, PacienteTableMap::COL_NIP_TITULAR => 5, PacienteTableMap::COL_CPF_TITULAR => 6, PacienteTableMap::COL_ORIGEM => 7, PacienteTableMap::COL_CORPO_QUADRO => 8, PacienteTableMap::COL_ATLETA => 9, PacienteTableMap::COL_ATLETA_MODALIDADE => 10, PacienteTableMap::COL_OUTRA_MODALIDADE => 11, ],
-        self::TYPE_FIELDNAME     => ['id' => 0, 'nome' => 1, 'situacao_administ' => 2, 'posto_graduacao' => 3, 'nip_paciente' => 4, 'nip_titular' => 5, 'cpf_titular' => 6, 'origem' => 7, 'corpo_quadro' => 8, 'atleta' => 9, 'atleta_modalidade' => 10, 'outra_modalidade' => 11, ],
-        self::TYPE_NUM           => [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, ]
+        self::TYPE_PHPNAME       => ['Id' => 0, 'Nome' => 1, 'SituacaoAdmistrativa' => 2, 'PostoGraduacao' => 3, 'Nip' => 4, 'NipTitular' => 5, 'CpfTitular' => 6, 'Origem' => 7, 'CorpoQuadro' => 8, 'Atleta' => 9, 'Modalidade' => 10, 'OutraModalidade' => 11, 'Desabilitado' => 12, ],
+        self::TYPE_CAMELNAME     => ['id' => 0, 'nome' => 1, 'situacaoAdmistrativa' => 2, 'postoGraduacao' => 3, 'nip' => 4, 'nipTitular' => 5, 'cpfTitular' => 6, 'origem' => 7, 'corpoQuadro' => 8, 'atleta' => 9, 'modalidade' => 10, 'outraModalidade' => 11, 'desabilitado' => 12, ],
+        self::TYPE_COLNAME       => [PacienteTableMap::COL_ID => 0, PacienteTableMap::COL_NOME => 1, PacienteTableMap::COL_SITUACAO_ADMINIST => 2, PacienteTableMap::COL_POSTO_GRADUACAO => 3, PacienteTableMap::COL_NIP_PACIENTE => 4, PacienteTableMap::COL_NIP_TITULAR => 5, PacienteTableMap::COL_CPF_TITULAR => 6, PacienteTableMap::COL_ORIGEM => 7, PacienteTableMap::COL_CORPO_QUADRO => 8, PacienteTableMap::COL_ATLETA => 9, PacienteTableMap::COL_ATLETA_MODALIDADE => 10, PacienteTableMap::COL_OUTRA_MODALIDADE => 11, PacienteTableMap::COL_DISABLED => 12, ],
+        self::TYPE_FIELDNAME     => ['id' => 0, 'nome' => 1, 'situacao_administ' => 2, 'posto_graduacao' => 3, 'nip_paciente' => 4, 'nip_titular' => 5, 'cpf_titular' => 6, 'origem' => 7, 'corpo_quadro' => 8, 'atleta' => 9, 'atleta_modalidade' => 10, 'outra_modalidade' => 11, 'disabled' => 12, ],
+        self::TYPE_NUM           => [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, ]
     ];
 
     /**
@@ -265,6 +270,14 @@ class PacienteTableMap extends TableMap
         'COL_OUTRA_MODALIDADE' => 'OUTRA_MODALIDADE',
         'outra_modalidade' => 'OUTRA_MODALIDADE',
         'pacientes.outra_modalidade' => 'OUTRA_MODALIDADE',
+        'Desabilitado' => 'DISABLED',
+        'Paciente.Desabilitado' => 'DISABLED',
+        'desabilitado' => 'DISABLED',
+        'paciente.desabilitado' => 'DISABLED',
+        'PacienteTableMap::COL_DISABLED' => 'DISABLED',
+        'COL_DISABLED' => 'DISABLED',
+        'disabled' => 'DISABLED',
+        'pacientes.disabled' => 'DISABLED',
     ];
 
     /**
@@ -296,6 +309,7 @@ class PacienteTableMap extends TableMap
         $this->addColumn('atleta', 'Atleta', 'BOOLEAN', false, 1, null);
         $this->addColumn('atleta_modalidade', 'Modalidade', 'VARCHAR', false, 50, null);
         $this->addColumn('outra_modalidade', 'OutraModalidade', 'VARCHAR', false, 50, null);
+        $this->addColumn('disabled', 'Desabilitado', 'BOOLEAN', true, 1, false);
     }
 
     /**
@@ -468,6 +482,7 @@ class PacienteTableMap extends TableMap
             $criteria->addSelectColumn(PacienteTableMap::COL_ATLETA);
             $criteria->addSelectColumn(PacienteTableMap::COL_ATLETA_MODALIDADE);
             $criteria->addSelectColumn(PacienteTableMap::COL_OUTRA_MODALIDADE);
+            $criteria->addSelectColumn(PacienteTableMap::COL_DISABLED);
         } else {
             $criteria->addSelectColumn($alias . '.id');
             $criteria->addSelectColumn($alias . '.nome');
@@ -481,6 +496,7 @@ class PacienteTableMap extends TableMap
             $criteria->addSelectColumn($alias . '.atleta');
             $criteria->addSelectColumn($alias . '.atleta_modalidade');
             $criteria->addSelectColumn($alias . '.outra_modalidade');
+            $criteria->addSelectColumn($alias . '.disabled');
         }
     }
 
@@ -511,6 +527,7 @@ class PacienteTableMap extends TableMap
             $criteria->removeSelectColumn(PacienteTableMap::COL_ATLETA);
             $criteria->removeSelectColumn(PacienteTableMap::COL_ATLETA_MODALIDADE);
             $criteria->removeSelectColumn(PacienteTableMap::COL_OUTRA_MODALIDADE);
+            $criteria->removeSelectColumn(PacienteTableMap::COL_DISABLED);
         } else {
             $criteria->removeSelectColumn($alias . '.id');
             $criteria->removeSelectColumn($alias . '.nome');
@@ -524,6 +541,7 @@ class PacienteTableMap extends TableMap
             $criteria->removeSelectColumn($alias . '.atleta');
             $criteria->removeSelectColumn($alias . '.atleta_modalidade');
             $criteria->removeSelectColumn($alias . '.outra_modalidade');
+            $criteria->removeSelectColumn($alias . '.disabled');
         }
     }
 

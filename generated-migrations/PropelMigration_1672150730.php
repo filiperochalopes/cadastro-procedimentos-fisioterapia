@@ -64,6 +64,39 @@ class PropelMigration_1672150730
         $sql = "TRUNCATE TABLE registros;";
         $stmt = $pdo->prepare($sql);
         $stmt->execute();
+
+        echo "Removendo pacientes duplicados...\n";
+        // Armazenando ids que não serão excluídos
+        $sql = "SELECT id, nome, nip_paciente, cpf_titular, nip_titular, COUNT(*) AS count
+        FROM pacientes
+        GROUP BY nome, nip_paciente, cpf_titular, nip_titular 
+        HAVING COUNT(*) > 1;";
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute();
+        $resultset = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $whitelist_ids_comma_separated = '';
+
+        foreach ($resultset as $row) {
+            if($whitelist_ids_comma_separated != ''){ 
+                $whitelist_ids_comma_separated .= ','; 
+            }
+            $whitelist_ids_comma_separated .= strval($row['id']);
+        }
+
+        // Capturando todos os registros duplicados
+        $sql = "SELECT p1.id, p1.nome FROM pacientes p1 
+        INNER JOIN (SELECT id, nome, nip_paciente, cpf_titular, nip_titular, COUNT(*) AS count
+        FROM pacientes
+        GROUP BY nome, nip_paciente, cpf_titular, nip_titular
+        HAVING COUNT(*) > 1) p2
+        ON p1.nome = p2.nome;";
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute();
+        $resultset = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        foreach ($resultset as $row) {
+            $pdo->prepare("DELETE FROM pacientes WHERE id=? AND id NOT IN (".$whitelist_ids_comma_separated.");")->execute([$row['id']]);
+        }
     }
 
     public function postUp(MigrationManager $manager)
@@ -82,6 +115,19 @@ class PropelMigration_1672150730
                 VALUES (?, 1);";
             $stmt = $pdo->prepare($sql);
             $stmt->bindValue(1, $row['fisioterapeuta']);
+            $stmt->execute();
+        }
+
+        echo "Adicionando pacientes excluídos...\n";
+        $sql = "SELECT DISTINCT nome_paciente FROM tabela t LEFT JOIN pacientes p ON t.nome_paciente = p.nome WHERE p.nome IS NULL;";
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute();
+        $resultset = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        foreach ($resultset as $row) {
+            $sql = "INSERT INTO `pacientes` (nome, `disabled`) 
+                VALUES (?, 1);";
+            $stmt = $pdo->prepare($sql);
+            $stmt->bindValue(1, $row['nome_paciente']);
             $stmt->execute();
         }
 
@@ -188,7 +234,7 @@ class PropelMigration_1672150730
 SET FOREIGN_KEY_CHECKS = 0;
 ALTER TABLE `fisioterapeutas`
     CHANGE `fisioterapeuta` `nome` VARCHAR(150) NOT NULL,
-    ADD `disabled` TINYINT(1) DEFAULT 0 AFTER `nome`;
+    ADD `disabled` TINYINT(1) DEFAULT 0 NOT NULL AFTER `nome`;
 ALTER TABLE `pacientes`
     CHANGE `posto_graduacao` `posto_graduacao` VARCHAR(10),
     CHANGE `nip_paciente` `nip_paciente` VARCHAR(8),
@@ -199,10 +245,12 @@ ALTER TABLE `pacientes`
     CHANGE `outra_modalidade` `outra_modalidade` VARCHAR(50),
     CHANGE `situacao_adm` `situacao_administ` VARCHAR(30),
     CHANGE `corpoquadro` `corpo_quadro` VARCHAR(5),
-    CHANGE `modalidade` `atleta_modalidade` VARCHAR(50);
+    CHANGE `modalidade` `atleta_modalidade` VARCHAR(50),
+    ADD `disabled` TINYINT(1) DEFAULT 0 NOT NULL AFTER `outra_modalidade`;
+CREATE UNIQUE INDEX `IndexUniqueNome` ON `pacientes` (`nome`(150));
 ALTER TABLE `procedimentos`
     CHANGE `procedimento` `nome` VARCHAR(100) NOT NULL,
-    ADD `disabled` TINYINT(1) DEFAULT 0 AFTER `nome`;
+    ADD `disabled` TINYINT(1) DEFAULT 0 NOT NULL AFTER `nome`;
 ALTER TABLE `registros`
     DROP `paciente`,
     DROP `procedimentos`,
@@ -287,7 +335,9 @@ ALTER TABLE `pacientes`
   CHANGE `outra_modalidade` `outra_modalidade` VARCHAR(50) NOT NULL,
   CHANGE `situacao_administ` `situacao_adm` VARCHAR(30),
   CHANGE `corpo_quadro` `corpoquadro` VARCHAR(5) NOT NULL,
-  CHANGE `atleta_modalidade` `modalidade` VARCHAR(50) NOT NULL;
+  CHANGE `atleta_modalidade` `modalidade` VARCHAR(50) NOT NULL,
+  DROP `disabled`;
+DROP INDEX `IndexUniqueNome` ON `pacientes`;
 ALTER TABLE `procedimentos`
   CHANGE `nome` `procedimento` VARCHAR(100) NOT NULL,
   DROP `disabled`;
