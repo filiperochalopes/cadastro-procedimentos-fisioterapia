@@ -1,11 +1,11 @@
-version: "3.9"
+version: "3.3"
 services:
   app:
     container_name: fisiocefan_app
     restart: always
     build: .
     ports:
-      - "8080:80"
+      - "${APP_PORT}:80"
     volumes:
       - ".:/var/www/html"
     environment:
@@ -19,7 +19,7 @@ services:
     image: mariadb:10.9.4
     restart: always
     ports:
-      - "33306:3306"
+      - "${DB_PORT}:3306"
     volumes:
       - "./static/db:/docker-entrypoint-initdb.d"
       - "./data:/var/lib/mysql"
@@ -29,15 +29,11 @@ services:
       MARIADB_USER: ${DB_USER}
       MARIADB_PASSWORD: ${DB_PASS}
   pma:
-    image: phpmyadmin:5.2-fpm-alpine
+    image: phpmyadmin:5.2
     restart: always
     ports:
-      - 8080:80
+      - ${PMA_PORT}:80
     environment:
-      PMA_ARBITRARY: 1
-      PMA_USER: ${DB_USER}
-      PMA_PASSWORD: ${DB_PASS}
       PMA_HOST: 'db'
-      PMA_PORT: 3306
-      MYSQL_PASSWORD: ${DB_PASS}
-      MYSQL_ROOT_PASSWORD: ${DB_PASS}
+    depends_on:
+      - db
