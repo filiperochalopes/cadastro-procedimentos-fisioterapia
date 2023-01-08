@@ -4,6 +4,8 @@ use Api\Models\Paciente;
 use Api\Models\PacienteQuery;
 use Api\Models\ProcedimentoQuery;
 use Api\Models\Registro;
+use Api\Models\RegistroQuery;
+use Propel\Runtime\Propel;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
@@ -59,6 +61,65 @@ $app->post($baseUrlV1 . '/registro', function (Request $request, Response $respo
     
     $response->getBody()->write(json_encode(array(
         "mensagem" => "Registro cadastrado com sucesso!",
+        "class" => "green"
+    )));
+
+    return $response
+            ->withHeader('Content-Type', 'application/json')
+            ->withStatus(201);
+});
+
+
+$app->put($baseUrlV1 . '/registro/{id}', function (Request $request, Response $response, array $args) {
+    // TODO Com mais urgência proteger endpoint
+    
+    // print_r($args['id']);
+    
+    $d = $request->getParsedBody();
+
+    // print_r($d);
+
+    // Lidando com procedimentos
+    if(isset($d['Procedimentos']) and !empty($d['Procedimentos'])){
+        $registro = RegistroQuery::create()->findOneById($args['id']);
+
+        foreach($d['Procedimentos'] as $nome_procedimento){
+            if($nome_procedimento){
+                $procedimento = ProcedimentoQuery::create()->findOneByNome($nome_procedimento);
+                $registro->addProcedimento($procedimento);
+            }
+        }
+
+        $registro->save();
+    }
+
+    unset($d['Procedimentos']);
+
+    RegistroQuery::create()->filterById($args['id'])->update([...$d]);
+
+    $registro = RegistroQuery::create()->findOneById($args['id']);
+    
+    $response->getBody()->write(json_encode(array(
+        "mensagem" => "O registro {$registro->getId()} foi atualizado com sucesso. Atualize a página.",
+        "class" => "green"
+    )));
+
+    return $response
+            ->withHeader('Content-Type', 'application/json')
+            ->withStatus(201);
+});
+
+$app->delete($baseUrlV1 . '/registro/{id}', function (Request $request, Response $response, array $args) {
+    
+    // print($args['id']);
+
+    $pdo = Propel::getConnection();
+    $sql = "DELETE FROM registro_procedimento WHERE registro_id=?;
+    DELETE FROM registros WHERE id=?;";
+    $pdo->prepare($sql)->execute([$args['id'],$args['id']]);
+
+    $response->getBody()->write(json_encode(array(
+        "mensagem" => "O registro {$args['id']} removido com sucesso. Atualize a página.",
         "class" => "green"
     )));
 

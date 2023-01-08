@@ -289,7 +289,7 @@ DROP VIEW IF EXISTS powerbi;
 CREATE VIEW powerbi AS
 	SELECT r.id AS id, r.data, r.turno, pa.nome as paciente_nome, pa.situacao_administ, pa.posto_graduacao, pa.nip_paciente, pa.nip_titular, pa.cpf_titular, pa.origem, pa.corpo_quadro, IF(pa.atleta=1, 'Sim', 'Não') as atleta, pa.atleta_modalidade, pa.outra_modalidade, f.nome as fisioterapeuta_nome, r.tipo_atendimento, IF(r.comparecimento=1, 'Sim', 'Não') as comparecimento, r.tipo_falta, rpjoin.procedimentos, rpjoin.total_procedimentos
     FROM registros r  
-	INNER JOIN
+	LEFT JOIN
  		(SELECT GROUP_CONCAT(DISTINCT p.nome SEPARATOR ',') AS procedimentos, COUNT(DISTINCT p.nome) as total_procedimentos, rp.registro_id 
 		FROM procedimentos p 
 		INNER JOIN registro_procedimento rp 

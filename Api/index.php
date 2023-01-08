@@ -12,6 +12,8 @@ require_once __DIR__ . '/../config/env.php';
 
 $app = AppFactory::create();
 
+$app->addBodyParsingMiddleware();
+
 $app->get($baseUrlV1.'/hello/{name}', function (Request $request, Response $response, array $args) {
     $name = $args['name'];
     $response->getBody()->write("Hello, $name");

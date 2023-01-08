@@ -186,6 +186,8 @@ $(document).ready(function () {
       $.ajax({
         url: `/api/v1/paciente/${id}`,
         method: "PUT",
+        dataTType: "json",
+        data: { Desabilitado: false },
         beforeSend: () => aviso('loading'),
       }).done(function (data) {
         aviso(data);
@@ -213,6 +215,94 @@ $(document).ready(function () {
         aviso(data);
         resetForm();
       });
+    }
+  });
+
+  /* --------- INCONSISTÊNCIAS ---------- */
+
+  // TODO Avaliar uma forma de reduzir a repetição dos blocos
+
+  /* --------- 1. MILITARES SEM GRADUAÇÃO ---------- */
+
+  $("#lista_inconsistencias_militar").on("click", "button", async function () {
+    try {
+      aviso('loading')
+      const response = await axios.put(`/api/v1/paciente/${($(this).data('id')).split('-')[1]}`, {
+        PostoGraduacao: $(`#${$(this).data('id')}`).val()
+      });
+      aviso(response.data)
+    } catch (errors) {
+      console.error(errors);
+    }
+  });
+
+  /* --------- 2. ATLETAS SEM MODALIDADE ---------- */
+
+  $("#lista_inconsistencias_atleta").on("click", "button", async function () {
+    try {
+      aviso('loading')
+      const response = await axios.put(`/api/v1/paciente/${($(this).data('id')).split('-')[1]}`, {
+        Modalidade: $(`#${$(this).data('id')}`).val()
+      });
+      aviso(response.data)
+    } catch (errors) {
+      console.error(errors);
+    }
+  });
+
+  /* --------- 3. REGISTRO SEM TURNO ---------- */
+
+  $("#lista_inconsistencias_turno").on("click", "button", async function () {
+    try {
+      aviso('loading')
+      const response = await axios.put(`/api/v1/registro/${($(this).data('id')).split('-')[1]}`, {
+        Turno: $(`#${$(this).data('id')}`).val()
+      });
+      aviso(response.data)
+    } catch (errors) {
+      console.error(errors);
+    }
+  });
+
+  /* --------- 4. FALTAS SEM JUSTIFICATIVAS ---------- */
+
+  $("#lista_inconsistencias_falta").on("click", "button", async function () {
+    try {
+      aviso('loading')
+      const response = await axios.put(`/api/v1/registro/${($(this).data('id')).split('-')[1]}`, {
+        TipoFalta: $(`#${$(this).data('id')}`).val()
+      });
+      aviso(response.data)
+    } catch (errors) {
+      console.error(errors);
+    }
+  });
+
+  /* --------- 5. COMPARECIMENTO SEM PROCEDIMENTO ---------- */
+
+  $("#lista_inconsistencias_procedimento").on("click", "button", async function () {
+    try {
+      aviso('loading')
+      const response = await axios.put(`/api/v1/registro/${($(this).data('id')).split('-')[1]}`, {
+        Procedimentos: [
+          $(`#${$(this).data('id')}`).val()
+        ]
+      });
+      aviso(response.data)
+    } catch (errors) {
+      console.error(errors);
+    }
+  });
+
+  /* --------- 6. ATENDIMENTOS DUPLICADOS ---------- */
+
+  $("#lista_inconsistencias_duplicidade").on("click", "button", async function () {
+    try {
+      aviso('loading')
+      const response = await axios.delete(`/api/v1/registro/${($(this).data('id')).split('-')[1]}`);
+      aviso(response.data)
+    } catch (errors) {
+      console.error(errors);
     }
   });
 
@@ -349,12 +439,6 @@ $(document).ready(function () {
     $(".procedimento").change(function () {
       addProcedimento($(this).attr("id"));
     });
-  }
-
-  function pad(num, size) {
-    var s = num + "";
-    while (s.length < size) s = "0" + s;
-    return s;
   }
 
   /* --------- ENVIO DE FORMULÁRIO DE LOGIN ----------- */

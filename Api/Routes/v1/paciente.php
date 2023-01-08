@@ -44,13 +44,20 @@ $app->delete($baseUrlV1 . '/paciente/{id}', function (Request $request, Response
 });
 
 $app->put($baseUrlV1 . '/paciente/{id}', function (Request $request, Response $response, array $args) {
+    // TODO Com mais urgência proteger endpoint
+    
+    // print_r($args['id']);
+    
+    $d = $request->getParsedBody();
+
+    // print_r($d);
+
+    PacienteQuery::create()->filterById($args['id'])->update([...$d]);
 
     $paciente = PacienteQuery::create()->findOneById($args['id']);
-    $paciente->setDesabilitado(0);
-    $paciente->save();
-
+    
     $response->getBody()->write(json_encode(array(
-        "mensagem" => "O paciente {$paciente->getNome()} foi recuperado com sucesso. Atualize a página.",
+        "mensagem" => "O paciente {$paciente->getNome()} foi atualizado com sucesso. Atualize a página.",
         "class" => "green"
     )));
 
