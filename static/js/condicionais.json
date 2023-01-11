@@ -13,12 +13,13 @@
             "cpf_titular",
             "corpoquadro"
         ],
-        "Dependente Direto" : [
-            "nip_paciente",
+        "Militar Reserva" : [
+            "posto_graduacao",
             "nip_titular",
-            "cpf_titular"
+            "cpf_titular",
+            "corpoquadro"
         ],
-        "Dependente Indireto" : [
+        "Dependente" : [
             "nip_paciente",
             "nip_titular",
             "cpf_titular"

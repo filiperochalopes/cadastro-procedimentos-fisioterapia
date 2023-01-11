@@ -13,12 +13,12 @@ $militares_sem_graduacao = PacienteQuery::create()->filterBySituacaoAdmistrativa
 
 $atletas_sem_modalidade = PacienteQuery::create()->filterByAtleta(true)->filterByModalidade(array(null, ''))->find();
 
-$registros_sem_turno = RegistroQuery::create()->filterByTurno(array(null, ''))->filterByData('2021-01-01', Criteria::GREATER_EQUAL)->find();
+$registros_sem_turno = RegistroQuery::create()->filterByTurno(array(null, ''))->filterByData('2023-01-01', Criteria::GREATER_EQUAL)->find();
 
-$faltas_sem_justificativa = RegistroQuery::create()->filterByComparecimento(false)->filterByTipoFalta(array(null, ''))->filterByData('2021-01-01', Criteria::GREATER_EQUAL)->find();
+$faltas_sem_justificativa = RegistroQuery::create()->filterByComparecimento(false)->filterByTipoFalta(array(null, ''))->filterByData('2023-01-01', Criteria::GREATER_EQUAL)->find();
 
 $comparecimentos_sem_procedimento = array();
-$comparecimentos = RegistroQuery::create()->filterByComparecimento(true)->filterByData('2021-01-01', Criteria::GREATER_EQUAL)->find();
+$comparecimentos = RegistroQuery::create()->filterByComparecimento(true)->filterByData('2023-01-01', Criteria::GREATER_EQUAL)->find();
 foreach ($comparecimentos as $comparecimento) {
     // Verifica se existe algum registro com o id dele
     if(RegistroProcedimentoQuery::create()->filterByRegistroId($comparecimento->getId())->count() <= 0){
@@ -28,15 +28,15 @@ foreach ($comparecimentos as $comparecimento) {
 
 $procedimentos = ProcedimentoQuery::create()->find();
 
+$duplicidades_registro = array();
 $pdo = Propel::getConnection();
 $sql = "SELECT r1.paciente_id, r1.turno, r1.data, r1.comparecimento, r1.id FROM registros r1
 INNER JOIN (SELECT *, COUNT(*) as count FROM registros GROUP BY paciente_id, turno, `data`, fisioterapeuta_id HAVING count > 1) r2
 ON r1.data = r2.data AND r1.turno = r2.turno AND r1.paciente_id = r2.paciente_id AND r1.fisioterapeuta_id = r2.fisioterapeuta_id
-WHERE r1.data >= '2022-01-01';";
+WHERE r1.data >= '2021-01-01';";
 $stmt = $pdo->prepare($sql);
 $stmt->execute();
 $resultset = $stmt->fetchAll(PDO::FETCH_ASSOC);
-$duplicidades_registro = array();
 
 foreach($resultset as $row){
   $registro = RegistroQuery::create()->findOneById($row['id']);
