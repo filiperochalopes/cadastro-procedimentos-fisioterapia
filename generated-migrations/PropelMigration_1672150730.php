@@ -256,7 +256,7 @@ ALTER TABLE `registros`
     DROP `procedimentos`,
     ADD `fisioterapeuta_id` INTEGER AFTER `id`,
     ADD `paciente_id` INTEGER AFTER `fisioterapeuta_id`,
-    ADD `tipo_atendimento` VARCHAR(21) AFTER `paciente_id`,
+    ADD `tipo_atendimento` VARCHAR(25) AFTER `paciente_id`,
     ADD `comparecimento` TINYINT(1) AFTER `tipo_atendimento`,
     ADD `tipo_falta` VARCHAR(40) AFTER `comparecimento`;
 CREATE INDEX `registros_fi_00f1f7` ON `registros` (`fisioterapeuta_id`);

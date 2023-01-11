@@ -42,11 +42,17 @@
     <column name="id" phpName="Id" type="INTEGER" primaryKey="true" autoIncrement="true" required="true"/>
     <column name="fisioterapeuta_id" phpName="FisioterapeutaId" type="INTEGER"/>
     <column name="paciente_id" phpName="PacienteId" type="INTEGER"/>
-    <column name="tipo_atendimento" phpName="TipoAtendimento" type="VARCHAR" size="21"/>
+    <column name="tipo_atendimento" phpName="TipoAtendimento" type="VARCHAR" size="25"/>
     <column name="comparecimento" phpName="Comparecimento" type="BOOLEAN"/>
     <column name="tipo_falta" phpName="TipoFalta" type="VARCHAR" size="40"/>
     <column name="data" phpName="Data" type="DATE"/>
     <column name="turno" phpName="Turno" type="VARCHAR" size="5"/>
+    <unique name="IndexUniqueDataRegistro">
+      <unique-column name="fisioterapeuta_id" />
+      <unique-column name="paciente_id" />
+      <unique-column name="data" />
+      <unique-column name="turno" />
+    </unique>
     <foreign-key foreignTable="fisioterapeutas" phpName="Fisioterapeuta" refPhpName="Registro">
       <reference local="fisioterapeuta_id" foreign="id"/>
     </foreign-key>

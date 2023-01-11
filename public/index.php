@@ -25,10 +25,10 @@ echo $template->render([
         ],
     ],
     'tipo_atendimento_options' => [
-        "Individual", "Grupo de Hidroterapia", "Pilates", "Grupo de Hidroterapia", "Grupo de Educação em Dor", "Grupo de Dor Lombar"
+        "Individual", "Grupo"
     ],
     'situacao_administ_options' => [
-        "Militar da Ativa", "Militar Inativo", "Dependente Direto", "Dependente Indireto", "Pensionista", "Servidor Civil", "Não Cadastrado / Sem classificação"
+        "Militar da Ativa", "Militar Inativo", "Dependente", "Pensionista", "Servidor Civil", "Não Cadastrado / Sem classificação"
     ],
     'posto_graduacao_options' => [
         "AE", "VA", "CA", "CMG", "CF", "CC", "CT", "1T", "2T", "GM", "SO", "SG", "CB", "MN/SD"
