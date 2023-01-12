@@ -28,7 +28,7 @@ echo $template->render([
         "Individual", "Grupo"
     ],
     'situacao_administ_options' => [
-        "Militar da Ativa", "Militar Inativo", "Militar Reserva", "Dependente", "Pensionista", "Servidor Civil", "Não Cadastrado / Sem classificação"
+        "Militar da Ativa", "Militar Inativo", "Militar da Reserva", "Dependente", "Pensionista", "Servidor Civil", "Não Cadastrado / Sem classificação"
     ],
     'posto_graduacao_options' => [
         "AE", "VA", "CA", "CMG", "CF", "CC", "CT", "1T", "2T", "GM", "SO", "SG", "CB", "MN/SD"
