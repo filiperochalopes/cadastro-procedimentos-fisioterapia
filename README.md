@@ -9,6 +9,13 @@ Projeto de baixo custo para o serviço da Marinha do Brasil no Centro de Educaç
 
 Passou por uma refatoração de dados e de estrutura em código em 2023, adequando-se aos padrões mais atuais, todavia algumas implementações de banco de dados e regras normais não foram implementadas por combinado mútuo.
 
+### Ambiente de produção
+
+É neccessário editar as credenciais de acesso ao banco de dados diretamente em `propel.yml` e executar:
+```sh
+propel config:convert
+```
+
 ### Rodando docker em ambiente de desenvolvimento com banco de dados inicial
 
 1. Cole o backup do banco de dados em `/static/db/`
