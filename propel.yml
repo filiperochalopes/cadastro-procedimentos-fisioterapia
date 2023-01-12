@@ -3,7 +3,6 @@ propel:
         connections:
             default:
                 adapter: mysql
-                classname: Propel\Runtime\Connection\DebugPDO
                 dsn: mysql:host=db;port=3306;dbname=fisiocefan
                 user: thiago
                 password: securePass

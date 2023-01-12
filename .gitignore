@@ -4,3 +4,6 @@ note.txt
 static/db/*.sql
 data
 twigcache
+composer.lock
+php.ini
+error_log

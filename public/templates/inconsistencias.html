@@ -45,7 +45,7 @@
 <h3>Comparecimento sem procedimento</h3>
 <ul id="lista_inconsistencias_procedimento">
     {% for registro in comparecimentos_sem_procedimento %}
-    <li data-id="procedimento-{{registro.Id}}">{{registro.Data|date}} [{{registro.Turno}}] {{registro.TipoAtendimento}} ({{registro.Paciente.Nome}}) <select
+    <li data-id="procedimento-{{registro.Id}}">{{registro.Data|date}} [{{registro.Turno}}] {{registro.TipoAtendimento}} (Fisio: {{registro.Fisioterapeuta.Nome}} --> {{registro.Paciente.Nome}}) <select
             id="procedimento-{{registro.Id}}">
             <option value="" disabled selected>Selecione</option>
             {% for procedimento in procedimentos %}
