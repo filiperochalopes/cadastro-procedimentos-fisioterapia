@@ -7,3 +7,4 @@ twigcache
 composer.lock
 php.ini
 error_log
+propel.yml
