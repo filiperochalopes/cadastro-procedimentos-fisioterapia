@@ -1,0 +1,13 @@
+vendor
+note.txt
+.env
+static/db/*.sql
+data
+twigcache
+composer.lock
+php.ini
+error_log
+propel.yml
+propel.yml.dist
+generated-conf/config.php
+.user.ini

@@ -1,0 +1,23 @@
+propel:
+    database:
+        connections:
+            default:
+                adapter: mysql
+                dsn: mysql:host=db;port=3306;dbname=fisiocefan
+                user: thiago
+                password: securePass
+                settings:
+                    charset: utf8
+    runtime:
+        log:
+            defaultLogger:
+                type: stream
+                path: /var/log/propel.log
+                level: 300
+        defaultConnection: default
+        connections:
+            - default
+    generator:
+        defaultConnection: default
+        connections:
+            - default

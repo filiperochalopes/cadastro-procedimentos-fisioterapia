@@ -1,0 +1,59 @@
+{
+    "situacao_adm" : {
+        "Militar da Ativa" : [
+            "posto_graduacao",
+            "nip_titular",
+            "cpf_titular",
+            "corpoquadro",
+            "atleta"
+        ],
+        "Militar da Reserva" : [
+            "posto_graduacao",
+            "nip_titular",
+            "cpf_titular",
+            "corpoquadro"
+        ],
+        "Dependente" : [
+            "nip_paciente",
+            "nip_titular",
+            "cpf_titular"
+        ],
+        "Pensionista" : [
+            "nip_titular",
+            "cpf_titular"
+        ],
+        "Servidor Civil" : [
+            "nip_titular",
+            "cpf_titular"
+        ]
+    },
+
+    "atleta_sim" : {
+        "1" : [
+            "modalidade"
+        ]
+    },
+
+    "atleta_nao" : {
+        "0" : [
+        ]
+    },
+
+    "comparecimento_sim" : {
+        "1" : [
+            "procedimento_1"
+        ]
+    },
+
+    "comparecimento_nao" : {
+        "0" : [
+            "tipo_falta"
+        ]
+    },
+
+    "modalidade" : {
+        "Outra" : [
+            "outra_modalidade"
+        ]
+    }
+}

@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% block title %}Versões{% endblock %}
+{% block content %}
+<h1>ESTATÍSTICA DA FISIOTERAPIA DO CEFAN <span><i class="fas
+            fa-exclamation-triangle"></i> INCONSISTÊNCIAS</span></h1>
+<p>É importante destacar, que, por motivos de regras de negócio, são
+    consideradas inconsistências apenas os registros realizados com ano igual ou
+    superior a 2021</p>
+<h3>Militar sem Graduação</h3>
+<ul id="lista_inconsistencias_militar">
+    {% for militar in militares_sem_graduacao %}
+    <li data-id="militar-{{militar.Id}}">{{militar.Nome}} ({{militar.SituacaoAdmistrativa}}) <select
+            id="militar-{{militar.Id}}">
+            <option value="" disabled selected>Selecione</option>
+            {% for option in posto_graduacao_options %}
+            <option value="{{option}}">{{option}}</option>
+            {% endfor %}
+        </select> <button class="simple militar" data-id="militar-{{militar.Id}}"><i class="fas fa-long-arrow-alt-right"></i></button></li>
+    {% endfor %}
+</ul>
+<h3>Atleta sem Modalidade</h3>
+<ul id="lista_inconsistencias_atleta">
+    {% for atleta in atletas_sem_modalidade %}
+    <li data-id="atleta-{{atleta.Id}}">{{atleta.Nome}} <input type="text" id="atleta-{{atleta.Id}}" /> <button class="simple atleta" data-id="atleta-{{atleta.Id}}"><i class="fas fa-long-arrow-alt-right"></i></button></li>
+    {% endfor %}
+</ul>
+<h3>Registro sem Turno</h3>
+<ul id="lista_inconsistencias_turno">
+    {% for registro in registros_sem_turno %}
+    <li data-id="turno-{{registro.Id}}">{{registro.Data|date}} {{registro.TipoAtendimento}} (Fisio: {{registro.Fisioterapeuta.Nome}} --> {{registro.Paciente.Nome}}) <select
+            id="turno-{{registro.Id}}">
+            <option value="" disabled selected>Selecione</option>
+            {% for option in turnos_options %}
+            <option value="{{option}}">{{option}}</option>
+            {% endfor %}
+        </select> <button class="simple turno" data-id="turno-{{registro.Id}}"><i class="fas fa-long-arrow-alt-right"></i></button></li>
+    {% endfor %}
+</ul>
+<h3>Faltas sem justificativas</h3>
+<ul id="lista_inconsistencias_falta">
+    {% for registro in faltas_sem_justificativa %}
+    <li data-id="falta-{{registro.Id}}">{{registro.Data|date}} {{registro.TipoAtendimento}} ({{registro.Paciente.Nome}}) <input type="text" id="falta-{{registro.Id}}" /> <button class="simple falta" data-id="falta-{{registro.Id}}"><i class="fas fa-long-arrow-alt-right"></i></button></li>
+    {% endfor %}
+</ul>
+<h3>Comparecimento sem procedimento</h3>
+<ul id="lista_inconsistencias_procedimento">
+    {% for registro in comparecimentos_sem_procedimento %}
+    <li data-id="procedimento-{{registro.Id}}">{{registro.Data|date}} [{{registro.Turno}}] {{registro.TipoAtendimento}} (Fisio: {{registro.Fisioterapeuta.Nome}} --> {{registro.Paciente.Nome}}) <select
+            id="procedimento-{{registro.Id}}">
+            <option value="" disabled selected>Selecione</option>
+            {% for procedimento in procedimentos %}
+            <option value="{{procedimento.Nome}}">{{procedimento.Nome}}</option>
+            {% endfor %}
+        </select> <button class="simple procedimento" data-id="procedimento-{{registro.Id}}"><i class="fas fa-long-arrow-alt-right"></i></button></li>
+    {% endfor %}
+</ul>
+<h3>Dois antendimentos prestados na mesma data</h3>
+<p>Atendimento registrado como prestado pelo mesmo fisioterapeuta ao mesmo paciente no mesmo dia e turno. <strong>ATENÇÃO: Ao remover um dos itens não há como retroceder à ação! Avalie com cuidado e só clique em "Excluir" se tiver certeza!</strong></p>
+<ul id="lista_inconsistencias_duplicidade">
+    {% for registro in duplicidades_registro %}
+    <li data-id="duplicidade-{{registro.Id}}">({{registro.Id}}) {{registro.Data|date}} {{registro.Turno}} {{registro.TipoAtendimento}} {{registro.Comparecimento ? 'Compareceu' : 'Não Compareceu'}} (Fisio: {{registro.Fisioterapeuta.Nome}} --> {{registro.Paciente.Nome}}) <button class="simple duplicidade" data-id="duplicidade-{{registro.Id}}">Excluir</button></li>
+    {% endfor %}
+</ul>
+{% endblock content %}

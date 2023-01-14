@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        {% block head %} {% include "head.html" %} {% endblock head %}
+    </head>
+    <body>
+        {% include "aside.html" %}
+        {% include "header.html" %}
+        <div id="aviso">
+            <div></div>
+            <span class="close"><i class="far fa-times-circle"></i></span>
+        </div>
+        <main>
+            {% block content %}{% endblock %}
+        </main>
+        {% include "footer.html" %}
+    </body>
+</html>

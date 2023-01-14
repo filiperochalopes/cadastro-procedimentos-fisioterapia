@@ -1,0 +1,18 @@
+
+[
+    {
+        "name": "Roadmap (Próximas melhorias)",
+        "content": "- Criação de senha para cada fisioterapeuta\n - Continuidade no aprimoramento de estruturação de dados, para otimizar consistência de dados obedecendo regras normais: Pendente criação de relacionamento many-to-many para modalidades esportivas, e uso de ids para identificação de objetos de valor que hoje estão como strings \n- Criar funcionalidade de adicionar Objetos de Valor: Situação administrativa, Posto/Graduação, Origem, Corpo/Quadro, Modalidades de Atletas, Tipo de Atendimento, Tipo de Falta e Procedimentos utilizando [jtable](https://www.jtable.org/) ou semelhante. \n- Criar página para adicionar Procedimentos\n- Segurança de Rotas da API, as APIs de dados sensíveis GET não estão disponíveis, todavia é uma boa prática mantê-las o mais seguro possível\n- Criação de edição de paciente ao registrar novo registro\n- Introduzir Axios no frontend para melhorar o código em questão de legibilidade\n- Melhorar validação de nome de pacientes, por exemplo Giovani Júlio Lima está repetido por conta do acento. Maior limpeza de banco de dados.\n- Limpeza de script Js DRY\n- Criação de identidade visual para melhoria de compartilhamento de links pelo WhatsApp\n- Validação de formulário: Proibir data posterior à atual"
+    },
+    {
+        "name": "1.2.0",
+        "releaseDate": "2022-01-07",
+        "releaseDateHumanReadable": "07 de Janeiro de 2022",
+        "content": "Terceira atualização do sistema, porém o segundo registro\n- Remoção de mesmo dado repetido em mais de uma tabela\n- Reconstrução de tabela de análise por construção de `VIEW` mysql\n- Limpeza de dados, removendo duplicidade de relacionamentos e adicionando dados perdidos\n- Alteração de nomenclaturas mais pertinentes\n- Reconstrução de templates das páginas usando [Twig](https://twig.symfony.com/)\n- Reconstrução de buscas ao banco de dados. Agora com mais segurança e melhor manutenção com o uso do [Propel2](https://propelorm.org/)\n- Criação de API para UPINSERT de dados utilizando [Slim](https://www.slimframework.com/)\n- Adição de tela de alerta de inconsistências para avaliação e edição de tabela de registros e pacientes\n- Criação de tela de versões para acompanhamento das mesmas\n- Remoção de fisioterapeutas agora é lógica para poder manter retrocompatibilidade de registros com possibilidade de habilitar fisioterapeutas desabilitados (Pending)\n- Aviso de campo pendente de preenchimento em formulário principal para `inputs` tipo `radio`\n- Proibição de cadastro de mais de um paciente com o mesmo nome"
+    },
+    {
+        "name": "1.1.0",
+        "releaseDateHumanReadable": "Lançamento de 2019",
+        "content": "Versão visando custo efetividade para resolução de problema de cadastro condicional de procedimentos em banco de dados de pacientes em tratamento por equipe de fisioterapeutas do Centro de Educação Física (CEFAN) com funcionalidades iniciais:\n- Cadastro de atendimentos\n-Cadastro de fisioterapeutas\n- Exclusão de pacientes e fisioterapeutas"
+    }
+]

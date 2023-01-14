@@ -1,0 +1,19 @@
+{
+    "require": {
+        "propel/propel": "~2.0@beta",
+        "slim/slim": "4.*",
+        "slim/psr7": "^1.6",
+        "twig/twig": "^3.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Api\\": "Api"
+        }
+    },
+    "authors": [{
+        "name": "Filipe Lopes",
+        "email": "contato@filipelopes.me",
+        "homepage": "https://filipelopes.me",
+        "role": "Developer"
+    }]
+}

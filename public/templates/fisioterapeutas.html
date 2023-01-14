@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block title %}Versões{% endblock %}
+{% block content %}
+    <h1>ESTATÍSTICA DA FISIOTERAPIA DO CEFAN <span><i class="fas fa-user-nurse"></i> FISIOTERAPEUTAS</span></h1>
+    <section>
+        <h3><i class="fas fa-plus-circle"></i> Novo fisioterapeuta</h3>
+        <form>
+            <label for="nome">Nome <span>*</span></label>
+            <input type="text" id="nome" name="nome" placeholder="do fisioterapeuta" required/>
+            <button type="submit" id="adicionar_fisioterapeuta">Adicionar</button>
+        </form>
+    </section>
+    <h3><i class="fas fa-trash-alt"></i> Clique para desabilitar</h3>
+    <p>A partir da versão <a href="/versao#1.2.0" class="pre">1.2</a> não é possível excluir um elemento, eles são apenas desabilitados, ao <a href="#disabled">fim da página</a> será possível verificar e recuperar os itens desabilitados. Pressione <span class="btn">Ctrl + F</span> para pesquisar por um nome.</p>
+    <!-- Fisioterapeutas ativos -->
+    <table class="tablelist" id="table_fisioterapeutas">
+        <tbody>
+            {% for fisioterapeuta in fisioterapeutas_ativos %}
+            <tr data-id="{{fisioterapeuta.id}}"><td class="nome">{{fisioterapeuta.nome}}</td><td><button class="options-bt del static" data-del="{{fisioterapeuta.id}}" data-confirm="{{fisioterapeuta.nome}}"><i class="fas fa-trash-alt"></i></button></td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <h3><i class="fas fa-recycle"></i> Clique para Recuperar</h3>
+    <a name="disabled"></a>
+    <!-- Fisioterapeutas desabilitados -->
+    <table class="tablelist" id="table_fisioterapeutas_desabilitados">
+        <tbody>
+            {% for fisioterapeuta in fisioterapeutas_desabilitados %}
+            <tr data-id="{{fisioterapeuta.id}}"><td class="nome">{{fisioterapeuta.nome}}</td><td><button class="options-bt renew static" data-renew="{{fisioterapeuta.id}}" data-confirm="{{fisioterapeuta.nome}}"><i class="fas fa-recycle"></i></button></td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock content %}
+

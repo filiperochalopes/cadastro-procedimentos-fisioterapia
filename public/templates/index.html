@@ -1,0 +1,140 @@
+{% extends "base.html" %}
+{% block title %}Formulário de Atendimento{% endblock %}
+{% block content %}
+    <h1>ESTATÍSTICA DA FISIOTERAPIA DO CEFAN <span><i class="fas fa-check-square"></i> FORMULÁRIO</span></h1>
+    <form id="form_registro">
+
+        <label for="fisioterapeuta">FISIOTERAPEUTA<span>*</span></label>
+        <select id="fisioterapeuta" name="fisioterapeuta" required>
+            <option value="" disabled selected>Profissional responsável pelo atendimento</option>
+            {% for fisioterapeuta in fisioterapeutas %}
+                <option value="{{fisioterapeuta.id}}">{{fisioterapeuta.nome}}</option>
+            {% endfor %}
+        </select>
+
+        <label for="data">DATA <span>*</span></label>
+        <input type="date" id="data" name="data" required/> <label for="data" class="inline side"><i class="far fa-calendar-alt"></i></label>
+
+        <label>TURNO <span>*</span></label>
+        {% for input in turno_inputs %}
+            <div>
+                <input type="radio" name="{{input.name}}" id="{{input.id}}" value="{{input.label}}" required /><label for="{{input.id}}" >{{input.label}}</label>
+            </div>
+        {% endfor %}
+
+        <!-- Line Break clear deprecated class -->
+        <span class="clear"></span>
+
+        <label for="tipo_atendimento">TIPO DE ATENDIMENTO<span>*</span></label>
+        <select id="tipo_atendimento" name="tipo_atendimento" required>
+            <option value="" disabled selected>Selecione um tipo</option>
+            {% for option in tipo_atendimento_options %}
+                <option value="{{option}}">{{option}}</option>
+            {% endfor %}
+        </select>
+
+        <label for="nome_paciente">NOME COMPLETO DO PACIENTE <span>*</span></label>
+        <input type="text" id="nome_paciente" name="nome_paciente" autocomplete="off" required/>
+        <div class="hint" id="nome_paciente_hint" data-input-hint="nome_paciente">
+            <ul>
+            </ul>
+        </div>
+        
+        <label for="situacao_adm">SITUAÇÃO ADMINISTRATIVA<span>*</span></label>
+        <select id="situacao_adm" name="situacao_adm" required>
+            <option value="" disabled selected>Selecione uma situação</option>
+            {% for option in situacao_administ_options %}
+                <option value="{{option}}">{{option}}</option>
+            {% endfor %}
+        </select>
+
+        <label for="posto_graduacao" class="condicional" data-condicional="posto_graduacao">POSTO/GRADUAÇÃO<span>*</span></label>
+        <select id="posto_graduacao" name="posto_graduacao" class="condicional" data-condicional="posto_graduacao" required>
+            <option value="" disabled selected>do paciente</option>
+            {% for option in posto_graduacao_options %}
+                <option value="{{option}}">{{option}}</option>
+            {% endfor %}
+        </select>                        
+
+        <label for="nip_paciente" class="condicional" data-condicional="nip_paciente">NIP DO PACIENTE <span>*</span></label>
+        <input type="number" id="nip_paciente" name="nip_paciente" class="condicional" data-condicional="nip_paciente" pattern="[0-9]{8}"/>
+
+        <label for="nip_titular" data-condicional="nip_titular" class="condicional">NIP DO TITULAR <span>*</span></label>
+        <input type="number" id="nip_titular" name="nip_titular" class="condicional" data-condicional="nip_titular" pattern="[0-9]{8}"/>
+
+        <label for="cpf_titular" data-condicional="cpf_titular" class="condicional">CPF DO TITULAR <span>*</span></label>
+        <input type="number" id="cpf_titular" name="cpf_titular" class="condicional" data-condicional="cpf_titular" pattern="[0-9]{11}"/>
+
+        <label>ORIGEM <span>*</span></label>
+        {% for input in origem_inputs %}
+            <div>
+                <input type="radio" name="{{input.name}}" id="{{input.id}}" value="{{input.label}}" required /><label for="{{input.id}}" >{{input.label}}</label>
+            </div>
+        {% endfor %}
+
+        <!-- Line Break clear deprecated class -->
+        <span class="clear"></span>
+
+        <label>PACIENTE COMPARECEU AO TRATAMENTO? <span>*</span></label>
+        {% for input in comparecimento_inputs %}
+            <div>
+                <input type="radio" name="{{input.name}}" id="{{input.id}}" value="{{input.value is empty ? input.label : input.value}}" required /><label for="{{input.id}}" >{{input.label}}</label>
+            </div>
+        {% endfor %}
+
+        <!-- Line Break clear deprecated class -->
+        <span class="clear"></span>
+
+        <label for="tipo_falta" data-condicional="tipo_falta" class="condicional">TIPO DE FALTA<span>*</span></label>
+        <select id="tipo_falta" name="tipo_falta" data-condicional="tipo_falta" class="condicional">
+            <option value="" disabled selected>Selecione um tipo</option>
+            {% for option in tipo_falta_options %}
+                <option value="{{option}}">{{option}}</option>
+            {% endfor %}
+        </select>
+
+        <label class="condicional" data-condicional="corpoquadro" >CORPO/QUADRO <span>*</span></label>
+        {% for input in corpo_quadro_inputs %}
+            <div>
+                <input type="radio" name="{{input.name}}" id="{{input.id}}" value="{{input.label}}" class="condicional" data-condicional="{{input.name}}" /><label for="{{input.id}}" class="condicional" data-condicional="{{input.name}}" >{{input.label}}</label>
+            </div>
+        {% endfor %}
+
+        <!-- Line Break clear deprecated class -->
+        <span class="clear"></span>
+
+        <label class="condicional" data-condicional="atleta" >ATLETA? <span>*</span></label>
+        {% for input in atleta_inputs %}
+            <div>
+                <input type="radio" name="{{input.name}}" id="{{input.id}}" value="{{input.value is empty ? input.label : input.value}}" class="condicional" data-condicional="{{input.name}}" /><label for="{{input.id}}" class="condicional" data-condicional="{{input.name}}" >{{input.label}}</label>
+            </div>
+        {% endfor %}
+
+        <!-- Line Break clear deprecated class -->
+        <span class="clear"></span>
+
+        <label for="modalidade" class="condicional" data-condicional="modalidade">MODALIDADE ESPORTIVA<span>*</span></label>
+        <select id="modalidade" name="modalidade" class="condicional" data-condicional="modalidade" required>
+            <option value="" disabled selected>Escolha uma opção</option>
+            {% for option in atleta_modalidade_options %}
+                <option value="{{option}}">{{option}}</option>
+            {% endfor %}
+        </select>
+
+        <label for="outra_modalidade" class="condicional" data-condicional="outra_modalidade">Defina Outra: <span>*</span></label>
+        <input type="text" id="outra_modalidade" name="outra_modalidade" class="condicional" data-condicional="outra_modalidade" required/>
+
+        {% for i in 1..20 %}
+            <label for="procedimentos[{{i}}]" class="condicional procedimento" data-condicional="procedimento_{{i}}">PROCEDIMENTO {{i}}<span>*</span></label>
+            <select id="procedimento_{{i}}" name="procedimentos[{{i}}]" class="condicional procedimento" data-condicional="procedimento_{{i}}" required>
+                <option value="" selected>Em branco</option>
+                {% for procedimento in procedimentos %}
+                    <option value="{{procedimento.nome}}">{{procedimento.nome}}</option>
+                {% endfor %}
+            </select>
+        {% endfor %}
+
+        <button type="submit" id="adicionar_registro">Enviar</button>
+    </form>
+    
+{% endblock content %}

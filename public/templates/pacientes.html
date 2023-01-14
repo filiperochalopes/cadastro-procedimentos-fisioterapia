@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}Versões{% endblock %}
+{% block content %}
+    <h1>ESTATÍSTICA DA FISIOTERAPIA DO CEFAN <span><i class="fas fa-user"></i> Pacientes</span></h1>
+    <h3><i class="fas fa-trash-alt"></i> Clique para desabilitar</h3>
+    <p>A partir da versão <a href="/versao#1.2.0" class="pre">1.2</a> não é possível excluir um elemento, eles são apenas desabilitados, ao <a href="#disabled">fim da página</a> será possível verificar e recuperar os itens desabilitados. Pressione <span class="btn">Ctrl + F</span> para pesquisar por um nome.</p>
+    <!-- Pacientes ativos -->
+    <table class="tablelist" id="table_pacientes">
+        <tbody>
+            {% for paciente in pacientes_ativos %}
+            <tr data-id="{{paciente.id}}"><td class="nome">{{paciente.nome}}</td><td><button class="options-bt del static" data-del="{{paciente.id}}" data-confirm="{{paciente.nome}}"><i class="fas fa-trash-alt"></i></button></td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <h3><i class="fas fa-recycle"></i> Clique para Recuperar</h3>
+    <a name="disabled"></a>
+    <!-- Pacientes desabilitados -->
+    <table class="tablelist" id="table_pacientes_desabilitados">
+        <tbody>
+            {% for paciente in pacientes_desabilitados %}
+            <tr data-id="{{paciente.id}}"><td class="nome">{{paciente.nome}}</td><td><button class="options-bt renew static" data-renew="{{paciente.id}}" data-confirm="{{paciente.nome}}"><i class="fas fa-recycle"></i></button></td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock content %}
+

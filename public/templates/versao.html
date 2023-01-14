@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}Versões{% endblock %}
+{% block content %}
+    <h1>ESTATÍSTICA DA FISIOTERAPIA DO CEFAN <span><i class="fas fa-list"></i> VERSÕES</span></h1>
+    
+    {% for version in versions %}
+        <a name="{{version.name}}"></a>
+        <h3>{{version.name}}</h3>
+        <h5>{{version.releaseDateHumanReadable}}</h5>
+        <p>{{version.content|raw}}</p>
+    {% endfor %}
+{% endblock content %}
