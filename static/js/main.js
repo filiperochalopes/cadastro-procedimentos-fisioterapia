@@ -374,6 +374,10 @@ $(document).ready(function () {
         $(`#${id}`).focus().val(value).blur().change();
       }
 
+      if (data.SituacaoAdmistrativa) {
+        changeSelectInput("situacao_adm", data.SituacaoAdmistrativa);
+      }
+
       $("input[name=origem][value=" + data.Origem + "]").prop("checked", true);
 
       if (data.CorpoQuadro) {

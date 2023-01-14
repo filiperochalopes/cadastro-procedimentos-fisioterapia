@@ -32,8 +32,7 @@ $duplicidades_registro = array();
 $pdo = Propel::getConnection();
 $sql = "SELECT r1.paciente_id, r1.turno, r1.data, r1.comparecimento, r1.id FROM registros r1
 INNER JOIN (SELECT *, COUNT(*) as count FROM registros GROUP BY paciente_id, turno, `data`, fisioterapeuta_id HAVING count > 1) r2
-ON r1.data = r2.data AND r1.turno = r2.turno AND r1.paciente_id = r2.paciente_id AND r1.fisioterapeuta_id = r2.fisioterapeuta_id
-WHERE r1.data >= '2021-01-01';";
+ON r1.data = r2.data AND r1.turno = r2.turno AND r1.paciente_id = r2.paciente_id AND r1.fisioterapeuta_id = r2.fisioterapeuta_id;";
 $stmt = $pdo->prepare($sql);
 $stmt->execute();
 $resultset = $stmt->fetchAll(PDO::FETCH_ASSOC);

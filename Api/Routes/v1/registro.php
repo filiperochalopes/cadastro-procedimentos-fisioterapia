@@ -29,22 +29,22 @@ $app->post($baseUrlV1 . '/registro', function (Request $request, Response $respo
     if(!$paciente){
         // Cria novo paciente
         $paciente = new Paciente();
-        $paciente->setSituacaoAdmistrativa(isset($d['situacao_adm']) ? $d['situacao_adm'] : null);
-        $paciente->setPostoGraduacao(isset($d['posto_graduacao']) ? $d['posto_graduacao'] : null);
-        $paciente->setNome(isset($d['nome_paciente']) ? $d['nome_paciente'] : null);
-        $paciente->setNip(isset($d['nip_paciente']) ? $d['nip_paciente'] : null);
-        $paciente->setNipTitular(isset($d['nip_titular']) ? $d['nip_titular'] : null);
-        $paciente->setCpfTitular(isset($d['cpf_titular']) ? $d['cpf_titular'] : null);
-        $paciente->setOrigem(isset($d['origem']) ? $d['origem'] : null);
-        $paciente->setAtleta(isset($d['atleta']) ? $d['atleta'] : null);
-        $paciente->setModalidade(isset($d['modalidade']) ? $d['modalidade'] : null);
-        $paciente->setOutraModalidade(isset($d['outra_modalidade']) ? $d['outra_modalidade'] : null);
-        $paciente->setCorpoQuadro(isset($d['corpoquadro']) ? $d['corpoquadro'] : null);
-        $paciente->save();
     }
-    $registro->setPacienteId($paciente->getId());
     
-    // TODO Edição de Paciente
+    $paciente->setSituacaoAdmistrativa(isset($d['situacao_adm']) ? $d['situacao_adm'] : null);
+    $paciente->setPostoGraduacao(isset($d['posto_graduacao']) ? $d['posto_graduacao'] : null);
+    $paciente->setNome(isset($d['nome_paciente']) ? $d['nome_paciente'] : null);
+    $paciente->setNip(isset($d['nip_paciente']) ? $d['nip_paciente'] : null);
+    $paciente->setNipTitular(isset($d['nip_titular']) ? $d['nip_titular'] : null);
+    $paciente->setCpfTitular(isset($d['cpf_titular']) ? $d['cpf_titular'] : null);
+    $paciente->setOrigem(isset($d['origem']) ? $d['origem'] : null);
+    $paciente->setAtleta(isset($d['atleta']) ? $d['atleta'] : null);
+    $paciente->setModalidade(isset($d['modalidade']) ? $d['modalidade'] : null);
+    $paciente->setOutraModalidade(isset($d['outra_modalidade']) ? $d['outra_modalidade'] : null);
+    $paciente->setCorpoQuadro(isset($d['corpoquadro']) ? $d['corpoquadro'] : null);
+    $paciente->save();
+
+    $registro->setPacienteId($paciente->getId());
 
     // Lidando com procedimentos
     if(!empty($d['procedimentos'])){

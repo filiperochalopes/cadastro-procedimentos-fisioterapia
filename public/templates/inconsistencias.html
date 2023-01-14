@@ -27,7 +27,7 @@
 <h3>Registro sem Turno</h3>
 <ul id="lista_inconsistencias_turno">
     {% for registro in registros_sem_turno %}
-    <li data-id="turno-{{registro.Id}}">{{registro.Data|date}} {{registro.TipoAtendimento}} ({{registro.Paciente.Nome}}) <select
+    <li data-id="turno-{{registro.Id}}">{{registro.Data|date}} {{registro.TipoAtendimento}} (Fisio: {{registro.Fisioterapeuta.Nome}} --> {{registro.Paciente.Nome}}) <select
             id="turno-{{registro.Id}}">
             <option value="" disabled selected>Selecione</option>
             {% for option in turnos_options %}
