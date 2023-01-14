@@ -8,3 +8,4 @@ composer.lock
 php.ini
 error_log
 propel.yml
+propel.yml.dist

@@ -60,7 +60,7 @@ echo $template->render([
         ],
     ],
     'tipo_falta_options' => [
-        "Falta sem justificativa", "Desmarcação pelo profissional", "Desmarcação pelo paciente"
+        "Falta sem justificativa", "Desmarcação pelo profissional", "Desmarcação pelo paciente", "Alta por Abandono"
     ],
     'corpo_quadro_inputs' => [
         [
