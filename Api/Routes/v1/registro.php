@@ -12,6 +12,12 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 require_once __DIR__ . '/../../../config/env.php';
 
 $app->post($baseUrlV1 . '/registro', function (Request $request, Response $response) {
+
+    function exceptions_error_handler($severity, $message, $filename, $lineno) {
+        throw new ErrorException($message, 0, $severity, $filename, $lineno);
+    }
+    
+    set_error_handler('exceptions_error_handler');
     
     $d = $request->getParsedBody();
     
@@ -57,16 +63,25 @@ $app->post($baseUrlV1 . '/registro', function (Request $request, Response $respo
     }
 
     // Salvando alterações
-    $registro->save();
-    
-    $response->getBody()->write(json_encode(array(
-        "mensagem" => "Registro cadastrado com sucesso!",
-        "class" => "green"
-    )));
+    try {
+        $registro->save();
+        $response->getBody()->write(json_encode(array(
+            "mensagem" => "Registro cadastrado com sucesso!",
+            "class" => "green"
+        )));
+        $status_code = 201;
+    } catch (Error $e) {
+        $response->getBody()->write(json_encode(array(
+            "mensagem" => "Erro: Inconsistência no banco. Registro duplicado!",
+            "detalhe" => "{$e->getMessage()}",
+            "class" => "red"
+        )));
+        $status_code = 400;
+    }
 
     return $response
             ->withHeader('Content-Type', 'application/json')
-            ->withStatus(201);
+            ->withStatus($status_code);
 });
 
 

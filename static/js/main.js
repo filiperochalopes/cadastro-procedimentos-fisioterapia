@@ -198,23 +198,21 @@ $(document).ready(function () {
 
   /* --------- ADICIONAR REGISTRO ---------- */
 
-  $("#adicionar_registro").click(function (e) {
+  $("#adicionar_registro").click(async function (e) {
     if (document.getElementById("form_registro").checkValidity()) {
       // Se ocorreu a validação mínima de campos
       e.preventDefault();
       console.log($("#form_registro").serialize());
 
-      $.ajax({
-        url: "/api/v1/registro",
-        method: "POST",
-        data: $("#form_registro").serialize(),
-        beforeSend: function (xhr) {
-          aviso('loading');
-        },
-      }).done(function (data) {
-        aviso(data);
-        resetForm();
-      });
+      try {
+        aviso('loading')
+        const response = await axios.post('/api/v1/registro', $("#form_registro").serialize());
+        aviso(response.data)
+        resetForm()
+      } catch (errors) {
+        console.error(errors);
+        aviso(errors.response.data)
+      }
     }
   });
 
@@ -463,6 +461,10 @@ $(document).ready(function () {
       },
     });
   });
+
+  $("body").on("click", "#aviso .close", function () {
+    $("#aviso").hide();
+  });
 });
 
 /* --------- AVISO ---------- */
@@ -492,7 +494,3 @@ function aviso(props, long = false) {
     $("#aviso").hide();
   }, time);
 }
-
-$("#aviso .close").click(function () {
-  $("#aviso").hide();
-});

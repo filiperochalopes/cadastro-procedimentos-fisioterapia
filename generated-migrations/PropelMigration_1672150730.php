@@ -298,7 +298,7 @@ CREATE VIEW powerbi AS
 	JOIN pacientes pa
 	ON pa.id = r.paciente_id 
 	JOIN fisioterapeutas f 
-	ON f.id = r.fisioterapeuta_id;
+	ON f.id = r.fisioterapeuta_id ORDER BY data DESC;
 
 # This restores the fkey checks, after having unset them earlier
 SET FOREIGN_KEY_CHECKS = 1;
