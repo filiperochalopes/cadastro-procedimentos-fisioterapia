@@ -397,8 +397,8 @@ $(document).ready(function () {
         changeSelectInput("posto_graduacao", data.PostoGraduacao);
       }
 
-      if (data.NipPaciente) {
-        changeSelectInput("nip_paciente", data.NipPaciente);
+      if (data.Nip) {
+        changeSelectInput("nip_paciente", data.Nip);
       }
 
       if (data.NipTitular) {
